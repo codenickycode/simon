@@ -1,12 +1,5 @@
 import classnames from "classnames";
-import { useEffect, useState } from "react";
-import { PadColor } from "../types/pad";
-import { playTone } from "../services/tone";
-
-export interface PadProps {
-  color: PadColor;
-  active: boolean;
-}
+import { PADS, PadColor } from "../types/pad";
 
 const bgColor: { [key in PadColor]: string } = {
   green: "bg-green-600",
@@ -27,51 +20,25 @@ const borderRadius: { [key in PadColor]: string } = {
   yellow: "rounded-bl-full",
 };
 
-const chars: { [key in PadColor]: string } = {
-  green: "q",
-  red: "w",
-  blue: "s",
-  yellow: "a",
-};
+export interface PadProps {
+  color: PadColor;
+  active: boolean;
+  onPointerDown: () => void;
+  onPointerUp: () => void;
+}
 
 export const Pad = (props: PadProps) => {
-  const [pressing, setPressing] = useState(false);
-  const handlePointerDown = () => {
-    setPressing(true);
-    playTone(props.color);
-  };
-  const handlePointerUp = () => setPressing(false);
-  const active = props.active || pressing;
   const bgActiveClass = bgActiveColor[props.color];
-  const bgClass = active ? bgActiveClass : bgColor[props.color];
+  const bgClass = props.active ? bgActiveClass : bgColor[props.color];
   const borderRadiusClass = borderRadius[props.color];
-  const char = chars[props.color];
-  useEffect(() => {
-    const handleKeyDown = (event: { key: string }) => {
-      if (event.key === chars[props.color]) {
-        if (!pressing) playTone(props.color);
-        setPressing(true);
-      }
-    };
-    const handleKeyUp = (event: { key: string }) => {
-      if (event.key === chars[props.color]) {
-        setPressing(false);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, [pressing, props.color]);
+  const key = PADS[props.color].key;
   return (
     <button
-      onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
+      onPointerDown={props.onPointerDown}
+      onPointerUp={props.onPointerUp}
       className={classnames("w-16 h-16", bgClass, borderRadiusClass)}
     >
-      {char}
+      {key}
     </button>
   );
 };
