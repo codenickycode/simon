@@ -1,7 +1,7 @@
 import classnames from "classnames";
-import { useState } from "react";
-
-export type PadColor = "green" | "red" | "blue" | "yellow";
+import { useEffect, useState } from "react";
+import { PadColor } from "../types/pad";
+import { playTone } from "../services/tone";
 
 export interface PadProps {
   color: PadColor;
@@ -27,19 +27,51 @@ const borderRadius: { [key in PadColor]: string } = {
   yellow: "rounded-bl-full",
 };
 
+const chars: { [key in PadColor]: string } = {
+  green: "q",
+  red: "w",
+  blue: "s",
+  yellow: "a",
+};
+
 export const Pad = (props: PadProps) => {
   const [pressing, setPressing] = useState(false);
-  const handlePointerDown = () => setPressing(true);
+  const handlePointerDown = () => {
+    setPressing(true);
+    playTone(props.color);
+  };
   const handlePointerUp = () => setPressing(false);
   const active = props.active || pressing;
   const bgActiveClass = bgActiveColor[props.color];
   const bgClass = active ? bgActiveClass : bgColor[props.color];
   const borderRadiusClass = borderRadius[props.color];
+  const char = chars[props.color];
+  useEffect(() => {
+    const handleKeyDown = (event: { key: string }) => {
+      if (event.key === chars[props.color]) {
+        if (!pressing) playTone(props.color);
+        setPressing(true);
+      }
+    };
+    const handleKeyUp = (event: { key: string }) => {
+      if (event.key === chars[props.color]) {
+        setPressing(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [pressing, props.color]);
   return (
     <button
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       className={classnames("w-16 h-16", bgClass, borderRadiusClass)}
-    />
+    >
+      {char}
+    </button>
   );
 };
