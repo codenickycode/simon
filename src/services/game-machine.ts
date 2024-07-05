@@ -7,20 +7,11 @@ interface GameContext {
   highScore: number;
 }
 
-export type GameEventType = "sequenceComplete" | "start" | "input";
 export type GameEvent =
   | { type: "sequenceComplete" }
   | { type: "start" }
   | { type: "input"; value: PadTone };
-export type GameActionType =
-  | "addToSequence"
-  | "checkSequence"
-  | "checkHighScore"
-  | "reset"
-  | "incrementI";
-export type GameAction = (input: { context: GameContext }) => void;
-export type Actor = "playSequence";
-export type Guard = "correct";
+
 export interface GuardType {
   context: GameContext;
   event: GameEvent;
