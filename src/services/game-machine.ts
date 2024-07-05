@@ -35,13 +35,16 @@ export const machine = setup({
       }
     },
     checkHighScore: ({ context }) => {
-      const userScore = context.i + 1;
+      // the user failed to enter the last value
+      const userScore = context.sequence.length - 1;
       if (userScore > context.highScore) {
         context.highScore = userScore;
       }
     },
-    reset: ({ context }) => {
+    resetSequence: ({ context }) => {
       context.sequence = [];
+    },
+    resetI: ({ context }) => {
       context.i = 0;
     },
     incrementI: ({ context }) => {
@@ -50,9 +53,12 @@ export const machine = setup({
   },
   actors: {
     // @ts-expect-error not sure what it expects here
-    playSequence: async () => {
-      // todo: play sequence
-    },
+    playSequence: () =>
+      new Promise((res) => {
+        // todo: play sequence
+        console.log("playing sequence");
+        res(undefined);
+      }),
   },
   guards: {
     correct: ({ context, event }: GuardType) => {
@@ -93,7 +99,7 @@ export const machine = setup({
             id: "sequencer",
             input: {},
             onDone: {
-              target: "USER_TURN",
+              target: "playing.userTurn",
             },
             src: "playSequence",
           },
@@ -102,15 +108,18 @@ export const machine = setup({
           initial: "idle",
           on: {
             sequenceComplete: {
-              target: "computerTurn",
+              target: "playing.computerTurn",
             },
+          },
+          exit: {
+            type: "resetI",
           },
           states: {
             idle: {
               on: {
                 input: [
                   {
-                    target: "idle",
+                    target: "playing.userTurn.idle",
                     actions: {
                       type: "incrementI",
                     },
@@ -134,14 +143,14 @@ export const machine = setup({
     gameover: {
       after: {
         "5000": {
-          target: "idle",
+          target: "#game.idle",
         },
       },
       entry: {
         type: "checkHighScore",
       },
       exit: {
-        type: "reset",
+        type: "resetSequence",
       },
     },
   },
