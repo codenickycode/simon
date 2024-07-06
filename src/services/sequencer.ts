@@ -10,21 +10,21 @@ type PromiseResolver = (value: void | PromiseLike<void>) => void;
 class Sequencer {
   private transport = Tone.getTransport();
   private synth = new Tone.Synth().toDestination();
+
   private sequence = this.initSequence();
   length = () => this.sequence.events.length;
   valueAt = (index: number) => this.sequence.events[index];
+
   private onPlayNote: (note: PadTone | undefined) => void = () => {
     throw new Error("onPlayNote has not been initialized");
   };
   setOnPlayNote(onPlayNote: (note: PadTone | undefined) => void) {
     this.onPlayNote = onPlayNote;
   }
+
   private initSequence() {
     const sequence = new Tone.Sequence((time, note) => {
-      if (note !== undefined) {
-        this.synth.triggerAttackRelease(note, NOTE_DURATION_S, time);
-        this.onPlayNote(note);
-      }
+      this.synth.triggerAttackRelease(note, NOTE_DURATION_S, time);
       Tone.getDraw().schedule(() => {
         this.onPlayNote(note);
       }, time);
