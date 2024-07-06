@@ -1,5 +1,6 @@
 import * as Tone from "tone";
 import { PadTone } from "../types/pad";
+import { noOp } from "../utils/noOp";
 
 const NOTE_DURATION_S = 0.3;
 export const TIMING_BUFFER_MS = 500;
@@ -44,8 +45,7 @@ class Sequencer {
   }
 
   private sequencerComplete: Promise<void> = Promise.resolve(undefined);
-  // @ts-expect-error we set it in the Promise body in the start method
-  private sequencerCompleteResolver: PromiseResolver;
+  private sequencerCompleteResolver: PromiseResolver = noOp;
 
   async playSequence() {
     this.sequencerComplete = new Promise<void>(
