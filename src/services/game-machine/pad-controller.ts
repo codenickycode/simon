@@ -4,11 +4,12 @@ import { sequencer } from "../sequencer";
 import { GameEvent } from "./types";
 
 export const usePadController = ({
+  isComputerTurn,
   send,
 }: {
+  isComputerTurn: boolean;
   send: (event: GameEvent) => void;
 }) => {
-  const [activePad, setActivePad] = useState<PadTone | undefined>();
   const onPadDown = useCallback(
     (note: PadTone) => {
       sequencer.playNote(note);
@@ -16,6 +17,7 @@ export const usePadController = ({
     },
     [send]
   );
+  const [activePad, setActivePad] = useState<PadTone | undefined>();
   useEffect(() => {
     sequencer.setOnPlayNote((padTone: PadTone | undefined) => {
       setActivePad(padTone);
@@ -27,7 +29,7 @@ export const usePadController = ({
   }, []);
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.repeat) {
+      if (event.repeat || isComputerTurn) {
         event.preventDefault();
         return;
       }
@@ -38,6 +40,6 @@ export const usePadController = ({
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [onPadDown]);
+  }, [isComputerTurn, onPadDown]);
   return { activePad, onPadDown };
 };

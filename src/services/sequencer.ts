@@ -62,10 +62,6 @@ class Sequencer {
     await this.sequencerComplete;
   }
 
-  isStarted() {
-    return this.transport.state === "started";
-  }
-
   playNote(tone: PadTone) {
     this.synth.triggerAttackRelease(
       tone,

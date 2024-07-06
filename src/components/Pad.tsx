@@ -24,6 +24,7 @@ export interface PadProps {
   color: PadColor;
   active: boolean;
   onPointerDown: () => void;
+  disabled: boolean;
 }
 
 export const Pad = (props: PadProps) => {
@@ -35,6 +36,7 @@ export const Pad = (props: PadProps) => {
     <button
       onPointerDown={props.onPointerDown}
       className={classnames("w-16 h-16", bgClass, borderRadiusClass)}
+      disabled={props.disabled}
     >
       {key}
     </button>
