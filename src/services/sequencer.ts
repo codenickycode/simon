@@ -4,7 +4,7 @@ import { noOp } from "../utils/noOp";
 
 const NOTE_DURATION_S = 0.3;
 export const TIMING_BUFFER_MS = 500;
-const TIMING_BUFFER = TIMING_BUFFER_MS / 1000;
+const TIMING_BUFFER_S = TIMING_BUFFER_MS / 1000;
 
 type PromiseResolver = (value: void | PromiseLike<void>) => void;
 
@@ -57,7 +57,7 @@ class Sequencer {
     this.transport.schedule(() => {
       this.transport.stop();
       this.sequencerCompleteResolver();
-    }, sequenceDuration + TIMING_BUFFER);
+    }, sequenceDuration + TIMING_BUFFER_S);
     this.sequence.start();
     this.transport.start();
     return await this.sequencerComplete;
