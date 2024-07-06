@@ -59,7 +59,7 @@ export const setupStateMachine = () => {
         description: "Display high score",
       },
       playing: {
-        initial: "computerTurn",
+        initial: "_computerTurn", // computerTurn without delay
         states: {
           computerTurn: {
             after: {
