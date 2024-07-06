@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { setup, raise, fromPromise } from "xstate";
+import { setup, fromPromise } from "xstate";
 import { useMachine } from "@xstate/react";
 import { keyToPadTone, PADS, PadTone } from "../../types/pad";
 import { sequencer } from "../sequencer";
@@ -7,7 +7,6 @@ import { useKeyCycle } from "../../utils/keyboard";
 
 interface GameContext {
   i: number;
-  sequence: PadTone[];
   highScore: number;
 }
 
@@ -70,24 +69,13 @@ const setupMachine = () => {
     },
     actions: {
       // we have to declare this type once and then the rest of the actions are typed 🤷
-      addToSequence: ({ context }: { context: GameContext }) => {
+      addToSequence: () => {
         const tones = Object.values(PADS).map((p) => p.tone);
         const index = Math.floor(Math.random() * 4);
         const padTone = tones[index];
-        // TODO: Do we need both context and tone sequence?
-        context.sequence.push(padTone);
         sequencer.addNoteToSequence(padTone);
       },
-      checkHighScore: ({ context }) => {
-        // the user failed to enter the last value
-        const userScore = context.sequence.length - 1;
-        if (userScore > context.highScore) {
-          context.highScore = userScore;
-        }
-      },
-      resetSequence: ({ context }) => {
-        // TODO: Do we need both context and tone sequence?
-        context.sequence = [];
+      resetSequence: () => {
         sequencer.resetSequence();
       },
       resetI: ({ context }) => {
@@ -99,8 +87,8 @@ const setupMachine = () => {
       input: ({ context, event }) => {
         event.type === "input" && sequencer.playNote(event.value);
         context.i++;
-        if (context.i === context.sequence.length) {
-          raise({ type: "sequenceComplete" });
+        if (context.i > context.highScore) {
+          context.highScore = context.i;
         }
       },
     },
@@ -111,20 +99,19 @@ const setupMachine = () => {
       correct: ({ context, event }: GuardType) => {
         if (
           event.type === "input" &&
-          event.value === context.sequence[context.i]
+          event.value === sequencer.valueAt(context.i)
         ) {
           return true;
         }
         return false;
       },
       checkComplete: ({ context }) => {
-        return context.i === context.sequence.length;
+        return context.i === sequencer.length();
       },
     },
   }).createMachine({
     context: {
       i: 0,
-      sequence: [],
       highScore: 0,
     },
     id: "game",
@@ -208,9 +195,6 @@ const setupMachine = () => {
           "2000": {
             target: "#game.idle",
           },
-        },
-        entry: {
-          type: "checkHighScore",
         },
         exit: {
           type: "resetSequence",

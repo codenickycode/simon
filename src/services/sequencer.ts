@@ -7,6 +7,8 @@ class Sequencer {
   private transport = Tone.getTransport();
   private synth = new Tone.Synth().toDestination();
   private sequence = this.initSequence();
+  length = () => this.sequence.events.filter(Boolean).length;
+  valueAt = (index: number) => this.sequence.events[index];
   private onPlayNote: (note: PadTone | undefined) => void = () => {
     throw new Error("onPlayNote has not been initialized");
   };
