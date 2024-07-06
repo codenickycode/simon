@@ -1,8 +1,8 @@
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { setup, raise, fromPromise } from "xstate";
 import { useMachine } from "@xstate/react";
-import { PADS, PadTone } from "../types/pad";
-import { Sequencer } from "./sequencer";
+import { keyToPadTone, PADS, PadTone } from "../types/pad";
+import { sequencer } from "./sequencer";
 
 interface GameContext {
   i: number;
@@ -20,12 +20,50 @@ export interface GuardType {
   event: GameEvent;
 }
 
-export const useGameMachine = (sequencer: Sequencer) => {
-  const machine = useMemo(() => setupMachine(sequencer), [sequencer]);
-  return useMachine(machine);
+export const useGameMachine = () => {
+  const [activePad, setActivePad] = useState<PadTone | undefined>();
+  useEffect(() => {
+    sequencer.setOnPlayNote((padTone: PadTone | undefined) => {
+      setActivePad(padTone);
+      setTimeout(() => setActivePad(undefined), 150);
+    });
+  }, []);
+  const machine = useMemo(() => setupMachine(), []);
+  const [state, send] = useMachine(machine);
+  const onPadDown = useCallback(
+    (note: PadTone) => {
+      send({ type: "input", value: note });
+    },
+    [send]
+  );
+  const onPadUp = () => setActivePad(undefined);
+  useEffect(() => {
+    const handleKeyDown = (event: { key: string }) => {
+      const tone = keyToPadTone(event.key);
+      tone && onPadDown(tone);
+    };
+    const handleKeyUp = () => {
+      setActivePad(undefined);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [activePad, onPadDown]);
+  const startSequence = useCallback(() => send({ type: "start" }), [send]);
+  return {
+    activePad,
+    onPadDown,
+    onPadUp,
+    startSequence,
+    highScore: state.context.highScore,
+    state,
+  };
 };
 
-const setupMachine = (sequencer: Sequencer) => {
+const setupMachine = () => {
   return setup({
     types: {
       context: {} as GameContext,

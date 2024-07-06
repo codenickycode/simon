@@ -4,7 +4,7 @@ import { noOp } from "tone/build/esm/core/util/Interface";
 
 type PromiseResolver = (value: void | PromiseLike<void>) => void;
 
-export class Sequencer {
+class Sequencer {
   private transport = Tone.getTransport();
   private synth = new Tone.Synth().toDestination();
   private onPlayNote: (note: PadTone | undefined) => void = noOp;
@@ -72,3 +72,5 @@ export class Sequencer {
     this.onPlayNote(tone);
   }
 }
+
+export const sequencer = new Sequencer();
