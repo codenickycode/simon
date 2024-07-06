@@ -7,7 +7,7 @@ type PromiseResolver = (value: void | PromiseLike<void>) => void;
 export class Sequencer {
   private transport = Tone.getTransport();
   private synth = new Tone.Synth().toDestination();
-  private onDraw: (note: PadTone | undefined) => void = noOp;
+  private onPlayNote: (note: PadTone | undefined) => void = noOp;
   private sequence = this.initSequence();
 
   private initSequence() {
@@ -15,17 +15,16 @@ export class Sequencer {
       if (note !== undefined) {
         this.synth.triggerAttackRelease(note, "0.3", time);
       }
-      // Schedule state updates to coincide with audio playback
       Tone.getDraw().schedule(() => {
-        this.onDraw(note);
+        this.onPlayNote(note);
       }, time);
     }, []);
     sequence.loop = false;
     return sequence;
   }
 
-  setOnDraw(onDraw: (note: PadTone | undefined) => void) {
-    this.onDraw = onDraw;
+  setOnPlayNote(onPlayNote: (note: PadTone | undefined) => void) {
+    this.onPlayNote = onPlayNote;
   }
 
   addNoteToSequence(note: PadTone) {
@@ -37,7 +36,6 @@ export class Sequencer {
   }
 
   resetSequence() {
-    console.log("resetting sequence");
     this.sequence.stop();
     this.sequence.clear();
     this.sequence.events = [];
@@ -69,7 +67,8 @@ export class Sequencer {
     return this.transport.state === "started";
   }
 
-  playTone(tone: PadTone) {
+  playNote(tone: PadTone) {
     this.synth.triggerAttackRelease(tone, "0.3");
+    this.onPlayNote(tone);
   }
 }

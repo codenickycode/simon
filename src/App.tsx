@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Gamepad } from "./components/Gamepad";
 import { Sequencer } from "./services/sequencer";
 import { PadTone, keyToPadTone } from "./types/pad";
@@ -8,9 +8,15 @@ const sequencer = new Sequencer();
 
 function App() {
   const [state, send] = useGameMachine(sequencer);
+  const playNote = useCallback(
+    (note: PadTone) => {
+      send({ type: "input", value: note });
+    },
+    [send]
+  );
   const [activePad, setActivePad] = useState<PadTone | undefined>();
   useEffect(() => {
-    sequencer.setOnDraw((padTone: PadTone | undefined) => {
+    sequencer.setOnPlayNote((padTone: PadTone | undefined) => {
       setActivePad(padTone);
       setTimeout(() => setActivePad(undefined), 150);
     });
@@ -18,9 +24,7 @@ function App() {
   useEffect(() => {
     const handleKeyDown = (event: { key: string }) => {
       const tone = keyToPadTone(event.key);
-      if (!activePad) {
-        setActivePad(tone);
-      }
+      tone && playNote(tone);
     };
     const handleKeyUp = () => {
       setActivePad(undefined);
@@ -31,21 +35,13 @@ function App() {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [activePad]);
-  useEffect(() => {
-    if (sequencer.isStarted()) {
-      return;
-    }
-    if (activePad) {
-      sequencer.playTone(activePad);
-    }
-  }, [activePad]);
+  }, [activePad, playNote]);
   return (
     <div>
       <Gamepad
         activePad={activePad}
-        setActivePad={setActivePad}
-        onInput={(padTone: PadTone) => send({ type: "input", value: padTone })}
+        onPadDown={playNote}
+        onPadUp={() => setActivePad(undefined)}
       />
       <button onClick={() => send({ type: "start" })}>start</button>
       <h1>High Score: {state.context.highScore}</h1>

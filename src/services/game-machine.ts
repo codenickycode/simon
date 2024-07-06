@@ -56,7 +56,11 @@ const setupMachine = (sequencer: Sequencer) => {
       resetI: ({ context }) => {
         context.i = 0;
       },
-      incrementI: ({ context }) => {
+      playNote: ({ event }) => {
+        event.type === "input" && sequencer.playNote(event.value);
+      },
+      input: ({ context, event }) => {
+        event.type === "input" && sequencer.playNote(event.value);
         context.i++;
         if (context.i === context.sequence.length) {
           raise({ type: "sequenceComplete" });
@@ -94,6 +98,11 @@ const setupMachine = (sequencer: Sequencer) => {
           start: {
             target: "playing",
           },
+          input: {
+            actions: {
+              type: "playNote",
+            },
+          },
         },
         description: "Display high score",
       },
@@ -130,7 +139,7 @@ const setupMachine = (sequencer: Sequencer) => {
                     {
                       target: "checkComplete",
                       actions: {
-                        type: "incrementI",
+                        type: "input",
                       },
                       guard: {
                         type: "correct",
