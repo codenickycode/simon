@@ -26,8 +26,5 @@ export const PADS: { [key in PadColor]: PadConfig } = {
 
 export const keyToPadTone = (key: string): PadTone | undefined => {
   const pad = Object.values(PADS).find((pad) => pad.key === key);
-  if (!pad) {
-    console.warn("could not find pad from key");
-  }
   return pad?.tone;
 };

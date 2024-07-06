@@ -67,7 +67,11 @@ class Sequencer {
   }
 
   playNote(tone: PadTone) {
-    this.synth.triggerAttackRelease(tone, NOTE_DURATION_S);
+    this.synth.triggerAttackRelease(
+      tone,
+      NOTE_DURATION_S,
+      Tone.getContext().currentTime // play immediately
+    );
     this.onPlayNote(tone);
   }
 }
