@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { setup, fromPromise } from "xstate";
 import { useMachine } from "@xstate/react";
 import { keyToPadTone, PADS, PadTone } from "../../types/pad";
-import { sequencer } from "../sequencer";
+import { sequencer, TIMING_BUFFER_MS } from "../sequencer";
 import { useKeyCycle } from "../../utils/keyboard";
 
 interface GameContext {
@@ -20,9 +20,9 @@ export interface GuardType {
   event: GameEvent;
 }
 
-export const useGameMachine = () => {
-  const machine = useMemo(() => setupMachine(), []);
-  const [state, send] = useMachine(machine);
+export const useGameController = () => {
+  const stateMachine = useMemo(() => setupStateMachine(), []);
+  const [state, send] = useMachine(stateMachine);
   const padController = usePadController({ send });
   return {
     activePad: padController.activePad,
@@ -61,14 +61,13 @@ const usePadController = ({ send }: { send: (event: GameEvent) => void }) => {
   return { activePad, onPadDown, onPadUp };
 };
 
-const setupMachine = () => {
+const setupStateMachine = () => {
   return setup({
     types: {
       context: {} as GameContext,
       events: {} as GameEvent,
     },
     actions: {
-      // we have to declare this type once and then the rest of the actions are typed 🤷
       addToSequence: () => {
         const tones = Object.values(PADS).map((p) => p.tone);
         const index = Math.floor(Math.random() * 4);
@@ -134,6 +133,11 @@ const setupMachine = () => {
         initial: "computerTurn",
         states: {
           computerTurn: {
+            after: {
+              [TIMING_BUFFER_MS]: "_computerTurn",
+            },
+          },
+          _computerTurn: {
             entry: {
               type: "addToSequence",
             },

@@ -1,10 +1,9 @@
 import { Gamepad } from "./components/Gamepad";
-import { useGameMachine } from "./services/game-machine/game-machine";
+import { useGameController } from "./services/game-machine/game-machine";
 
 function App() {
   const { activePad, onPadDown, onPadUp, startSequence, highScore, state } =
-    useGameMachine();
-
+    useGameController();
   return (
     <div>
       <Gamepad activePad={activePad} onPadDown={onPadDown} onPadUp={onPadUp} />

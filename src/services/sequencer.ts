@@ -1,13 +1,17 @@
 import * as Tone from "tone";
 import { PadTone } from "../types/pad";
 
+const NOTE_DURATION_S = 0.3;
+export const TIMING_BUFFER_MS = 500;
+const TIMING_BUFFER = TIMING_BUFFER_MS / 1000;
+
 type PromiseResolver = (value: void | PromiseLike<void>) => void;
 
 class Sequencer {
   private transport = Tone.getTransport();
   private synth = new Tone.Synth().toDestination();
   private sequence = this.initSequence();
-  length = () => this.sequence.events.filter(Boolean).length;
+  length = () => this.sequence.events.length;
   valueAt = (index: number) => this.sequence.events[index];
   private onPlayNote: (note: PadTone | undefined) => void = () => {
     throw new Error("onPlayNote has not been initialized");
@@ -18,7 +22,8 @@ class Sequencer {
   private initSequence() {
     const sequence = new Tone.Sequence((time, note) => {
       if (note !== undefined) {
-        this.synth.triggerAttackRelease(note, "0.3", time);
+        this.synth.triggerAttackRelease(note, NOTE_DURATION_S, time);
+        this.onPlayNote(note);
       }
       Tone.getDraw().schedule(() => {
         this.onPlayNote(note);
@@ -29,11 +34,7 @@ class Sequencer {
   }
 
   addNoteToSequence(note: PadTone) {
-    // pop undefined
-    this.sequence.events.pop();
     this.sequence.events.push(note);
-    // always add with undefined to deactivate the active pad
-    this.sequence.events.push(undefined);
   }
 
   resetSequence() {
@@ -50,15 +51,13 @@ class Sequencer {
     this.sequencerComplete = new Promise<void>(
       (res) => (this.sequencerCompleteResolver = res)
     );
-    this.transport.stop();
     this.transport.position = 0;
-    const sequenceDuration = this.sequence.events.length * 0.3; // 0.3 seconds per note
+    const sequenceDuration = this.sequence.events.length * NOTE_DURATION_S;
     // Schedule the end of the sequence
     this.transport.schedule(() => {
-      // Stop the transport slightly after the last note
-      this.transport.stop("+0.1");
+      this.transport.stop();
       this.sequencerCompleteResolver();
-    }, sequenceDuration);
+    }, sequenceDuration + TIMING_BUFFER);
     this.sequence.start();
     this.transport.start();
     return await this.sequencerComplete;
@@ -69,7 +68,7 @@ class Sequencer {
   }
 
   playNote(tone: PadTone) {
-    this.synth.triggerAttackRelease(tone, "0.3");
+    this.synth.triggerAttackRelease(tone, NOTE_DURATION_S);
     this.onPlayNote(tone);
   }
 }
