@@ -3,6 +3,7 @@ import { setup, raise, fromPromise } from "xstate";
 import { useMachine } from "@xstate/react";
 import { keyToPadTone, PADS, PadTone } from "../../types/pad";
 import { sequencer } from "../sequencer";
+import { useKeyCycle } from "../../utils/keyboard";
 
 interface GameContext {
   i: number;
@@ -21,46 +22,44 @@ export interface GuardType {
 }
 
 export const useGameMachine = () => {
-  const [activePad, setActivePad] = useState<PadTone | undefined>();
-  useEffect(() => {
-    sequencer.setOnPlayNote((padTone: PadTone | undefined) => {
-      setActivePad(padTone);
-      setTimeout(() => setActivePad(undefined), 150);
-    });
-  }, []);
   const machine = useMemo(() => setupMachine(), []);
   const [state, send] = useMachine(machine);
+  const padController = usePadController({ send });
+  return {
+    activePad: padController.activePad,
+    onPadDown: padController.onPadDown,
+    onPadUp: padController.onPadUp,
+    startSequence: useCallback(() => send({ type: "start" }), [send]),
+    highScore: state.context.highScore,
+    state,
+  };
+};
+
+const usePadController = ({ send }: { send: (event: GameEvent) => void }) => {
+  const [activePad, setActivePad] = useState<PadTone | undefined>();
   const onPadDown = useCallback(
     (note: PadTone) => {
       send({ type: "input", value: note });
     },
     [send]
   );
-  const onPadUp = () => setActivePad(undefined);
+  const onPadUp = useCallback(() => setActivePad(undefined), []);
+  // when the sequencer plays a note, it is a "pad down", so set a timeout and
+  // give it a "pad up"
   useEffect(() => {
-    const handleKeyDown = (event: { key: string }) => {
-      const tone = keyToPadTone(event.key);
+    sequencer.setOnPlayNote((padTone: PadTone | undefined) => {
+      setActivePad(padTone);
+      setTimeout(onPadUp, 150);
+    });
+  }, [onPadUp]);
+  useKeyCycle({
+    downHandler: (key: string) => {
+      const tone = keyToPadTone(key);
       tone && onPadDown(tone);
-    };
-    const handleKeyUp = () => {
-      setActivePad(undefined);
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, [activePad, onPadDown]);
-  const startSequence = useCallback(() => send({ type: "start" }), [send]);
-  return {
-    activePad,
-    onPadDown,
-    onPadUp,
-    startSequence,
-    highScore: state.context.highScore,
-    state,
-  };
+    },
+    upHandler: onPadUp,
+  });
+  return { activePad, onPadDown, onPadUp };
 };
 
 const setupMachine = () => {

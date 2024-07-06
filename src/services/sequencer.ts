@@ -1,15 +1,18 @@
 import * as Tone from "tone";
 import { PadTone } from "../types/pad";
-import { noOp } from "tone/build/esm/core/util/Interface";
 
 type PromiseResolver = (value: void | PromiseLike<void>) => void;
 
 class Sequencer {
   private transport = Tone.getTransport();
   private synth = new Tone.Synth().toDestination();
-  private onPlayNote: (note: PadTone | undefined) => void = noOp;
   private sequence = this.initSequence();
-
+  private onPlayNote: (note: PadTone | undefined) => void = () => {
+    throw new Error("onPlayNote has not been initialized");
+  };
+  setOnPlayNote(onPlayNote: (note: PadTone | undefined) => void) {
+    this.onPlayNote = onPlayNote;
+  }
   private initSequence() {
     const sequence = new Tone.Sequence((time, note) => {
       if (note !== undefined) {
@@ -21,10 +24,6 @@ class Sequencer {
     }, []);
     sequence.loop = false;
     return sequence;
-  }
-
-  setOnPlayNote(onPlayNote: (note: PadTone | undefined) => void) {
-    this.onPlayNote = onPlayNote;
   }
 
   addNoteToSequence(note: PadTone) {
