@@ -35,7 +35,11 @@ export const Pad = (props: PadProps) => {
   return (
     <button
       onPointerDown={props.onPointerDown}
-      className={classnames("w-16 h-16", bgClass, borderRadiusClass)}
+      className={classnames(
+        "w-16 h-16 disabled:pointer-events-none",
+        bgClass,
+        borderRadiusClass
+      )}
       disabled={props.disabled}
     >
       {key}
