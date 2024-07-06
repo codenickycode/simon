@@ -30,7 +30,11 @@ export const setupStateMachine = () => {
       },
     },
     actors: {
-      playSequence: fromPromise(async () => await sequencer.playSequence()),
+      playSequence: fromPromise(async () => {
+        // first, tick the event loop to make sure sequence scheduling is done
+        await new Promise((res) => setTimeout(res, 0));
+        await sequencer.playSequence();
+      }),
     },
     guards: {
       correct: ({ context, event }) => {

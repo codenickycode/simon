@@ -43,11 +43,16 @@ class Sequencer {
   private sequenceCompleteId = 0;
   /** plays the sequence and resolves when complete */
   async playSequence() {
+    if (this.transport.state === "started") {
+      // trying to prevent an error of unknown origin with this is called more than once
+      return;
+    }
     return new Promise((res) => {
       this.transport.clear(this.sequenceCompleteId);
       this.transport.position = 0;
       const sequenceDuration = this.sequence.events.length * NOTE_DURATION_S;
       this.sequenceCompleteId = this.transport.schedule(() => {
+        this.transport.stop();
         res(undefined);
       }, sequenceDuration);
       this.sequence.start();
