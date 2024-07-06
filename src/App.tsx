@@ -1,5 +1,5 @@
 import { Gamepad } from "./components/Gamepad";
-import { useGameController } from "./services/game-machine/game-machine";
+import { useGameController } from "./services/game-machine";
 
 function App() {
   const { padController, gameState } = useGameController();

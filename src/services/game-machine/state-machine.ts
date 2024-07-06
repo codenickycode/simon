@@ -1,67 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { setup, fromPromise } from "xstate";
-import { useMachine } from "@xstate/react";
-import { keyToPadTone, PADS, PadTone } from "../../types/pad";
+import { fromPromise, setup } from "xstate";
+import { GameContext, GameEvent } from "./types";
+import { PADS } from "../../types/pad";
 import { sequencer, TIMING_BUFFER_MS } from "../sequencer";
-import { useKeyCycle } from "../../utils/keyboard";
 
-interface GameContext {
-  i: number;
-  highScore: number;
-}
-
-export type GameEvent =
-  | { type: "sequenceComplete" }
-  | { type: "start" }
-  | { type: "input"; value: PadTone };
-
-export interface GuardType {
-  context: GameContext;
-  event: GameEvent;
-}
-
-export const useGameController = () => {
-  const stateMachine = useMemo(() => setupStateMachine(), []);
-  const [state, send] = useMachine(stateMachine);
-  const padController = usePadController({ send });
-  return {
-    padController,
-    gameState: {
-      startSequence: useCallback(() => send({ type: "start" }), [send]),
-      highScore: state.context.highScore,
-      state,
-    },
-  };
-};
-
-const usePadController = ({ send }: { send: (event: GameEvent) => void }) => {
-  const [activePad, setActivePad] = useState<PadTone | undefined>();
-  const onPadDown = useCallback(
-    (note: PadTone) => {
-      send({ type: "input", value: note });
-    },
-    [send]
-  );
-  const onPadUp = useCallback(() => setActivePad(undefined), []);
-  // when the sequencer plays a note, it is a "pad down", so set a timeout and
-  // give it a "pad up"
-  useEffect(() => {
-    sequencer.setOnPlayNote((padTone: PadTone | undefined) => {
-      setActivePad(padTone);
-      setTimeout(onPadUp, 150);
-    });
-  }, [onPadUp]);
-  useKeyCycle({
-    downHandler: (key: string) => {
-      const tone = keyToPadTone(key);
-      tone && onPadDown(tone);
-    },
-    upHandler: onPadUp,
-  });
-  return { activePad, onPadDown, onPadUp };
-};
-
-const setupStateMachine = () => {
+export const setupStateMachine = () => {
   return setup({
     types: {
       context: {} as GameContext,
@@ -81,10 +23,10 @@ const setupStateMachine = () => {
         context.i = 0;
       },
       playNote: ({ event }) => {
-        event.type === "input" && sequencer.playNote(event.value);
+        event.type === "padDown" && sequencer.playNote(event.value);
       },
-      input: ({ context, event }) => {
-        event.type === "input" && sequencer.playNote(event.value);
+      padDown: ({ context, event }) => {
+        event.type === "padDown" && sequencer.playNote(event.value);
         context.i++;
         if (context.i > context.highScore) {
           context.highScore = context.i;
@@ -95,9 +37,9 @@ const setupStateMachine = () => {
       playSequence: fromPromise(async () => await sequencer.playSequence()),
     },
     guards: {
-      correct: ({ context, event }: GuardType) => {
+      correct: ({ context, event }) => {
         if (
-          event.type === "input" &&
+          event.type === "padDown" &&
           event.value === sequencer.valueAt(context.i)
         ) {
           return true;
@@ -121,7 +63,7 @@ const setupStateMachine = () => {
           start: {
             target: "playing",
           },
-          input: {
+          padDown: {
             actions: {
               type: "playNote",
             },
@@ -163,11 +105,11 @@ const setupStateMachine = () => {
             states: {
               idle: {
                 on: {
-                  input: [
+                  padDown: [
                     {
                       target: "checkComplete",
                       actions: {
-                        type: "input",
+                        type: "padDown",
                       },
                       guard: {
                         type: "correct",
