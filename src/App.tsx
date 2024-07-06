@@ -2,17 +2,16 @@ import { Gamepad } from "./components/Gamepad";
 import { useGameController } from "./services/game-machine/game-machine";
 
 function App() {
-  const { activePad, onPadDown, onPadUp, startSequence, highScore, state } =
-    useGameController();
+  const { padController, gameState } = useGameController();
   return (
     <div>
-      <Gamepad activePad={activePad} onPadDown={onPadDown} onPadUp={onPadUp} />
-      <button onClick={startSequence}>start</button>
-      <h1>High Score: {highScore}</h1>
+      <Gamepad {...padController} />
+      <button onClick={gameState.startSequence}>start</button>
+      <h1>High Score: {gameState.highScore}</h1>
       <div>
-        <h1>State: {JSON.stringify(state.value, null, 2)}</h1>
+        <h1>State: {JSON.stringify(gameState.state.value, null, 2)}</h1>
         <pre>
-          <code>{JSON.stringify(state, null, 2)}</code>
+          <code>{JSON.stringify(gameState.state, null, 2)}</code>
         </pre>
       </div>
     </div>

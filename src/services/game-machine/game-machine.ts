@@ -25,12 +25,12 @@ export const useGameController = () => {
   const [state, send] = useMachine(stateMachine);
   const padController = usePadController({ send });
   return {
-    activePad: padController.activePad,
-    onPadDown: padController.onPadDown,
-    onPadUp: padController.onPadUp,
-    startSequence: useCallback(() => send({ type: "start" }), [send]),
-    highScore: state.context.highScore,
-    state,
+    padController,
+    gameState: {
+      startSequence: useCallback(() => send({ type: "start" }), [send]),
+      highScore: state.context.highScore,
+      state,
+    },
   };
 };
 
