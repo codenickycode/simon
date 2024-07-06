@@ -44,22 +44,22 @@ class Sequencer {
     this.sequence.events = [];
   }
 
-  private sequencerComplete: Promise<void> = Promise.resolve(undefined);
-  private sequencerCompleteResolver: PromiseResolver = noOp;
+  private sequenceComplete: Promise<void> = Promise.resolve(undefined);
+  private sequenceCompleteResolver: PromiseResolver = noOp;
 
   async playSequence() {
-    this.sequencerComplete = new Promise<void>(
-      (res) => (this.sequencerCompleteResolver = res)
+    this.sequenceComplete = new Promise<void>(
+      (res) => (this.sequenceCompleteResolver = res)
     );
     this.transport.position = 0;
     const sequenceDuration = this.sequence.events.length * NOTE_DURATION_S;
     // Schedule the end of the sequence
     this.transport.schedule(() => {
-      this.sequencerCompleteResolver();
+      this.sequenceCompleteResolver();
     }, sequenceDuration + TIMING_BUFFER_S);
     this.sequence.start();
     this.transport.start();
-    await this.sequencerComplete;
+    await this.sequenceComplete;
   }
 
   playNote(tone: PadTone) {
