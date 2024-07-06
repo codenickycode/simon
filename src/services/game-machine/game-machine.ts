@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { setup, raise, fromPromise } from "xstate";
 import { useMachine } from "@xstate/react";
-import { keyToPadTone, PADS, PadTone } from "../types/pad";
-import { sequencer } from "./sequencer";
+import { keyToPadTone, PADS, PadTone } from "../../types/pad";
+import { sequencer } from "../sequencer";
 
 interface GameContext {
   i: number;
