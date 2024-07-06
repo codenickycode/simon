@@ -1,5 +1,8 @@
-import { setup, raise } from "xstate";
+import { useMemo } from "react";
+import { setup, raise, fromPromise } from "xstate";
+import { useMachine } from "@xstate/react";
 import { PADS, PadTone } from "../types/pad";
+import { Sequencer } from "./sequencer";
 
 interface GameContext {
   i: number;
@@ -17,141 +20,156 @@ export interface GuardType {
   event: GameEvent;
 }
 
-export const machine = setup({
-  types: {
-    context: {} as GameContext,
-    events: {} as GameEvent,
-  },
-  actions: {
-    // we have to declare this type once and then the rest of the actions are typed 🤷
-    addToSequence: ({ context }: { context: GameContext }) => {
-      const tones = Object.values(PADS).map((p) => p.tone);
-      const index = Math.floor(Math.random() * 4);
-      context.sequence.push(tones[index]);
+export const useGameMachine = (sequencer: Sequencer) => {
+  const machine = useMemo(() => setupMachine(sequencer), [sequencer]);
+  return useMachine(machine);
+};
+
+const setupMachine = (sequencer: Sequencer) => {
+  return setup({
+    types: {
+      context: {} as GameContext,
+      events: {} as GameEvent,
     },
-    checkSequence: ({ context }) => {
-      if (context.i === context.sequence.length) {
-        return raise({ type: "sequenceComplete" });
-      }
-    },
-    checkHighScore: ({ context }) => {
-      // the user failed to enter the last value
-      const userScore = context.sequence.length - 1;
-      if (userScore > context.highScore) {
-        context.highScore = userScore;
-      }
-    },
-    resetSequence: ({ context }) => {
-      context.sequence = [];
-    },
-    resetI: ({ context }) => {
-      context.i = 0;
-    },
-    incrementI: ({ context }) => {
-      context.i++;
-    },
-  },
-  actors: {
-    // @ts-expect-error not sure what it expects here
-    playSequence: () =>
-      new Promise((res) => {
-        // todo: play sequence
-        console.log("playing sequence");
-        res(undefined);
-      }),
-  },
-  guards: {
-    correct: ({ context, event }: GuardType) => {
-      if (
-        event.type === "input" &&
-        event.value === context.sequence[context.i]
-      ) {
-        return true;
-      }
-      return false;
-    },
-  },
-}).createMachine({
-  context: {
-    i: 0,
-    sequence: [],
-    highScore: 0,
-  },
-  id: "game",
-  initial: "idle",
-  states: {
-    idle: {
-      on: {
-        start: {
-          target: "playing",
-        },
+    actions: {
+      // we have to declare this type once and then the rest of the actions are typed 🤷
+      addToSequence: ({ context }: { context: GameContext }) => {
+        const tones = Object.values(PADS).map((p) => p.tone);
+        const index = Math.floor(Math.random() * 4);
+        const padTone = tones[index];
+        // TODO: Do we need both context and tone sequence?
+        context.sequence.push(padTone);
+        sequencer.addNoteToSequence(padTone);
       },
-      description: "Display high score",
+      checkHighScore: ({ context }) => {
+        // the user failed to enter the last value
+        const userScore = context.sequence.length - 1;
+        if (userScore > context.highScore) {
+          context.highScore = userScore;
+        }
+      },
+      resetSequence: ({ context }) => {
+        // TODO: Do we need both context and tone sequence?
+        context.sequence = [];
+        sequencer.resetSequence();
+      },
+      resetI: ({ context }) => {
+        context.i = 0;
+      },
+      incrementI: ({ context }) => {
+        context.i++;
+        if (context.i === context.sequence.length) {
+          raise({ type: "sequenceComplete" });
+        }
+      },
     },
-    playing: {
-      initial: "computerTurn",
-      states: {
-        computerTurn: {
-          entry: {
-            type: "addToSequence",
-          },
-          invoke: {
-            id: "sequencer",
-            input: {},
-            onDone: {
-              target: "playing.userTurn",
-            },
-            src: "playSequence",
+    actors: {
+      playSequence: fromPromise(async () => await sequencer.playSequence()),
+    },
+    guards: {
+      correct: ({ context, event }: GuardType) => {
+        if (
+          event.type === "input" &&
+          event.value === context.sequence[context.i]
+        ) {
+          return true;
+        }
+        return false;
+      },
+      checkComplete: ({ context }) => {
+        return context.i === context.sequence.length;
+      },
+    },
+  }).createMachine({
+    context: {
+      i: 0,
+      sequence: [],
+      highScore: 0,
+    },
+    id: "game",
+    initial: "idle",
+    states: {
+      idle: {
+        on: {
+          start: {
+            target: "playing",
           },
         },
-        userTurn: {
-          initial: "idle",
-          on: {
-            sequenceComplete: {
-              target: "playing.computerTurn",
+        description: "Display high score",
+      },
+      playing: {
+        initial: "computerTurn",
+        states: {
+          computerTurn: {
+            entry: {
+              type: "addToSequence",
+            },
+            invoke: {
+              id: "sequencer",
+              input: {},
+              onDone: {
+                target: "userTurn",
+              },
+              src: "playSequence",
             },
           },
-          exit: {
-            type: "resetI",
-          },
-          states: {
-            idle: {
-              on: {
-                input: [
+          userTurn: {
+            initial: "idle",
+            on: {
+              sequenceComplete: {
+                target: "computerTurn",
+              },
+            },
+            exit: {
+              type: "resetI",
+            },
+            states: {
+              idle: {
+                on: {
+                  input: [
+                    {
+                      target: "checkComplete",
+                      actions: {
+                        type: "incrementI",
+                      },
+                      guard: {
+                        type: "correct",
+                      },
+                    },
+                    {
+                      target: "#game.gameover",
+                    },
+                  ],
+                },
+              },
+              checkComplete: {
+                always: [
                   {
-                    target: "playing.userTurn.idle",
-                    actions: {
-                      type: "incrementI",
-                    },
-                    guard: {
-                      type: "correct",
-                    },
+                    target: "#game.playing.computerTurn",
+                    guard: "checkComplete",
                   },
                   {
-                    target: "#game.gameover",
+                    target: "idle",
                   },
                 ],
               },
-              entry: {
-                type: "checkSequence",
-              },
             },
           },
         },
       },
-    },
-    gameover: {
-      after: {
-        "5000": {
-          target: "#game.idle",
+      gameover: {
+        after: {
+          "2000": {
+            target: "#game.idle",
+          },
+        },
+        entry: {
+          type: "checkHighScore",
+        },
+        exit: {
+          type: "resetSequence",
         },
       },
-      entry: {
-        type: "checkHighScore",
-      },
-      exit: {
-        type: "resetSequence",
-      },
     },
-  },
-});
+  });
+};

@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
-import "./App.css";
 import { Gamepad } from "./components/Gamepad";
-import { initSeq, isSequenceStarted, playTone, start } from "./services/tone";
+import { Sequencer } from "./services/sequencer";
 import { PadTone, keyToPadTone } from "./types/pad";
+import { useGameMachine } from "./services/game-machine";
+
+const sequencer = new Sequencer();
 
 function App() {
+  const [state, send] = useGameMachine(sequencer);
   const [activePad, setActivePad] = useState<PadTone | undefined>();
   useEffect(() => {
-    initSeq((padTone: PadTone | undefined) => {
+    sequencer.setOnDraw((padTone: PadTone | undefined) => {
       setActivePad(padTone);
       setTimeout(() => setActivePad(undefined), 150);
     });
@@ -30,17 +33,28 @@ function App() {
     };
   }, [activePad]);
   useEffect(() => {
-    if (isSequenceStarted()) {
+    if (sequencer.isStarted()) {
       return;
     }
     if (activePad) {
-      playTone(activePad);
+      sequencer.playTone(activePad);
     }
   }, [activePad]);
   return (
     <div>
-      <Gamepad activePad={activePad} setActivePad={setActivePad} />
-      <button onClick={start}>start</button>
+      <Gamepad
+        activePad={activePad}
+        setActivePad={setActivePad}
+        onInput={(padTone: PadTone) => send({ type: "input", value: padTone })}
+      />
+      <button onClick={() => send({ type: "start" })}>start</button>
+      <h1>High Score: {state.context.highScore}</h1>
+      <div>
+        <h1>State: {JSON.stringify(state.value, null, 2)}</h1>
+        <pre>
+          <code>{JSON.stringify(state, null, 2)}</code>
+        </pre>
+      </div>
     </div>
   );
 }

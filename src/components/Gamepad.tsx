@@ -4,6 +4,7 @@ import { Pad } from "./Pad";
 interface GamepadProps {
   activePad: PadTone | undefined;
   setActivePad: (pad: PadTone | undefined) => void;
+  onInput: (padTone: PadTone) => void;
 }
 
 export const Gamepad = (props: GamepadProps) => {
@@ -13,13 +14,21 @@ export const Gamepad = (props: GamepadProps) => {
         <Pad
           color="green"
           active={props.activePad === PADS.green.tone}
-          onPointerDown={() => props.setActivePad(PADS.green.tone)}
+          onPointerDown={() => {
+            // todo: prob dont need to do both
+            props.setActivePad(PADS.green.tone);
+            props.onInput(PADS.green.tone);
+          }}
           onPointerUp={() => props.setActivePad(undefined)}
         />
         <Pad
           color="red"
           active={props.activePad === PADS.red.tone}
-          onPointerDown={() => props.setActivePad(PADS.red.tone)}
+          onPointerDown={() => {
+            // todo: prob dont need to do both
+            props.setActivePad(PADS.red.tone);
+            props.onInput(PADS.red.tone);
+          }}
           onPointerUp={() => props.setActivePad(undefined)}
         />
       </div>
@@ -27,13 +36,21 @@ export const Gamepad = (props: GamepadProps) => {
         <Pad
           color="yellow"
           active={props.activePad === PADS.yellow.tone}
-          onPointerDown={() => props.setActivePad(PADS.yellow.tone)}
+          onPointerDown={() => {
+            // todo: prob dont need to do both
+            props.setActivePad(PADS.yellow.tone);
+            props.onInput(PADS.yellow.tone);
+          }}
           onPointerUp={() => props.setActivePad(undefined)}
         />
         <Pad
           color="blue"
           active={props.activePad === PADS.blue.tone}
-          onPointerDown={() => props.setActivePad(PADS.blue.tone)}
+          onPointerDown={() => {
+            // todo: prob dont need to do both
+            props.setActivePad(PADS.blue.tone);
+            props.onInput(PADS.blue.tone);
+          }}
           onPointerUp={() => props.setActivePad(undefined)}
         />
       </div>
