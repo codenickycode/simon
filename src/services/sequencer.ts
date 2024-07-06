@@ -1,12 +1,8 @@
 import * as Tone from "tone";
 import { PadTone } from "../types/pad";
-import { noOp } from "../utils/noOp";
 
 const NOTE_DURATION_S = 0.3;
 export const TIMING_BUFFER_MS = 500;
-const TIMING_BUFFER_S = TIMING_BUFFER_MS / 1000;
-
-type PromiseResolver = (value: void | PromiseLike<void>) => void;
 
 class Sequencer {
   private transport = Tone.getTransport();
@@ -44,22 +40,19 @@ class Sequencer {
     this.sequence.events = [];
   }
 
-  private sequenceComplete: Promise<void> = Promise.resolve(undefined);
-  private sequenceCompleteResolver: PromiseResolver = noOp;
-
+  private sequenceCompleteId = 0;
+  /** plays the sequence and resolves when complete */
   async playSequence() {
-    this.sequenceComplete = new Promise<void>(
-      (res) => (this.sequenceCompleteResolver = res)
-    );
-    this.transport.position = 0;
-    const sequenceDuration = this.sequence.events.length * NOTE_DURATION_S;
-    // Schedule the end of the sequence
-    this.transport.schedule(() => {
-      this.sequenceCompleteResolver();
-    }, sequenceDuration + TIMING_BUFFER_S);
-    this.sequence.start();
-    this.transport.start();
-    await this.sequenceComplete;
+    return new Promise((res) => {
+      this.transport.clear(this.sequenceCompleteId);
+      this.transport.position = 0;
+      const sequenceDuration = this.sequence.events.length * NOTE_DURATION_S;
+      this.sequenceCompleteId = this.transport.schedule(() => {
+        res(undefined);
+      }, sequenceDuration);
+      this.sequence.start();
+      this.transport.start();
+    });
   }
 
   playNote(tone: PadTone) {
