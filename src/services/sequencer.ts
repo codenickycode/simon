@@ -55,7 +55,6 @@ class Sequencer {
     const sequenceDuration = this.sequence.events.length * NOTE_DURATION_S;
     // Schedule the end of the sequence
     this.transport.schedule(() => {
-      this.transport.stop();
       this.sequencerCompleteResolver();
     }, sequenceDuration + TIMING_BUFFER_S);
     this.sequence.start();
