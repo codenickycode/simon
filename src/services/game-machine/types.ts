@@ -8,4 +8,4 @@ export interface GameContext {
 export type GameEvent =
   | { type: "sequenceComplete" }
   | { type: "start" }
-  | { type: "padDown"; value: PadTone };
+  | { type: "input"; value: PadTone };

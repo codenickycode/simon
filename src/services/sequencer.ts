@@ -59,7 +59,7 @@ class Sequencer {
     }, sequenceDuration + TIMING_BUFFER_S);
     this.sequence.start();
     this.transport.start();
-    return await this.sequencerComplete;
+    await this.sequencerComplete;
   }
 
   isStarted() {

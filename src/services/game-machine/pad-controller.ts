@@ -12,7 +12,8 @@ export const usePadController = ({
   const [activePad, setActivePad] = useState<PadTone | undefined>();
   const onPadDown = useCallback(
     (note: PadTone) => {
-      send({ type: "padDown", value: note });
+      sequencer.playNote(note);
+      send({ type: "input", value: note });
     },
     [send]
   );

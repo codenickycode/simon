@@ -22,11 +22,7 @@ export const setupStateMachine = () => {
       resetI: ({ context }) => {
         context.i = 0;
       },
-      playNote: ({ event }) => {
-        event.type === "padDown" && sequencer.playNote(event.value);
-      },
-      padDown: ({ context, event }) => {
-        event.type === "padDown" && sequencer.playNote(event.value);
+      input: ({ context }) => {
         context.i++;
         if (context.i > context.highScore) {
           context.highScore = context.i;
@@ -38,13 +34,9 @@ export const setupStateMachine = () => {
     },
     guards: {
       correct: ({ context, event }) => {
-        if (
-          event.type === "padDown" &&
-          event.value === sequencer.valueAt(context.i)
-        ) {
-          return true;
-        }
-        return false;
+        return (
+          event.type === "input" && event.value === sequencer.valueAt(context.i)
+        );
       },
       checkComplete: ({ context }) => {
         return context.i === sequencer.length();
@@ -62,11 +54,6 @@ export const setupStateMachine = () => {
         on: {
           start: {
             target: "playing",
-          },
-          padDown: {
-            actions: {
-              type: "playNote",
-            },
           },
         },
         description: "Display high score",
@@ -105,11 +92,11 @@ export const setupStateMachine = () => {
             states: {
               idle: {
                 on: {
-                  padDown: [
+                  input: [
                     {
                       target: "checkComplete",
                       actions: {
-                        type: "padDown",
+                        type: "input",
                       },
                       guard: {
                         type: "correct",
