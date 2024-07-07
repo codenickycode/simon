@@ -1,5 +1,5 @@
 name = "simon"
-main = "src/worker.js"
+main = "dist/index.js"
 compatibility_date = "2024-07-07"
 workers_dev = true
 [[kv_namespaces]]

@@ -1,18 +1,19 @@
 import highScoreHandler from './high-score';
+import { Env } from './types';
 
 export default {
-	async fetch(request, env) {
+	async fetch(request: Request, env: Env) {
 		return await handleRequest(request, env);
 	},
 };
 
-async function handleRequest(request, env) {
-	const headers = {
+async function handleRequest(request: Request, env: Env) {
+	const headers = new Headers({
 		'Access-Control-Allow-Origin': '*', // Replace * with your domain in production
 		'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
 		'Access-Control-Allow-Headers': 'Content-Type',
 		'Content-Type': 'application/json',
-	};
+	});
 	if (request.method === 'OPTIONS') {
 		return new Response(null, { headers });
 	}

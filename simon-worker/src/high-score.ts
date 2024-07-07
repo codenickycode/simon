@@ -1,4 +1,6 @@
-export default async function highScoreHandler(request, env, headers) {
+import { Env, HighScore } from './types';
+
+export default async function highScoreHandler(request: Request, env: Env, headers: Headers) {
 	switch (request.method) {
 		case 'GET':
 			return await getHighScore(env, headers);
@@ -9,14 +11,14 @@ export default async function highScoreHandler(request, env, headers) {
 	}
 }
 
-async function getHighScore(env, headers) {
+async function getHighScore(env: Env, headers: Headers) {
 	const highScore = await getCurrentHighScore(env);
 	return new Response(JSON.stringify(highScore), { headers });
 }
 
-async function updateHighScore(request, env, headers) {
+async function updateHighScore(request: Request, env: Env, headers: Headers) {
 	try {
-		const { score, name } = await request.json();
+		const { score, name } = await request.json<{ score: unknown; name: unknown }>();
 		if (typeof score !== 'number' || typeof name !== 'string') {
 			throw new Error('Invalid score or name');
 		}
@@ -33,10 +35,10 @@ async function updateHighScore(request, env, headers) {
 	}
 }
 
-async function getCurrentHighScore(env) {
-	let highScore = await env.db.get('highScore', 'json');
-	if (!highScore) {
-		highScore = { score: 0, name: 'Anonymous' };
+async function getCurrentHighScore(env: Env): Promise<HighScore> {
+	const currentHighScore = await env.db.get<HighScore>('highScore', 'json');
+	if (!currentHighScore) {
+		return { score: 0, name: 'Anonymous' };
 	}
-	return highScore;
+	return currentHighScore;
 }
