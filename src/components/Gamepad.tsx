@@ -3,7 +3,8 @@ import { Pad } from "./Pad";
 
 interface GamepadProps {
   activePad: PadTone | undefined;
-  setActivePad: (pad: PadTone | undefined) => void;
+  onPadDown: (padTone: PadTone) => void;
+  isComputerTurn: boolean;
 }
 
 export const Gamepad = (props: GamepadProps) => {
@@ -13,28 +14,28 @@ export const Gamepad = (props: GamepadProps) => {
         <Pad
           color="green"
           active={props.activePad === PADS.green.tone}
-          onPointerDown={() => props.setActivePad(PADS.green.tone)}
-          onPointerUp={() => props.setActivePad(undefined)}
+          onPointerDown={() => props.onPadDown(PADS.green.tone)}
+          disabled={props.isComputerTurn}
         />
         <Pad
           color="red"
           active={props.activePad === PADS.red.tone}
-          onPointerDown={() => props.setActivePad(PADS.red.tone)}
-          onPointerUp={() => props.setActivePad(undefined)}
+          onPointerDown={() => props.onPadDown(PADS.red.tone)}
+          disabled={props.isComputerTurn}
         />
       </div>
       <div className="flex flex-row">
         <Pad
           color="yellow"
           active={props.activePad === PADS.yellow.tone}
-          onPointerDown={() => props.setActivePad(PADS.yellow.tone)}
-          onPointerUp={() => props.setActivePad(undefined)}
+          onPointerDown={() => props.onPadDown(PADS.yellow.tone)}
+          disabled={props.isComputerTurn}
         />
         <Pad
           color="blue"
           active={props.activePad === PADS.blue.tone}
-          onPointerDown={() => props.setActivePad(PADS.blue.tone)}
-          onPointerUp={() => props.setActivePad(undefined)}
+          onPointerDown={() => props.onPadDown(PADS.blue.tone)}
+          disabled={props.isComputerTurn}
         />
       </div>
       {/* center circle */}

@@ -1,46 +1,20 @@
-import { useEffect, useState } from "react";
-import "./App.css";
 import { Gamepad } from "./components/Gamepad";
-import { initSeq, isSequenceStarted, playTone, start } from "./services/tone";
-import { PadTone, keyToPadTone } from "./types/pad";
+import { useGameController } from "./services/game-machine";
 
 function App() {
-  const [activePad, setActivePad] = useState<PadTone | undefined>();
-  useEffect(() => {
-    initSeq((padTone: PadTone | undefined) => {
-      setActivePad(padTone);
-      setTimeout(() => setActivePad(undefined), 150);
-    });
-  }, []);
-  useEffect(() => {
-    const handleKeyDown = (event: { key: string }) => {
-      const tone = keyToPadTone(event.key);
-      if (!activePad) {
-        setActivePad(tone);
-      }
-    };
-    const handleKeyUp = () => {
-      setActivePad(undefined);
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, [activePad]);
-  useEffect(() => {
-    if (isSequenceStarted()) {
-      return;
-    }
-    if (activePad) {
-      playTone(activePad);
-    }
-  }, [activePad]);
+  const { padController, gameState } = useGameController();
   return (
     <div>
-      <Gamepad activePad={activePad} setActivePad={setActivePad} />
-      <button onClick={start}>start</button>
+      <Gamepad {...padController} isComputerTurn={gameState.isComputerTurn} />
+      <button onClick={gameState.startSequence}>start</button>
+      <h1>High Score: {gameState.highScore}</h1>
+      <div>
+        <h1>DISABLED: {JSON.stringify(gameState.isComputerTurn)}</h1>
+        <h1>State: {JSON.stringify(gameState.state.value, null, 2)}</h1>
+        <pre>
+          <code>{JSON.stringify(gameState.state, null, 2)}</code>
+        </pre>
+      </div>
     </div>
   );
 }
