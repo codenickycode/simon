@@ -1,0 +1,7 @@
+name = "simon"
+main = "src/worker.js"
+compatibility_date = "2024-07-07"
+workers_dev = true
+[[kv_namespaces]]
+binding = "db"
+id = "420d2dc5d82e4ce197d82de18946be4b"
