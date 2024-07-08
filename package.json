@@ -4,13 +4,10 @@
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
-  "workspaces": [
-    "simon-client",
-    "simon-worker"
-  ],
   "scripts": {
-    "client": "pnpm --filter simon-client",
-    "worker": "pnpm --filter simon-worker"
+    "client": "pnpm --filter client",
+    "worker": "pnpm --filter worker",
+    "clean": "rm -rf node_modules pnpm-lock.yaml client/node_modules worker/node_module && pnpm i"
   },
   "keywords": [],
   "author": "",
