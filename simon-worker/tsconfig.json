@@ -13,7 +13,11 @@
 		/* Linting */
 		"strict": true,
 		"noUnusedLocals": true,
-		"noUnusedParameters": true
+		"noUnusedParameters": true,
+
+		"paths": {
+			"@shared/*": ["../simon-shared/*"]
+		}
 	},
 	"include": ["src", "vite.config.ts"]
 }

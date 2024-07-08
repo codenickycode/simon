@@ -1,4 +1,5 @@
-import { Env, HighScore } from './types';
+import { Env } from './types';
+import { HighScore } from '@shared/interfaces';
 
 export default async function highScoreHandler(request: Request, env: Env, headers: Headers) {
 	switch (request.method) {
