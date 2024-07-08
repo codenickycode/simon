@@ -5,12 +5,12 @@
   "description": "",
   "main": "index.js",
   "workspaces": [
-    "simon-client",
-    "simon-worker"
+    "client",
+    "worker"
   ],
   "scripts": {
-    "client": "pnpm --filter simon-client",
-    "worker": "pnpm --filter simon-worker"
+    "client": "pnpm --filter client",
+    "worker": "pnpm --filter worker"
   },
   "keywords": [],
   "author": "",

@@ -1,5 +1,6 @@
 import highScoreHandler from './high-score';
 import { Env } from './types';
+import { PATH_HIGH_SCORE } from '../../shared/url';
 
 export default {
 	async fetch(request: Request, env: Env) {
@@ -19,7 +20,7 @@ async function handleRequest(request: Request, env: Env) {
 	}
 	const pathname = new URL(request.url).pathname;
 	switch (pathname) {
-		case '/high-score':
+		case PATH_HIGH_SCORE:
 			return highScoreHandler(request, env, headers);
 		default:
 			return new Response('Not Found', { status: 404, headers });

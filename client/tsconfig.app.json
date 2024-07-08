@@ -21,11 +21,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-
-    "paths": {
-      "@shared/*": ["../simon-shared/*"]
-    }
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["src"]
 }

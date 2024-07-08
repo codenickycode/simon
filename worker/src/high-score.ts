@@ -1,5 +1,5 @@
 import { Env } from './types';
-import { HighScore } from '@shared/interfaces';
+import { HighScore } from '../../shared/interfaces';
 
 export default async function highScoreHandler(request: Request, env: Env, headers: Headers) {
 	switch (request.method) {
@@ -20,6 +20,7 @@ async function getHighScore(env: Env, headers: Headers) {
 async function updateHighScore(request: Request, env: Env, headers: Headers) {
 	try {
 		const { score, name } = await request.json<{ score: unknown; name: unknown }>();
+		console.log({ score, name });
 		if (typeof score !== 'number' || typeof name !== 'string') {
 			throw new Error('Invalid score or name');
 		}
@@ -32,6 +33,7 @@ async function updateHighScore(request: Request, env: Env, headers: Headers) {
 			return new Response(JSON.stringify({ success: false, currentHighScore }), { headers });
 		}
 	} catch (error) {
+		console.log(error);
 		return new Response(JSON.stringify({ error: 'Invalid request body' }), { status: 400, headers });
 	}
 }
