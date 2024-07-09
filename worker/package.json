@@ -9,6 +9,9 @@
 		"dev": "pnpm run build && wrangler dev",
 		"start": "wrangler dev"
 	},
+	"dependencies": {
+		"@simon/shared": "workspace:*"
+	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20240620.0",
 		"typescript": "^5.5.2",

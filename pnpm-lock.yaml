@@ -10,6 +10,9 @@ importers:
 
   client:
     dependencies:
+      '@simon/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@xstate/react':
         specifier: ^4.1.1
         version: 4.1.1(@types/react@18.3.3)(react@18.3.1)(xstate@5.14.0)
@@ -69,7 +72,17 @@ importers:
         specifier: ^5.3.2
         version: 5.3.3
 
+  shared:
+    devDependencies:
+      typescript:
+        specifier: ^5.5.2
+        version: 5.5.3
+
   worker:
+    dependencies:
+      '@simon/shared':
+        specifier: workspace:*
+        version: link:../shared
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20240620.0
