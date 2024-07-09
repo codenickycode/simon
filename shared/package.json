@@ -5,10 +5,7 @@
   "main": "index.ts",
   "types": "types.ts",
   "scripts": {
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "typescript": "^5.5.2"
   }
 }
