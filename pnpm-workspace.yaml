@@ -2,3 +2,4 @@ packages:
   - "client"
   - "shared"
   - "worker"
+shared-workspace-lockfile: true

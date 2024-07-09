@@ -7,9 +7,13 @@
   "scripts": {
     "client": "pnpm --filter client",
     "worker": "pnpm --filter worker",
-    "clean": "rm -rf node_modules pnpm-lock.yaml client/node_modules worker/node_module && pnpm i"
+    "clean": "rm -rf node_modules pnpm-lock.yaml client/node_modules worker/node_module && pnpm i",
+    "typecheck": "pnpm -r exec tsc --noEmit"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.5.3"
+  }
 }
