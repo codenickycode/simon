@@ -1,23 +1,9 @@
 {
+	"extends": "../tsconfig.json",
 	"compilerOptions": {
-		"target": "ES2020",
-		"module": "ESNext",
-		"lib": ["ES2020"],
 		"types": ["@cloudflare/workers-types"],
-		"skipLibCheck": true,
-
-		/* Bundler mode */
-		"moduleResolution": "bundler",
-		"noEmit": true,
-
-		/* Linting */
-		"strict": true,
 		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-
-		"paths": {
-			"@simon/shared": ["../shared"]
-		}
+		"noUnusedParameters": true
 	},
 	"include": ["src", "vite.config.ts"]
 }
