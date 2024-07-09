@@ -1,4 +1,5 @@
-import { Env, HighScore } from './types';
+import { HighScoreEntry } from '@simon/shared';
+import { Env } from './types';
 
 export default async function highScoreHandler(request: Request, env: Env, headers: Headers) {
 	switch (request.method) {
@@ -35,8 +36,8 @@ async function updateHighScore(request: Request, env: Env, headers: Headers) {
 	}
 }
 
-async function getCurrentHighScore(env: Env): Promise<HighScore> {
-	const currentHighScore = await env.db.get<HighScore>('highScore', 'json');
+async function getCurrentHighScore(env: Env): Promise<HighScoreEntry> {
+	const currentHighScore = await env.db.get<HighScoreEntry>('highScore', 'json');
 	if (!currentHighScore) {
 		return { score: 0, name: 'Anonymous' };
 	}
