@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@simon/shared": "workspace:*",
+    "@tanstack/react-query": "^5.50.1",
     "@xstate/react": "^4.1.1",
     "classnames": "^2.5.1",
     "react": "^18.3.1",
