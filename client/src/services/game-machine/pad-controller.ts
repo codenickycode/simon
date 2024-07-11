@@ -1,21 +1,20 @@
 import { useCallback, useEffect, useState } from "react";
 import { keyToPadTone, PadTone } from "../../types/pad";
 import { sequencer } from "../sequencer";
-import { GameEvent } from "./types";
 
 export const usePadController = ({
   isComputerTurn,
-  send,
+  input,
 }: {
   isComputerTurn: boolean;
-  send: (event: GameEvent) => void;
+  input: (pad: PadTone) => void;
 }) => {
   const onPadDown = useCallback(
-    (note: PadTone) => {
-      sequencer.playNote(note);
-      send({ type: "input", value: note });
+    (pad: PadTone) => {
+      sequencer.playNote(pad);
+      input(pad);
     },
-    [send]
+    [input]
   );
   const [activePad, setActivePad] = useState<PadTone | undefined>();
   useEffect(() => {

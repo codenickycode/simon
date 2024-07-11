@@ -1,5 +1,5 @@
 import * as Tone from "tone";
-import { PadTone } from "../types/pad";
+import { PADS, PadTone } from "../types/pad";
 
 const NOTE_DURATION_S = 0.3;
 export const TIMING_BUFFER_MS = 500;
@@ -30,8 +30,11 @@ class Sequencer {
     return sequence;
   }
 
-  addNoteToSequence(note: PadTone) {
-    this.sequence.events.push(note);
+  addRandomNoteToSequence() {
+    const tones = Object.values(PADS).map((p) => p.tone);
+    const index = Math.floor(Math.random() * 4);
+    const padTone = tones[index];
+    this.sequence.events.push(padTone);
   }
 
   resetSequence() {

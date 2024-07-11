@@ -10,13 +10,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div>
-        <Gamepad {...padController} isComputerTurn={gameState.isComputerTurn} />
-        <button onClick={gameState.startSequence}>start</button>
+        <Gamepad
+          {...padController}
+          isComputerTurn={gameState.state === "playing:computer"}
+        />
+        <button onClick={gameState.actions.start}>start</button>
         <div>
-          <h1>DISABLED: {JSON.stringify(gameState.isComputerTurn)}</h1>
-          <h1>State: {JSON.stringify(gameState.state.value, null, 2)}</h1>
           <pre>
-            <code>{JSON.stringify(gameState.state, null, 2)}</code>
+            <code>{JSON.stringify(gameState, null, 2)}</code>
           </pre>
         </div>
         <HighScore />

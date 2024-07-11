@@ -1,22 +1,14 @@
-import { useCallback, useMemo } from "react";
-import { useMachine } from "@xstate/react";
+import { useGameMachine } from "./game-machine";
 import { usePadController } from "./pad-controller";
-import { setupStateMachine } from "./state-machine";
 
 export const useGameController = () => {
-  const stateMachine = useMemo(() => setupStateMachine(), []);
-  const [state, send] = useMachine(stateMachine);
-  const isComputerTurn = ["_computerTurn", "computerTurn"].includes(
-    // @ts-expect-error it's a complex type
-    state.value?.playing
-  );
+  const gameState = useGameMachine();
+  const isComputerTurn = gameState.state === "playing:computer";
   return {
-    padController: usePadController({ isComputerTurn, send }),
-    gameState: {
-      startSequence: useCallback(() => send({ type: "start" }), [send]),
-      highScore: state.context.highScore,
+    padController: usePadController({
       isComputerTurn,
-      state,
-    },
+      input: gameState.actions.input,
+    }),
+    gameState,
   };
 };
