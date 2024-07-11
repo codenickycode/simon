@@ -12,7 +12,7 @@ function App() {
       <div>
         <Gamepad
           {...padController}
-          isComputerTurn={gameState.state === "playing:computer"}
+          isComputerTurn={gameState.state === "computerTurn"}
         />
         <button onClick={gameState.actions.start}>start</button>
         <div>
