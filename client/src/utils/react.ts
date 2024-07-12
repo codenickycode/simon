@@ -3,8 +3,9 @@ import { flushSync } from "react-dom";
 
 /**
  * ⚠️ WARNING: This is a hack and not recommended!
- * ☢️ Can lead to performance issues and race conditions.
- * Executes a set state call and return the next value.
+ * 💥 Can lead to performance issues and race conditions.
+ * 🤔 You should probably use `useReducer`!
+ * Executes a set state call and returns the next value.
  */
 export const hackyNextStateSync = <T>(
   setStateCb: React.Dispatch<SetStateAction<T>>,

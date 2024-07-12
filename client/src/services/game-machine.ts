@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { PadTone } from "../types/pad";
 import { sequencer } from "./sequencer";
 import { delay } from "../utils/delay";
-import { hackyNextStateSync } from "../utils/react";
 
 /** A generic buffer to prevent feedback from happening to quickly for user */
 const TIMING_BUFFER_MS = 500;
@@ -13,98 +12,107 @@ export type GameState = "idle" | "computerTurn" | "userTurn" | "gameOver";
 export type Transition = (to: GameState) => void;
 
 export const useGameMachine = () => {
-  const [gameState, setGameState] = useState<GameState>("idle");
-  const [seqIndex, setSeqIndex] = useState(0);
-  const actions = useActions({
-    gameState,
-    setGameState,
-    seqIndex,
-    setSeqIndex,
+  const [gameState, dispatch] = useReducer(reducer, {
+    state: "idle",
+    userSeqIndex: 0,
   });
-  useEntry({ gameState, transition: actions.transition });
+  /** Transition to the provided game state */
+  const transition = useCallback(
+    (state: GameState) => dispatch({ type: "transition", state }),
+    []
+  );
+  /** Start a new game */
+  const start = useCallback(() => dispatch({ type: "start" }), []);
+  /** User inputs a pad press */
+  const input = useCallback(
+    (pad: PadTone) => dispatch({ type: "input", pad }),
+    []
+  );
+  useEntry({ state: gameState.state, transition });
   return {
-    state: gameState,
-    actions,
+    state: gameState.state,
+    actions: {
+      start,
+      input,
+    },
   };
 };
 
+interface ReducerState {
+  state: GameState;
+  userSeqIndex: number;
+}
+
+type ReducerAction =
+  | {
+      type: "transition";
+      state: GameState;
+    }
+  | {
+      type: "start";
+    }
+  | {
+      type: "input";
+      pad: PadTone;
+    };
+
 /** Actions defined by the current state */
-const useActions = ({
-  gameState,
-  setGameState,
-  seqIndex,
-  setSeqIndex,
-}: {
-  gameState: GameState;
-  setGameState: (state: GameState) => void;
-  seqIndex: number;
-  setSeqIndex: React.Dispatch<React.SetStateAction<number>>;
-}) => {
-  /** Transition to the provided game state */
-  const transition: Transition = useCallback(
-    (to: GameState) => {
-      switch (to) {
+const reducer = (
+  currentState: ReducerState,
+  action: ReducerAction
+): ReducerState => {
+  switch (action.type) {
+    case "transition":
+      switch (action.state) {
         case "idle":
-          return setGameState("idle");
+          return { ...currentState, state: "idle" };
         case "computerTurn":
-          return setGameState("computerTurn");
+          return { ...currentState, state: "computerTurn" };
         case "userTurn":
-          setSeqIndex(0);
-          return setGameState("userTurn");
+          return { ...currentState, state: "userTurn", userSeqIndex: 0 };
         case "gameOver":
-          return setGameState("gameOver");
+          return { ...currentState, state: "gameOver" };
         default:
           throw new Error("invalid state for transition");
       }
-    },
-    [setGameState, setSeqIndex]
-  );
-
-  /** Start a new game */
-  const start = useCallback(() => {
-    switch (gameState) {
-      case "idle":
-        sequencer.resetSequence();
-        return transition("computerTurn");
-      default:
-        return;
-    }
-  }, [gameState, transition]);
-
-  /** User inputs a pad press */
-  const input = useCallback(
-    (pad: PadTone) => {
-      switch (gameState) {
-        case "userTurn": {
-          if (!gameLogic.checkInput(pad, seqIndex)) {
-            return transition("gameOver");
-          }
-          const newSeqIdx = hackyNextStateSync(setSeqIndex, (prev) => prev + 1);
-          if (gameLogic.isSequenceComplete(newSeqIdx)) {
-            transition("computerTurn");
-          }
-          return;
-        }
-        default:
-          return;
+    case "start":
+      if (currentState.state !== "idle") {
+        return currentState;
       }
-    },
-    [gameState, seqIndex, setSeqIndex, transition]
-  );
-
-  return { transition, start, input };
+      sequencer.resetSequence();
+      return { ...currentState, state: "computerTurn" };
+    case "input": {
+      if (currentState.state !== "userTurn") {
+        return currentState;
+      }
+      if (!gameLogic.checkInput(action.pad, currentState.userSeqIndex)) {
+        return { ...currentState, state: "gameOver" };
+      }
+      const newIdx = currentState.userSeqIndex + 1;
+      const state = gameLogic.isSequenceComplete(newIdx)
+        ? "computerTurn"
+        : currentState.state;
+      return {
+        ...currentState,
+        userSeqIndex: newIdx,
+        state,
+      };
+    }
+    default:
+      throw new Error("action not implemented");
+  }
 };
 
 /** "on entry" functions to execute once after state change */
 const useEntry = ({
-  gameState,
+  state,
   transition,
 }: {
-  gameState: GameState;
+  state: GameState;
   transition: Transition;
 }) => {
   useEffect(() => {
-    switch (gameState) {
+    switch (state) {
       case "computerTurn":
         sequencer.addRandomNoteToSequence();
         // play sequence after a short delay, then hand it off to the user
@@ -112,7 +120,6 @@ const useEntry = ({
           await sequencer.playSequence();
           transition("userTurn");
         });
-
         return;
       case "gameOver":
         // display game over screen for a time, then return to idle state
@@ -121,7 +128,7 @@ const useEntry = ({
       default:
         return;
     }
-  }, [gameState, transition]);
+  }, [state, transition]);
 };
 
 export const gameLogic = {
