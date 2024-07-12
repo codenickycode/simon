@@ -8,7 +8,7 @@ const queryClient = new QueryClient();
 
 function App() {
   const gameMachine = useGameMachine();
-  const isComputerTurn = gameMachine.state === "computerTurn";
+  const isComputerTurn = gameMachine.status === "computerTurn";
   const padController = usePadController({
     isComputerTurn,
     input: gameMachine.actions.input,
