@@ -2,7 +2,6 @@ import * as Tone from "tone";
 import { PADS, PadTone } from "../types/pad";
 
 const NOTE_DURATION_S = 0.3;
-export const TIMING_BUFFER_MS = 500;
 
 class Sequencer {
   private transport = Tone.getTransport();

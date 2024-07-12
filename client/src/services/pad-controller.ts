@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { keyToPadTone, PadTone } from "../../types/pad";
-import { sequencer } from "../sequencer";
+import { keyToPadTone, PadTone } from "../types/pad";
+import { sequencer } from "./sequencer";
 
 export const usePadController = ({
   isComputerTurn,
