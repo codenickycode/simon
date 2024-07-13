@@ -11,8 +11,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <div>
         <Gamepad
-          activePad={gameMachine.activePad}
-          onPadDown={gameMachine.actions.padDown}
+          activePads={gameMachine.activePads}
+          onPadDown={gameMachine.actions.userPadDown}
+          onPadUp={gameMachine.actions.userPadUp}
           isComputerTurn={gameMachine.isComputerTurn}
         />
         <button onClick={gameMachine.actions.startNewGame}>start</button>

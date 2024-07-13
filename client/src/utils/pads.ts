@@ -1,5 +1,10 @@
 import { pads } from "../components/Gamepad/schema";
-import { PadId, PadKey, PadTone } from "../components/Gamepad/types";
+import {
+  ActivePads,
+  PadId,
+  PadKey,
+  PadTone,
+} from "../components/Gamepad/types";
 
 export const padKeyToPadId = (key: string): PadId | undefined => {
   const [padId] = Object.entries(pads).find(([, pad]) => pad.key === key) || [];
@@ -19,4 +24,10 @@ export const padToneToPadId = (tone: PadTone): PadId | undefined => {
 export const padToneToPadKey = (tone: PadTone): PadKey | undefined => {
   const pad = Object.values(pads).find((pad) => pad.tone === tone);
   return pad?.key;
+};
+
+export const isPadActive = (padId: PadId, activePads: ActivePads) => {
+  return !!Object.entries(activePads).find(
+    ([id, active]) => id === padId && active
+  );
 };

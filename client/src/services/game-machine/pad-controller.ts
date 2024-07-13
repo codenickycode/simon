@@ -1,23 +1,50 @@
-import { useEffect, useState } from "react";
-import { PadId } from "../../components/Gamepad/types";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ActivePads, PadId } from "../../components/Gamepad/types";
 import { getSequencer } from "../sequencer";
 import { padKeyToPadId } from "../../utils/pads";
+import { pads } from "../../components/Gamepad/schema";
+
+const INIT_PADS_ACTIVE: ActivePads = Object.fromEntries(
+  Object.keys(pads).map((padId) => [padId, false as boolean | undefined])
+);
 
 export const usePadController = ({
-  onPadDown,
+  onUserPadDown,
+  arePadsDisabled,
 }: {
-  onPadDown: (padId: PadId) => void;
+  onUserPadDown: (padId: PadId) => void;
+  arePadsDisabled: boolean;
 }) => {
-  const [activePad, setActivePad] = useState<PadId | undefined>();
+  const [computerPadsActive, setComputerPadsActive] =
+    useState(INIT_PADS_ACTIVE);
+  const [userPadsActive, setUserPadsActive] = useState(INIT_PADS_ACTIVE);
+
   useEffect(() => {
     getSequencer().setOnPlayPadTone((padId: PadId | undefined) => {
-      setActivePad(padId);
-      // TODO: This should be note duration in ms
-      // when the sequencer plays a note, it is a "pad down", so set a timeout and
-      // give it a "pad up"
-      setTimeout(() => setActivePad(undefined), 150);
+      if (!padId) {
+        return;
+      }
+      setComputerPadsActive((prev) => ({ ...prev, [padId]: true }));
+      // after note duration, make it inactive
+      setTimeout(
+        () =>
+          setComputerPadsActive((prev) => ({ ...prev, [padId]: undefined })),
+        getSequencer().noteDurationMs / 2
+      );
     });
   }, []);
+
+  const userPadDown = useCallback(
+    (padId: PadId) => {
+      if (arePadsDisabled) {
+        return;
+      }
+      setUserPadsActive((prev) => ({ ...prev, [padId]: true }));
+      onUserPadDown(padId);
+    },
+    [arePadsDisabled, onUserPadDown]
+  );
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.repeat) {
@@ -25,12 +52,45 @@ export const usePadController = ({
         return;
       }
       const padId = padKeyToPadId(event.key);
-      padId && onPadDown(padId);
+      if (!padId) {
+        return;
+      }
+      userPadDown(padId);
     };
     window.addEventListener("keydown", onKeyDown);
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [onPadDown]);
-  return { activePad };
+  }, [userPadDown]);
+
+  const userPadUp = useCallback((padId: PadId) => {
+    setUserPadsActive((prev) => ({ ...prev, [padId]: false }));
+  }, []);
+
+  useEffect(() => {
+    const onKeyUp = (event: KeyboardEvent) => {
+      const padId = padKeyToPadId(event.key);
+      if (!padId) {
+        return;
+      }
+      userPadUp(padId);
+    };
+    window.addEventListener("keyup", onKeyUp);
+    return () => {
+      window.removeEventListener("keyup", onKeyUp);
+    };
+  }, [userPadUp]);
+
+  // pads are active if either the user or computer have them active
+  const activePads = useMemo<ActivePads>(
+    () =>
+      Object.fromEntries(
+        Object.keys(pads).map((padId) => {
+          return [padId, computerPadsActive[padId] || userPadsActive[padId]];
+        })
+      ),
+    [computerPadsActive, userPadsActive]
+  );
+
+  return { activePads, userPadDown, userPadUp };
 };

@@ -8,3 +8,6 @@ export interface PadConfig {
   bgActiveColor: string;
   borderRadius: string;
 }
+
+// it's better for padId to be a string here for convenience
+export type ActivePads = Record<string, boolean | undefined>;

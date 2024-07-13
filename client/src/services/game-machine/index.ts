@@ -22,32 +22,36 @@ export const useGameMachine = () => {
     () => dispatch({ type: "startNewGame" }),
     []
   );
-  const padDown = useCallback(
+
+  const onUserPadDown = useCallback(
     (padId: PadId) => dispatch({ type: "padDown", padId }),
     []
   );
 
+  // *** Derived values ***
+  const isUserTurn = gameMachine.state === "userTurn";
+  const isComputerTurn = gameMachine.state === "computerTurn";
+  const isGameOver = gameMachine.state === "gameOver";
+  const userScore = gameMachine.userScore;
+
   // *** Components ***
-  const { activePad } = usePadController({
-    onPadDown: padDown,
+  const padController = usePadController({
+    onUserPadDown,
+    arePadsDisabled: !isUserTurn,
   });
 
   // *** State Hooks ***
   useOnEntry({ state: gameMachine.state, transition });
 
-  // *** Derived values ***
-  const isComputerTurn = gameMachine.state === "computerTurn";
-  const isGameOver = gameMachine.state === "gameOver";
-  const userScore = gameMachine.userScore;
-
   return {
     isComputerTurn,
     isGameOver,
     userScore,
-    activePad,
+    activePads: padController.activePads,
     actions: {
       startNewGame,
-      padDown,
+      userPadDown: padController.userPadDown,
+      userPadUp: padController.userPadUp,
     },
   };
 };
