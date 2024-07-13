@@ -1,4 +1,4 @@
-import { PadTone } from "../../types/pad";
+import { PadTone } from "../../components/Gamepad/types";
 
 export type GameState = "newGame" | "computerTurn" | "userTurn" | "gameOver";
 

@@ -2,7 +2,7 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useHighScoreApi } from "../services/api.high-score";
 import { Modal } from "./ui/Modal";
 import { Spinner } from "./ui/Spinner";
-import { ANIMATION_DURATION } from "../const";
+import { ANIMATION_DURATION } from "../config";
 
 export interface HighScoreProps {
   isGameOver: boolean;

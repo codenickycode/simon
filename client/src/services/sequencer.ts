@@ -1,6 +1,7 @@
 import * as Tone from "tone";
-import { PADS, PadTone } from "../types/pad";
+import { PadTone } from "../components/Gamepad/types";
 import { singleton } from "../utils/singleton";
+import { pads } from "../components/Gamepad/schema";
 
 const NOTE_DURATION_S = 0.3;
 
@@ -31,7 +32,7 @@ class Sequencer {
   }
 
   addRandomNoteToSequence() {
-    const tones = Object.values(PADS).map((p) => p.tone);
+    const tones = Object.values(pads).map((p) => p.tone);
     const index = Math.floor(Math.random() * 4);
     const padTone = tones[index];
     this.sequence.events.push(padTone);

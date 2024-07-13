@@ -1,5 +1,5 @@
 import { useCallback, useReducer } from "react";
-import { PadTone } from "../../types/pad";
+import { PadTone } from "../../components/Gamepad/types";
 import { GameState } from "./types";
 import { gameMachineReducer } from "./reducer";
 import { useOnEntry } from "./hooks";
