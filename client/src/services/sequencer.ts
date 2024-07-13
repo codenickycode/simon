@@ -4,7 +4,7 @@ import { singleton } from "../utils/singleton";
 import { pads } from "../components/Gamepad/schema";
 import { padToneToPadId } from "../utils/pads";
 
-const NOTE_DURATION_S = 0.3;
+const INIT_NOTE_DURATION_S = 0.3;
 
 class Sequencer {
   private transport = Tone.getTransport();
@@ -13,6 +13,10 @@ class Sequencer {
   private sequence = this.initSequence();
   length = () => this.sequence.events.length;
   valueAt = (index: number) => this.sequence.events[index];
+
+  // todo: allow tempo changes
+  noteDurationS = INIT_NOTE_DURATION_S;
+  noteDurationMs = INIT_NOTE_DURATION_S * 1000;
 
   private onPlayPadTone: (padId: PadId | undefined) => void = () => {
     throw new Error("onPlayPadTone has not been initialized");
@@ -23,7 +27,7 @@ class Sequencer {
 
   private initSequence() {
     const sequence = new Tone.Sequence((time, tone) => {
-      this.synth.triggerAttackRelease(tone, NOTE_DURATION_S, time);
+      this.synth.triggerAttackRelease(tone, this.noteDurationS, time);
       Tone.getDraw().schedule(() => {
         const padId = padToneToPadId(tone);
         this.onPlayPadTone(padId);
@@ -56,7 +60,7 @@ class Sequencer {
     return new Promise((res) => {
       this.transport.clear(this.sequenceCompleteId);
       this.transport.position = 0;
-      const sequenceDuration = this.sequence.events.length * NOTE_DURATION_S;
+      const sequenceDuration = this.sequence.events.length * this.noteDurationS;
       this.sequenceCompleteId = this.transport.schedule(() => {
         this.transport.stop();
         res(undefined);
@@ -69,10 +73,9 @@ class Sequencer {
   playPadTone(padId: PadId) {
     this.synth.triggerAttackRelease(
       pads[padId].tone,
-      NOTE_DURATION_S,
+      this.noteDurationS,
       Tone.getContext().currentTime // play immediately
     );
-    this.onPlayPadTone(padId);
   }
 }
 
