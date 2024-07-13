@@ -27,7 +27,6 @@ export const useGameMachine = () => {
   const isGameOver = gameState.status === "gameOver";
   const userScore = gameState.userScore;
 
-  console.log({ userScore });
   return {
     isComputerTurn,
     isGameOver,

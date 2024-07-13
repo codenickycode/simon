@@ -1,10 +1,11 @@
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useHighScoreApi } from "../services/api.high-score";
-import { Modal } from "./Modal";
-import { Spinner } from "./Spinner";
+import { Modal } from "./ui/Modal";
+import { Spinner } from "./ui/Spinner";
 import { ANIMATION_DURATION } from "../const";
 
 export interface HighScoreProps {
+  isGameOver: boolean;
   userScore: number;
 }
 
@@ -20,10 +21,23 @@ export const HighScore = (props: HighScoreProps) => {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    if (query.data && query.data.score < props.userScore) {
+    if (
+      props.isGameOver && // 🙂
+      query.data && // 😅
+      query.data.score < props.userScore && // 😰
+      !isModalOpen && // 🥵
+      mutation.isIdle // 😭
+    ) {
       openModal();
     }
-  }, [openModal, props.userScore, query.data]);
+  }, [
+    isModalOpen,
+    mutation.isIdle,
+    openModal,
+    props.isGameOver,
+    props.userScore,
+    query.data,
+  ]);
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

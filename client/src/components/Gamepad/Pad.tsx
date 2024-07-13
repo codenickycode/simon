@@ -1,5 +1,5 @@
 import classnames from "classnames";
-import { PADS, PadColor } from "../types/pad";
+import { PADS, PadColor } from "../../types/pad";
 
 const bgColor: { [key in PadColor]: string } = {
   green: "bg-green-600",
