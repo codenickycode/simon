@@ -1,6 +1,25 @@
 import { pads } from "../components/Gamepad/schema";
 import { PadKey, PadTone } from "../components/Gamepad/types";
-import { padKeyToPadTone, padToneToPadKey } from "./pads";
+import {
+  padKeyToPadId,
+  padKeyToPadTone,
+  padToneToPadId,
+  padToneToPadKey,
+} from "./pads";
+
+describe("padKeyToPadId", () => {
+  test.each(Object.entries(pads))(
+    "finds the pad id for the %s pad via key",
+    (padId, pad) => {
+      const result = padKeyToPadId(pad.key);
+      expect(result).toEqual(padId);
+    }
+  );
+  test("returns undefined if it does not find the id", () => {
+    const result = padKeyToPadId("foo");
+    expect(result).toBeUndefined();
+  });
+});
 
 describe("padKeyToPadTone", () => {
   test.each(Object.entries(pads))(
@@ -15,6 +34,21 @@ describe("padKeyToPadTone", () => {
     expect(result).toBeUndefined();
   });
 });
+
+describe("padToneToPadId", () => {
+  test.each(Object.entries(pads))(
+    "finds the pad id for the %s pad via tone",
+    (padId, pad) => {
+      const result = padToneToPadId(pad.tone);
+      expect(result).toEqual(padId);
+    }
+  );
+  test("returns undefined if it does not find the id", () => {
+    const result = padToneToPadId("foo" as PadTone);
+    expect(result).toBeUndefined();
+  });
+});
+
 describe("padToneToPadKey", () => {
   test.each(Object.entries(pads))(
     "finds the pad key for the %s pad via tone",

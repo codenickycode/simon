@@ -6,6 +6,7 @@ export const gameMachineReducer = (
   currentMachineState: GameMachineState,
   action: GameMachineAction
 ): GameMachineState => {
+  console.log(action);
   if (!actionGuard(currentMachineState, action)) {
     return currentMachineState;
   }
@@ -19,8 +20,10 @@ export const gameMachineReducer = (
       return { ...NEW_GAME_STATE, state: "computerTurn" };
     }
     case "padDown": {
-      getSequencer().playNote(action.pad);
-      if (!gameLogic.checkInput(action.pad, currentMachineState.userSeqIndex)) {
+      getSequencer().playPadTone(action.padId);
+      if (
+        !gameLogic.checkInput(action.padId, currentMachineState.userSeqIndex)
+      ) {
         return { ...currentMachineState, state: "gameOver" };
       }
       const nextIdx = currentMachineState.userSeqIndex + 1;

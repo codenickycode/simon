@@ -1,4 +1,4 @@
-import { PadTone } from "../../components/Gamepad/types";
+import { PadId } from "../../components/Gamepad/types";
 
 export type GameState = "newGame" | "computerTurn" | "userTurn" | "gameOver";
 
@@ -21,9 +21,9 @@ export type GameMachineAction =
     }
   | {
       type: "padDown";
-      pad: PadTone;
+      padId: PadId;
     }
   | {
       type: "padUp";
-      pad: PadTone;
+      padId: PadId;
     };

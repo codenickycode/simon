@@ -11,7 +11,7 @@
     "clean": "rm -rf node_modules pnpm-lock.yaml client/node_modules worker/node_module && pnpm i",
     "lint": "pnpm -r exec eslint .",
     "test": "pnpm -r test",
-    "typecheck": "pnpm -r exec tsc --noEmit"
+    "typecheck": "pnpm -r typecheck"
   },
   "keywords": [],
   "author": "",

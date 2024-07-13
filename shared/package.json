@@ -7,6 +7,6 @@
   "scripts": {
     "lint": "eslint .",
     "test": "echo 'test script not implemented for shared package'",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "pnpm exec tsc --build"
   }
 }

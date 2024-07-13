@@ -1,5 +1,5 @@
 import { useCallback, useReducer } from "react";
-import { PadTone } from "../../components/Gamepad/types";
+import { PadId } from "../../components/Gamepad/types";
 import { GameState } from "./types";
 import { gameMachineReducer } from "./reducer";
 import { useOnEntry } from "./hooks";
@@ -23,7 +23,7 @@ export const useGameMachine = () => {
     []
   );
   const padDown = useCallback(
-    (pad: PadTone) => dispatch({ type: "padDown", pad }),
+    (padId: PadId) => dispatch({ type: "padDown", padId }),
     []
   );
 
