@@ -13,7 +13,8 @@ export interface GameMachineState {
 export type GameMachineAction =
   | {
       type: "transition";
-      state: GameState;
+      to: GameState;
+      nextMachineState?: GameMachineState;
     }
   | {
       type: "start";
