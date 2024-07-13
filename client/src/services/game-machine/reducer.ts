@@ -1,10 +1,10 @@
 import { actions } from "./actions";
-import { GameStateAction, GameStateReducer } from "./types";
+import { GameMachineAction, GameMachineState } from "./types";
 
 export const gameStateReducer = (
-  currentState: GameStateReducer,
-  action: GameStateAction
-): GameStateReducer => {
+  currentState: GameMachineState,
+  action: GameMachineAction
+): GameMachineState => {
   switch (action.type) {
     case "transition":
       return actions.transition({ currentState, to: action.status });

@@ -4,12 +4,12 @@ export type GameStatus = "idle" | "computerTurn" | "userTurn" | "gameOver";
 
 export type Transition = (to: GameStatus) => void;
 
-export interface GameStateReducer {
+export interface GameMachineState {
   status: GameStatus;
   userSeqIndex: number;
 }
 
-export type GameStateAction =
+export type GameMachineAction =
   | {
       type: "transition";
       status: GameStatus;

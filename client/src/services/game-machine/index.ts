@@ -1,10 +1,10 @@
 import { useCallback, useReducer } from "react";
 import { PadTone } from "../../types/pad";
-import { GameStatus, GameStateReducer } from "./types";
+import { GameStatus, GameMachineState } from "./types";
 import { gameStateReducer } from "./reducer";
 import { useOnEntry } from "./hooks";
 
-const INITIAL_STATE: GameStateReducer = {
+const INITIAL_STATE: GameMachineState = {
   status: "idle",
   userSeqIndex: 0,
 };

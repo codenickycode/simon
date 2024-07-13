@@ -1,16 +1,16 @@
 import { PadTone } from "../../types/pad";
 import { getSequencer } from "../sequencer";
 import { gameLogic } from "./logic";
-import { GameStatus, GameStateReducer } from "./types";
+import { GameStatus, GameMachineState } from "./types";
 
 /** Transitions game to next status */
 const transition = ({
   currentState,
   to,
 }: {
-  currentState: GameStateReducer;
+  currentState: GameMachineState;
   to: GameStatus;
-}): GameStateReducer => {
+}): GameMachineState => {
   switch (to) {
     case "idle":
       return { ...currentState, status: "idle" };
@@ -29,8 +29,8 @@ const transition = ({
 const start = ({
   currentState,
 }: {
-  currentState: GameStateReducer;
-}): GameStateReducer => {
+  currentState: GameMachineState;
+}): GameMachineState => {
   if (currentState.status !== "idle") {
     return currentState;
   }
@@ -44,9 +44,9 @@ const input = ({
   currentState,
   pad,
 }: {
-  currentState: GameStateReducer;
+  currentState: GameMachineState;
   pad: PadTone;
-}): GameStateReducer => {
+}): GameMachineState => {
   if (currentState.status !== "userTurn") {
     return currentState;
   }
