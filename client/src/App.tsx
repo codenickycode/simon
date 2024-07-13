@@ -8,22 +8,24 @@ const queryClient = new QueryClient();
 
 function App() {
   const gameMachine = useGameMachine();
-  const isComputerTurn = gameMachine.status === "computerTurn";
   const padController = usePadController({
-    isComputerTurn,
+    isComputerTurn: gameMachine.isComputerTurn,
     input: gameMachine.actions.input,
   });
   return (
     <QueryClientProvider client={queryClient}>
       <div>
-        <Gamepad {...padController} isComputerTurn={isComputerTurn} />
+        <Gamepad
+          {...padController}
+          isComputerTurn={gameMachine.isComputerTurn}
+        />
         <button onClick={gameMachine.actions.start}>start</button>
         <div>
           <pre>
             <code>{JSON.stringify(gameMachine, null, 2)}</code>
           </pre>
         </div>
-        <HighScore />
+        <HighScore userScore={gameMachine.userScore} />
       </div>
     </QueryClientProvider>
   );

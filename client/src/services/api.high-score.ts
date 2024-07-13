@@ -10,12 +10,16 @@ const highScoreUrl = `${workerUrl}${WORKER_PATH_HIGH_SCORE}`;
 
 const HIGH_SCORE_QUERY_KEY = "highScore";
 
-export function useHighScoreApi() {
+export function useHighScoreApi({
+  onMutationSuccess,
+}: {
+  onMutationSuccess: () => void;
+}) {
   const queryClient = useQueryClient();
 
-  const query = useQuery({
+  const query = useQuery<HighScoreEntry>({
     queryKey: [HIGH_SCORE_QUERY_KEY],
-    queryFn: () => {
+    queryFn: async () => {
       return fetch(highScoreUrl).then((res) => {
         if (!res.ok) {
           throw res;
@@ -26,7 +30,7 @@ export function useHighScoreApi() {
   });
 
   const mutation = useMutation({
-    mutationFn: (updateHighScore: HighScoreEntry) => {
+    mutationFn: async (updateHighScore: HighScoreEntry) => {
       return fetch(highScoreUrl, {
         method: "POST",
         body: JSON.stringify(updateHighScore),
@@ -39,6 +43,7 @@ export function useHighScoreApi() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [HIGH_SCORE_QUERY_KEY] });
+      onMutationSuccess();
     },
   });
 
