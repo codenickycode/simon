@@ -10,7 +10,7 @@
 		"lint": "eslint .",
 		"test": "echo 'test script not implemented for worker package'",
 		"start": "wrangler dev",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "pnpm exec tsc --build"
 	},
 	"dependencies": {
 		"@simon/shared": "workspace:*"

@@ -10,7 +10,7 @@ export const usePadController = ({
 }) => {
   const [activePad, setActivePad] = useState<PadId | undefined>();
   useEffect(() => {
-    getSequencer().setOnPlayNote((padId: PadId | undefined) => {
+    getSequencer().setOnPlayPadTone((padId: PadId | undefined) => {
       setActivePad(padId);
       // TODO: This should be note duration in ms
       // when the sequencer plays a note, it is a "pad down", so set a timeout and

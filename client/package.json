@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "test": "vitest",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "pnpm exec tsc --build"
   },
   "dependencies": {
     "@simon/shared": "workspace:*",

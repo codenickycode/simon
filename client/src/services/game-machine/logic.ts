@@ -1,4 +1,5 @@
-import { PadTone } from "../../components/Gamepad/types";
+import { pads } from "../../components/Gamepad/schema";
+import { PadId } from "../../components/Gamepad/types";
 import { delay } from "../../utils/delay";
 import { getSequencer } from "../sequencer";
 import { GameMachineState } from "./types";
@@ -13,8 +14,8 @@ export const NEW_GAME_STATE: GameMachineState = {
 };
 
 export const gameLogic = {
-  checkInput: (pad: PadTone, currentIndex: number): boolean => {
-    return pad === getSequencer().valueAt(currentIndex);
+  checkInput: (padId: PadId, currentIndex: number): boolean => {
+    return pads[padId].tone === getSequencer().valueAt(currentIndex);
   },
   isSequenceComplete: (currentIndex: number): boolean => {
     return currentIndex !== 0 && currentIndex === getSequencer().length();
