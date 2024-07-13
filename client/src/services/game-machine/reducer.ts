@@ -14,7 +14,7 @@ export const gameMachineReducer = (
       const nextMachineState = action.nextMachineState || currentMachineState;
       return { ...nextMachineState, state: action.to };
     }
-    case "start": {
+    case "startNewGame": {
       getSequencer().resetSequence();
       return { ...NEW_GAME_STATE, state: "computerTurn" };
     }
@@ -46,7 +46,7 @@ const actionGuard = (
   switch (action.type) {
     case "transition":
       return true;
-    case "start":
+    case "startNewGame":
       return ["newGame", "gameOver"].includes(currentMachineState.state);
     case "input":
       return currentMachineState.state === "userTurn";

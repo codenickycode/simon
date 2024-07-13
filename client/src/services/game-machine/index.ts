@@ -17,7 +17,10 @@ export const useGameMachine = () => {
     (to: GameState) => dispatch({ type: "transition", to }),
     []
   );
-  const start = useCallback(() => dispatch({ type: "start" }), []);
+  const startNewGame = useCallback(
+    () => dispatch({ type: "startNewGame" }),
+    []
+  );
   const input = useCallback(
     (pad: PadTone) => dispatch({ type: "input", pad }),
     []
@@ -36,7 +39,7 @@ export const useGameMachine = () => {
     isGameOver,
     userScore,
     actions: {
-      start,
+      startNewGame,
       input,
     },
   };

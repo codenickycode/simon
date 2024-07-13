@@ -17,7 +17,7 @@ export type GameMachineAction =
       nextMachineState?: GameMachineState;
     }
   | {
-      type: "start";
+      type: "startNewGame";
     }
   | {
       type: "input";

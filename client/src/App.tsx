@@ -19,7 +19,7 @@ function App() {
           {...padController}
           isComputerTurn={gameMachine.isComputerTurn}
         />
-        <button onClick={gameMachine.actions.start}>start</button>
+        <button onClick={gameMachine.actions.startNewGame}>start</button>
         <HighScore
           isGameOver={gameMachine.isGameOver}
           userScore={gameMachine.userScore}
