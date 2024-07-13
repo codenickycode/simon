@@ -11,8 +11,10 @@ const INIT_PADS_ACTIVE: ActivePads = Object.fromEntries(
 export const usePadController = ({
   onUserPadDown,
   arePadsDisabled,
+  onJumpStart,
 }: {
   onUserPadDown: (padId: PadId) => void;
+  onJumpStart: (padId: PadId) => void;
   arePadsDisabled: boolean;
 }) => {
   const [computerPadsActive, setComputerPadsActive] =
@@ -36,13 +38,14 @@ export const usePadController = ({
 
   const userPadDown = useCallback(
     (padId: PadId) => {
+      setUserPadsActive((prev) => ({ ...prev, [padId]: true }));
       if (arePadsDisabled) {
+        onJumpStart(padId);
         return;
       }
-      setUserPadsActive((prev) => ({ ...prev, [padId]: true }));
       onUserPadDown(padId);
     },
-    [arePadsDisabled, onUserPadDown]
+    [arePadsDisabled, onJumpStart, onUserPadDown]
   );
 
   useEffect(() => {

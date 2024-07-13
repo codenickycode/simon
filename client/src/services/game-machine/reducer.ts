@@ -19,7 +19,9 @@ export const gameMachineReducer = (
       getSequencer().resetSequence();
       return { ...NEW_GAME_STATE, state: "computerTurn" };
     }
-    case "padDown": {
+    case "jumpStartUserTurn":
+    case "input": {
+      getSequencer().stopSequence();
       getSequencer().playPadTone(action.padId);
       if (
         !gameLogic.checkInput(action.padId, currentMachineState.userSeqIndex)
@@ -35,7 +37,11 @@ export const gameMachineReducer = (
           userSeqIndex: 0,
         };
       }
-      return { ...currentMachineState, userSeqIndex: nextIdx };
+      return {
+        ...currentMachineState,
+        userSeqIndex: nextIdx,
+        state: "userTurn",
+      };
     }
     default:
       throw new Error("action not implemented");
@@ -52,10 +58,10 @@ const actionGuard = (
       return true;
     case "startNewGame":
       return ["newGame", "gameOver"].includes(currentMachineState.state);
-    case "padDown":
+    case "input":
       return currentMachineState.state === "userTurn";
-    case "padUp":
-      return true;
+    case "jumpStartUserTurn":
+      return currentMachineState.state === "computerTurn";
     default:
       throw new Error("action guard not implemented for action type");
   }

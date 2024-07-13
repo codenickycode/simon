@@ -24,20 +24,26 @@ export const useGameMachine = () => {
   );
 
   const onUserPadDown = useCallback(
-    (padId: PadId) => dispatch({ type: "padDown", padId }),
+    (padId: PadId) => dispatch({ type: "input", padId }),
     []
   );
 
+  /** When the user jump starts their round with an early input. */
+  const jumpStartUserTurn = useCallback((padId: PadId) => {
+    dispatch({ type: "jumpStartUserTurn", padId });
+  }, []);
+
   // *** Derived values ***
-  const isUserTurn = gameMachine.state === "userTurn";
   const isComputerTurn = gameMachine.state === "computerTurn";
   const isGameOver = gameMachine.state === "gameOver";
+  const isUserTurn = gameMachine.state === "userTurn";
   const userScore = gameMachine.userScore;
 
   // *** Components ***
   const padController = usePadController({
     onUserPadDown,
     arePadsDisabled: !isUserTurn,
+    onJumpStart: jumpStartUserTurn,
   });
 
   // *** State Hooks ***
@@ -46,6 +52,7 @@ export const useGameMachine = () => {
   return {
     isComputerTurn,
     isGameOver,
+    isUserTurn,
     userScore,
     activePads: padController.activePads,
     actions: {

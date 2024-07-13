@@ -6,6 +6,7 @@ export interface PadProps {
   padId: PadId;
   active: boolean;
   onPointerDown: () => void;
+  onDisabledPointerDown: () => void;
   onPointerUp: () => void;
   disabled: boolean;
 }
@@ -15,15 +16,20 @@ export const Pad = (props: PadProps) => {
   const bgClass = props.active ? bgActiveClass : pads[props.padId].bgColor;
   const borderRadiusClass = pads[props.padId].borderRadius;
   const key = pads[props.padId].key;
+
+  const handlePointerDown = () => {
+    if (props.disabled) {
+      props.onDisabledPointerDown();
+    } else {
+      props.onPointerDown();
+    }
+  };
+
   return (
     <button
-      onPointerDown={props.onPointerDown}
+      onPointerDown={handlePointerDown}
       onPointerUp={props.onPointerUp}
-      className={classnames(
-        "w-16 h-16 disabled:pointer-events-none",
-        bgClass,
-        borderRadiusClass
-      )}
+      className={classnames("w-16 h-16", bgClass, borderRadiusClass)}
       disabled={props.disabled}
     >
       {key}
