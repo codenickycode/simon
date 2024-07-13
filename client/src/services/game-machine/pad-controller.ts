@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { PadTone } from "../../components/Gamepad/types";
+import { PadId } from "../../components/Gamepad/types";
 import { getSequencer } from "../sequencer";
-import { padKeyToPadTone } from "../../utils/pads";
+import { padKeyToPadId } from "../../utils/pads";
 
 export const usePadController = ({
   onPadDown,
 }: {
-  onPadDown: (pad: PadTone) => void;
+  onPadDown: (padId: PadId) => void;
 }) => {
-  const [activePad, setActivePad] = useState<PadTone | undefined>();
+  const [activePad, setActivePad] = useState<PadId | undefined>();
   useEffect(() => {
-    getSequencer().setOnPlayNote((padTone: PadTone | undefined) => {
-      setActivePad(padTone);
+    getSequencer().setOnPlayNote((padId: PadId | undefined) => {
+      setActivePad(padId);
       // TODO: This should be note duration in ms
       // when the sequencer plays a note, it is a "pad down", so set a timeout and
       // give it a "pad up"
@@ -24,8 +24,8 @@ export const usePadController = ({
         event.preventDefault();
         return;
       }
-      const tone = padKeyToPadTone(event.key);
-      tone && onPadDown(tone);
+      const padId = padKeyToPadId(event.key);
+      padId && onPadDown(padId);
     };
     window.addEventListener("keydown", onKeyDown);
     return () => {

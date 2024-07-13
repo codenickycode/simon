@@ -1,7 +1,8 @@
 import * as Tone from "tone";
-import { PadTone } from "../components/Gamepad/types";
+import { PadId, PadTone } from "../components/Gamepad/types";
 import { singleton } from "../utils/singleton";
 import { pads } from "../components/Gamepad/schema";
+import { padToneToPadId } from "../utils/pads";
 
 const NOTE_DURATION_S = 0.3;
 
@@ -13,10 +14,10 @@ class Sequencer {
   length = () => this.sequence.events.length;
   valueAt = (index: number) => this.sequence.events[index];
 
-  private onPlayNote: (note: PadTone | undefined) => void = () => {
+  private onPlayNote: (padId: PadId | undefined) => void = () => {
     throw new Error("onPlayNote has not been initialized");
   };
-  setOnPlayNote(onPlayNote: (note: PadTone | undefined) => void) {
+  setOnPlayNote(onPlayNote: (padId: PadId | undefined) => void) {
     this.onPlayNote = onPlayNote;
   }
 
@@ -64,13 +65,14 @@ class Sequencer {
     });
   }
 
-  playNote(tone: PadTone) {
+  playNote(padTone: PadTone) {
     this.synth.triggerAttackRelease(
-      tone,
+      padTone,
       NOTE_DURATION_S,
       Tone.getContext().currentTime // play immediately
     );
-    this.onPlayNote(tone);
+    const padId = padToneToPadId(padTone);
+    this.onPlayNote(padId);
   }
 }
 
