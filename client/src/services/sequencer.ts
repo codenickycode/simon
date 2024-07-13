@@ -70,6 +70,10 @@ class Sequencer {
     });
   }
 
+  stopSequence() {
+    this.transport.stop();
+  }
+
   playPadTone(padId: PadId) {
     this.synth.triggerAttackRelease(
       pads[padId].tone,

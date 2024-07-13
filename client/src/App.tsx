@@ -15,6 +15,7 @@ function App() {
           onPadDown={gameMachine.actions.userPadDown}
           onPadUp={gameMachine.actions.userPadUp}
           isComputerTurn={gameMachine.isComputerTurn}
+          isUserTurn={gameMachine.isUserTurn}
         />
         <button onClick={gameMachine.actions.startNewGame}>start</button>
         <HighScore

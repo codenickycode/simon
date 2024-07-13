@@ -20,10 +20,10 @@ export type GameMachineAction =
       type: "startNewGame";
     }
   | {
-      type: "padDown";
+      type: "input";
       padId: PadId;
     }
   | {
-      type: "padUp";
+      type: "jumpStartUserTurn";
       padId: PadId;
     };

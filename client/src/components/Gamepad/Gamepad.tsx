@@ -7,6 +7,7 @@ interface GamepadProps {
   onPadDown: (padId: PadId) => void;
   onPadUp: (padId: PadId) => void;
   isComputerTurn: boolean;
+  isUserTurn: boolean;
 }
 
 export const Gamepad = (props: GamepadProps) => {
@@ -18,14 +19,16 @@ export const Gamepad = (props: GamepadProps) => {
           active={isPadActive("green", props.activePads)}
           onPointerDown={() => props.onPadDown("green")}
           onPointerUp={() => props.onPadUp("green")}
-          disabled={props.isComputerTurn}
+          disabled={!props.isUserTurn}
+          bypassDisabled={props.isComputerTurn}
         />
         <Pad
           padId="red"
           active={isPadActive("red", props.activePads)}
           onPointerDown={() => props.onPadDown("red")}
           onPointerUp={() => props.onPadUp("red")}
-          disabled={props.isComputerTurn}
+          disabled={!props.isUserTurn}
+          bypassDisabled={props.isComputerTurn}
         />
       </div>
       <div className="flex flex-row">
@@ -34,14 +37,16 @@ export const Gamepad = (props: GamepadProps) => {
           active={isPadActive("yellow", props.activePads)}
           onPointerDown={() => props.onPadDown("yellow")}
           onPointerUp={() => props.onPadUp("yellow")}
-          disabled={props.isComputerTurn}
+          disabled={!props.isUserTurn}
+          bypassDisabled={props.isComputerTurn}
         />
         <Pad
           padId="blue"
           active={isPadActive("blue", props.activePads)}
           onPointerDown={() => props.onPadDown("blue")}
           onPointerUp={() => props.onPadUp("blue")}
-          disabled={props.isComputerTurn}
+          disabled={!props.isUserTurn}
+          bypassDisabled={props.isComputerTurn}
         />
       </div>
       {/* center circle */}
