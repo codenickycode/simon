@@ -1,4 +1,4 @@
-import { PADS, PadTone } from "../types/pad";
+import { PADS, PadTone } from "../../types/pad";
 import { Pad } from "./Pad";
 
 interface GamepadProps {

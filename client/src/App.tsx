@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Gamepad } from "./components/Gamepad";
+import { Gamepad } from "./components/Gamepad/Gamepad";
 import { useGameMachine } from "./services/game-machine";
 import { HighScore } from "./components/HighScore";
 import { usePadController } from "./services/pad-controller";
@@ -8,22 +8,23 @@ const queryClient = new QueryClient();
 
 function App() {
   const gameMachine = useGameMachine();
-  const isComputerTurn = gameMachine.status === "computerTurn";
   const padController = usePadController({
-    isComputerTurn,
+    isComputerTurn: gameMachine.isComputerTurn,
     input: gameMachine.actions.input,
   });
   return (
     <QueryClientProvider client={queryClient}>
       <div>
-        <Gamepad {...padController} isComputerTurn={isComputerTurn} />
+        <Gamepad
+          {...padController}
+          isComputerTurn={gameMachine.isComputerTurn}
+        />
         <button onClick={gameMachine.actions.start}>start</button>
-        <div>
-          <pre>
-            <code>{JSON.stringify(gameMachine, null, 2)}</code>
-          </pre>
-        </div>
-        <HighScore />
+        <HighScore
+          isGameOver={gameMachine.isGameOver}
+          userScore={gameMachine.userScore}
+        />
+        {gameMachine.isGameOver && <h1>Game Over</h1>}
       </div>
     </QueryClientProvider>
   );

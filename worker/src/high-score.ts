@@ -1,4 +1,4 @@
-import { HighScoreEntry } from '@simon/shared';
+import { HighScoreEntry, UpdateHighScoreResponse } from '@simon/shared';
 import { Env } from './types';
 
 export default async function highScoreHandler(request: Request, env: Env, headers: Headers) {
@@ -27,12 +27,18 @@ async function updateHighScore(request: Request, env: Env, headers: Headers) {
 		if (score > currentHighScore.score) {
 			const newHighScore = { score, name: name.trim() || 'Anonymous' };
 			await env.db.put('highScore', JSON.stringify(newHighScore));
-			return new Response(JSON.stringify({ success: true, newHighScore }), { headers });
+			const response: UpdateHighScoreResponse = { success: true, newHighScore };
+			return new Response(JSON.stringify(response), { headers });
 		} else {
-			return new Response(JSON.stringify({ success: false, currentHighScore }), { headers });
+			const response: UpdateHighScoreResponse = {
+				success: false,
+				error: 'The score you submitted is not higher than the current high score',
+			};
+			return new Response(JSON.stringify(response), { headers });
 		}
 	} catch (error) {
-		return new Response(JSON.stringify({ error: 'Invalid request body' }), { status: 400, headers });
+		const response: UpdateHighScoreResponse = { success: false, error: 'Invalid request body' };
+		return new Response(JSON.stringify(response), { status: 400, headers });
 	}
 }
 
