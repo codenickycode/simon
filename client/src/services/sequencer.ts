@@ -1,5 +1,6 @@
 import * as Tone from "tone";
 import { PADS, PadTone } from "../types/pad";
+import { singleton } from "../utils/singleton";
 
 const NOTE_DURATION_S = 0.3;
 
@@ -72,4 +73,4 @@ class Sequencer {
   }
 }
 
-export const sequencer = new Sequencer();
+export const getSequencer = () => singleton("sequencer", () => new Sequencer());

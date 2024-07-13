@@ -1,5 +1,5 @@
 import { PadTone } from "../../types/pad";
-import { sequencer } from "../sequencer";
+import { getSequencer } from "../sequencer";
 import { gameLogic } from "./logic";
 import { GameStatus, GameStateReducer } from "./types";
 
@@ -34,7 +34,7 @@ const start = ({
   if (currentState.status !== "idle") {
     return currentState;
   }
-  sequencer.resetSequence();
+  getSequencer().resetSequence();
   return { ...currentState, status: "computerTurn" };
 };
 
