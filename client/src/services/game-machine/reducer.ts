@@ -18,7 +18,8 @@ export const gameMachineReducer = (
       getSequencer().resetSequence();
       return { ...NEW_GAME_STATE, state: "computerTurn" };
     }
-    case "input": {
+    case "padDown": {
+      getSequencer().playNote(action.pad);
       if (!gameLogic.checkInput(action.pad, currentMachineState.userSeqIndex)) {
         return { ...currentMachineState, state: "gameOver" };
       }
@@ -48,8 +49,10 @@ const actionGuard = (
       return true;
     case "startNewGame":
       return ["newGame", "gameOver"].includes(currentMachineState.state);
-    case "input":
+    case "padDown":
       return currentMachineState.state === "userTurn";
+    case "padUp":
+      return true;
     default:
       throw new Error("action guard not implemented for action type");
   }

@@ -4,6 +4,7 @@ import { GameState } from "./types";
 import { gameMachineReducer } from "./reducer";
 import { useOnEntry } from "./hooks";
 import { NEW_GAME_STATE } from "./logic";
+import { usePadController } from "./pad-controller";
 
 export const useGameMachine = () => {
   const [gameMachine, dispatch] = useReducer(
@@ -21,12 +22,17 @@ export const useGameMachine = () => {
     () => dispatch({ type: "startNewGame" }),
     []
   );
-  const input = useCallback(
-    (pad: PadTone) => dispatch({ type: "input", pad }),
+  const padDown = useCallback(
+    (pad: PadTone) => dispatch({ type: "padDown", pad }),
     []
   );
 
-  // *** Hooks ***
+  // *** Components ***
+  const { activePad } = usePadController({
+    onPadDown: padDown,
+  });
+
+  // *** State Hooks ***
   useOnEntry({ state: gameMachine.state, transition });
 
   // *** Derived values ***
@@ -38,9 +44,10 @@ export const useGameMachine = () => {
     isComputerTurn,
     isGameOver,
     userScore,
+    activePad,
     actions: {
       startNewGame,
-      input,
+      padDown,
     },
   };
 };
