@@ -1,4 +1,4 @@
-import { PadTone } from "../../types/pad";
+import { PadTone } from "../../components/Gamepad/types";
 import { delay } from "../../utils/delay";
 import { getSequencer } from "../sequencer";
 import { GameMachineState } from "./types";

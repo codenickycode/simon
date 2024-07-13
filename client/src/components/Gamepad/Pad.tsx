@@ -1,37 +1,19 @@
 import classnames from "classnames";
-import { PADS, PadColor } from "../../types/pad";
-
-const bgColor: { [key in PadColor]: string } = {
-  green: "bg-green-600",
-  red: "bg-red-600",
-  blue: "bg-blue-600",
-  yellow: "bg-yellow-600",
-};
-const bgActiveColor: { [key in PadColor]: string } = {
-  green: "bg-green-500",
-  red: "bg-red-500",
-  blue: "bg-blue-500",
-  yellow: "bg-yellow-500",
-};
-const borderRadius: { [key in PadColor]: string } = {
-  green: "rounded-tl-full",
-  red: "rounded-tr-full",
-  blue: "rounded-br-full",
-  yellow: "rounded-bl-full",
-};
+import { PadId } from "./types";
+import { pads } from "./schema";
 
 export interface PadProps {
-  color: PadColor;
+  padId: PadId;
   active: boolean;
   onPointerDown: () => void;
   disabled: boolean;
 }
 
 export const Pad = (props: PadProps) => {
-  const bgActiveClass = bgActiveColor[props.color];
-  const bgClass = props.active ? bgActiveClass : bgColor[props.color];
-  const borderRadiusClass = borderRadius[props.color];
-  const key = PADS[props.color].key;
+  const bgActiveClass = pads[props.padId].bgActiveColor;
+  const bgClass = props.active ? bgActiveClass : pads[props.padId].bgColor;
+  const borderRadiusClass = pads[props.padId].borderRadius;
+  const key = pads[props.padId].key;
   return (
     <button
       onPointerDown={props.onPointerDown}

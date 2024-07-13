@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { keyToPadTone, PadTone } from "../../types/pad";
+import { PadTone } from "../../components/Gamepad/types";
 import { getSequencer } from "../sequencer";
+import { padKeyToPadTone } from "../../utils/pads";
 
 export const usePadController = ({
   onPadDown,
@@ -23,7 +24,7 @@ export const usePadController = ({
         event.preventDefault();
         return;
       }
-      const tone = keyToPadTone(event.key);
+      const tone = padKeyToPadTone(event.key);
       tone && onPadDown(tone);
     };
     window.addEventListener("keydown", onKeyDown);
