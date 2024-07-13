@@ -24,10 +24,13 @@ export const useGameMachine = () => {
 
   // *** Derived values ***
   const isComputerTurn = gameState.status === "computerTurn";
+  const isGameOver = gameState.status === "gameOver";
   const userScore = gameState.userScore;
 
+  console.log({ userScore });
   return {
     isComputerTurn,
+    isGameOver,
     userScore,
     actions: {
       start,

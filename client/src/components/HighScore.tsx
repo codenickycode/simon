@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useHighScoreApi } from "../services/api.high-score";
 import { Modal } from "./Modal";
 import { Spinner } from "./Spinner";
@@ -9,7 +9,7 @@ export interface HighScoreProps {
 }
 
 export const HighScore = (props: HighScoreProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
 
@@ -19,13 +19,23 @@ export const HighScore = (props: HighScoreProps) => {
 
   const [userName, setUserName] = useState("");
 
+  useEffect(() => {
+    if (query.data && query.data.score < props.userScore) {
+      openModal();
+    }
+  }, [openModal, props.userScore, query.data]);
+
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     mutation.mutate({ name: userName, score: props.userScore });
   };
 
   if (!isModalOpen && !mutation.isIdle) {
-    setTimeout(() => mutation.reset(), ANIMATION_DURATION);
+    // reset everything after the modal closes
+    setTimeout(() => {
+      mutation.reset();
+      setUserName("");
+    }, ANIMATION_DURATION);
   }
 
   return (
@@ -37,13 +47,14 @@ export const HighScore = (props: HighScoreProps) => {
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <h2>🎉 Congrats! 🥳</h2>
-        <p>You have the new high score! Enter your name:</p>
+        <p>You have the new high score!</p>
         <form onSubmit={onSubmit}>
           <input
             autoFocus={isModalOpen}
             name="userName"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
+            placeholder="Enter your name"
             disabled={mutation.isPending}
           />
           <button type="submit" disabled={mutation.isPending}>

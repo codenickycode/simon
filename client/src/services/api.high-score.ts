@@ -41,9 +41,21 @@ export function useHighScoreApi({
         return res.json();
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [HIGH_SCORE_QUERY_KEY] });
-      onMutationSuccess();
+    onSettled: (
+      data:
+        | { success: true; newHighScore: HighScoreEntry }
+        | { success: false; currentHighScore: HighScoreEntry }
+        | undefined,
+      error
+    ) => {
+      if (data?.success) {
+        queryClient.invalidateQueries({ queryKey: [HIGH_SCORE_QUERY_KEY] });
+        onMutationSuccess();
+      } else if (data?.success === false) {
+        console.warn("couldnt update high score, maybe its not high enough");
+      } else if (error) {
+        console.error("Mutation failed:", error);
+      }
     },
   });
 

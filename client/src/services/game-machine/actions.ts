@@ -33,11 +33,14 @@ const start = ({
 }: {
   currentState: GameMachineState;
 }): GameMachineState => {
-  if (currentState.status !== "newGame") {
+  if (currentState.status !== "newGame" && currentState.status !== "gameOver") {
     return currentState;
   }
   getSequencer().resetSequence();
-  return { ...currentState, status: "computerTurn" };
+  return transition({
+    currentState: { ...NEW_GAME_STATE },
+    to: "computerTurn",
+  });
 };
 
 const input = ({
@@ -51,7 +54,7 @@ const input = ({
     return currentState;
   }
   if (!gameLogic.checkInput(pad, currentState.userSeqIndex)) {
-    return { ...currentState, status: "gameOver" };
+    return transition({ currentState, to: "gameOver" });
   }
   const newIdx = currentState.userSeqIndex + 1;
   const status = gameLogic.isSequenceComplete(newIdx)

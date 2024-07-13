@@ -20,12 +20,8 @@ function App() {
           isComputerTurn={gameMachine.isComputerTurn}
         />
         <button onClick={gameMachine.actions.start}>start</button>
-        <div>
-          <pre>
-            <code>{JSON.stringify(gameMachine, null, 2)}</code>
-          </pre>
-        </div>
         <HighScore userScore={gameMachine.userScore} />
+        {gameMachine.isGameOver && <h1>Game Over</h1>}
       </div>
     </QueryClientProvider>
   );
