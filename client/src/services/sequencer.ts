@@ -72,6 +72,7 @@ class Sequencer {
 
   stopSequence() {
     this.transport.stop();
+    this.transport.clear(this.sequenceCompleteId);
   }
 
   playPadTone(padId: PadId) {
