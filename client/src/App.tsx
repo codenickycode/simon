@@ -12,7 +12,7 @@ function App() {
       <div>
         <Gamepad
           activePad={gameMachine.activePad}
-          onPadDown={gameMachine.actions.onPadDown}
+          onPadDown={gameMachine.actions.padDown}
           isComputerTurn={gameMachine.isComputerTurn}
         />
         <button onClick={gameMachine.actions.startNewGame}>start</button>

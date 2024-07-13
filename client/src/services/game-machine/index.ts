@@ -22,14 +22,14 @@ export const useGameMachine = () => {
     () => dispatch({ type: "startNewGame" }),
     []
   );
-  const onPadDown = useCallback(
+  const padDown = useCallback(
     (pad: PadTone) => dispatch({ type: "padDown", pad }),
     []
   );
 
   // *** Components ***
   const { activePad } = usePadController({
-    onPadDown,
+    onPadDown: padDown,
   });
 
   // *** State Hooks ***
@@ -47,7 +47,7 @@ export const useGameMachine = () => {
     activePad,
     actions: {
       startNewGame,
-      onPadDown,
+      padDown,
     },
   };
 };
