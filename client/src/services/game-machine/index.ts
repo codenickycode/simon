@@ -11,14 +11,11 @@ const INITIAL_STATE: GameMachineState = {
 
 export const useGameMachine = () => {
   const [gameState, dispatch] = useReducer(gameStateReducer, INITIAL_STATE);
-  /** Transition to the provided game status */
   const transition = useCallback(
     (status: GameStatus) => dispatch({ type: "transition", status }),
     []
   );
-  /** Start a new game */
   const start = useCallback(() => dispatch({ type: "start" }), []);
-  /** User inputs a pad press */
   const input = useCallback(
     (pad: PadTone) => dispatch({ type: "input", pad }),
     []

@@ -3,7 +3,6 @@ import { getSequencer } from "../sequencer";
 import { gameLogic } from "./logic";
 import { GameStatus, GameMachineState } from "./types";
 
-/** Transitions game to next status */
 const transition = ({
   currentState,
   to,
@@ -25,7 +24,6 @@ const transition = ({
   }
 };
 
-/** Only valid in idle status. Resets sequence and starts first computer turn. */
 const start = ({
   currentState,
 }: {
@@ -38,8 +36,6 @@ const start = ({
   return { ...currentState, status: "computerTurn" };
 };
 
-/** Only valid in userTurn status. Checks if user's input is correct and
- * determines next status. */
 const input = ({
   currentState,
   pad,
