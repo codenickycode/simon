@@ -1,21 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
-import { keyToPadTone, PadTone } from "../types/pad";
-import { getSequencer } from "./sequencer";
+import { useEffect, useState } from "react";
+import { keyToPadTone, PadTone } from "../../types/pad";
+import { getSequencer } from "../sequencer";
 
 export const usePadController = ({
-  isComputerTurn,
-  input,
+  onPadDown,
 }: {
-  isComputerTurn: boolean;
-  input: (pad: PadTone) => void;
+  onPadDown: (pad: PadTone) => void;
 }) => {
-  const onPadDown = useCallback(
-    (pad: PadTone) => {
-      getSequencer().playNote(pad);
-      input(pad);
-    },
-    [input]
-  );
   const [activePad, setActivePad] = useState<PadTone | undefined>();
   useEffect(() => {
     getSequencer().setOnPlayNote((padTone: PadTone | undefined) => {
@@ -28,7 +19,7 @@ export const usePadController = ({
   }, []);
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.repeat || isComputerTurn) {
+      if (event.repeat) {
         event.preventDefault();
         return;
       }
@@ -39,6 +30,6 @@ export const usePadController = ({
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [isComputerTurn, onPadDown]);
-  return { activePad, onPadDown };
+  }, [onPadDown]);
+  return { activePad };
 };

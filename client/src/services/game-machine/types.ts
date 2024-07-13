@@ -20,6 +20,10 @@ export type GameMachineAction =
       type: "startNewGame";
     }
   | {
-      type: "input";
+      type: "padDown";
+      pad: PadTone;
+    }
+  | {
+      type: "padUp";
       pad: PadTone;
     };
