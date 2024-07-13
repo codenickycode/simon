@@ -1,6 +1,7 @@
 import {
   getWorkerUrl,
   HighScoreEntry,
+  UpdateHighScoreResponse,
   WORKER_PATH_HIGH_SCORE,
 } from "@simon/shared";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -41,13 +42,7 @@ export function useHighScoreApi({
         return res.json();
       });
     },
-    onSettled: (
-      data:
-        | { success: true; newHighScore: HighScoreEntry }
-        | { success: false; currentHighScore: HighScoreEntry }
-        | undefined,
-      error
-    ) => {
+    onSettled: (data: UpdateHighScoreResponse | undefined, error) => {
       if (data?.success) {
         queryClient.invalidateQueries({ queryKey: [HIGH_SCORE_QUERY_KEY] });
         onMutationSuccess();
