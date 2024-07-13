@@ -7,7 +7,7 @@ import { GameMachineState } from "./types";
 const TIMING_BUFFER_MS = 500;
 
 export const NEW_GAME_STATE: GameMachineState = {
-  status: "newGame",
+  state: "newGame",
   userSeqIndex: 0,
   userScore: 0,
 };
