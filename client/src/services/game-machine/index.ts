@@ -1,22 +1,31 @@
-import { useCallback, useMemo } from "react";
-import { useMachine } from "@xstate/react";
-import { usePadController } from "./pad-controller";
-import { setupStateMachine } from "./state-machine";
+import { useCallback, useReducer } from "react";
+import { PadTone } from "../../types/pad";
+import { GameStatus, GameMachineState } from "./types";
+import { gameStateReducer } from "./reducer";
+import { useOnEntry } from "./hooks";
 
-export const useGameController = () => {
-  const stateMachine = useMemo(() => setupStateMachine(), []);
-  const [state, send] = useMachine(stateMachine);
-  const isComputerTurn = ["_computerTurn", "computerTurn"].includes(
-    // @ts-expect-error it's a complex type
-    state.value?.playing
+const INITIAL_STATE: GameMachineState = {
+  status: "idle",
+  userSeqIndex: 0,
+};
+
+export const useGameMachine = () => {
+  const [gameState, dispatch] = useReducer(gameStateReducer, INITIAL_STATE);
+  const transition = useCallback(
+    (status: GameStatus) => dispatch({ type: "transition", status }),
+    []
   );
+  const start = useCallback(() => dispatch({ type: "start" }), []);
+  const input = useCallback(
+    (pad: PadTone) => dispatch({ type: "input", pad }),
+    []
+  );
+  useOnEntry({ status: gameState.status, transition });
   return {
-    padController: usePadController({ isComputerTurn, send }),
-    gameState: {
-      startSequence: useCallback(() => send({ type: "start" }), [send]),
-      highScore: state.context.highScore,
-      isComputerTurn,
-      state,
+    status: gameState.status,
+    actions: {
+      start,
+      input,
     },
   };
 };

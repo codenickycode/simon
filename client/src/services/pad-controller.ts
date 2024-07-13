@@ -1,25 +1,24 @@
 import { useCallback, useEffect, useState } from "react";
-import { keyToPadTone, PadTone } from "../../types/pad";
-import { sequencer } from "../sequencer";
-import { GameEvent } from "./types";
+import { keyToPadTone, PadTone } from "../types/pad";
+import { getSequencer } from "./sequencer";
 
 export const usePadController = ({
   isComputerTurn,
-  send,
+  input,
 }: {
   isComputerTurn: boolean;
-  send: (event: GameEvent) => void;
+  input: (pad: PadTone) => void;
 }) => {
   const onPadDown = useCallback(
-    (note: PadTone) => {
-      sequencer.playNote(note);
-      send({ type: "input", value: note });
+    (pad: PadTone) => {
+      getSequencer().playNote(pad);
+      input(pad);
     },
-    [send]
+    [input]
   );
   const [activePad, setActivePad] = useState<PadTone | undefined>();
   useEffect(() => {
-    sequencer.setOnPlayNote((padTone: PadTone | undefined) => {
+    getSequencer().setOnPlayNote((padTone: PadTone | undefined) => {
       setActivePad(padTone);
       // TODO: This should be note duration in ms
       // when the sequencer plays a note, it is a "pad down", so set a timeout and

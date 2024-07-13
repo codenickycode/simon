@@ -1,11 +1,23 @@
 import { PadTone } from "../../types/pad";
 
-export interface GameContext {
-  i: number;
-  highScore: number;
+export type GameStatus = "idle" | "computerTurn" | "userTurn" | "gameOver";
+
+export type Transition = (to: GameStatus) => void;
+
+export interface GameMachineState {
+  status: GameStatus;
+  userSeqIndex: number;
 }
 
-export type GameEvent =
-  | { type: "sequenceComplete" }
-  | { type: "start" }
-  | { type: "input"; value: PadTone };
+export type GameMachineAction =
+  | {
+      type: "transition";
+      status: GameStatus;
+    }
+  | {
+      type: "start";
+    }
+  | {
+      type: "input";
+      pad: PadTone;
+    };

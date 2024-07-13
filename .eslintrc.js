@@ -5,6 +5,7 @@ module.exports = {
   ignorePatterns: ["dist", ".eslintrc.js"],
   parser: "@typescript-eslint/parser",
   rules: {
+    "default-case": "error",
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-unused-expressions": [
       "error",

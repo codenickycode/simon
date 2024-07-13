@@ -1,22 +1,26 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Gamepad } from "./components/Gamepad";
-import { useGameController } from "./services/game-machine";
+import { useGameMachine } from "./services/game-machine";
 import { HighScore } from "./components/HighScore";
+import { usePadController } from "./services/pad-controller";
 
 const queryClient = new QueryClient();
 
 function App() {
-  const { padController, gameState } = useGameController();
+  const gameMachine = useGameMachine();
+  const isComputerTurn = gameMachine.status === "computerTurn";
+  const padController = usePadController({
+    isComputerTurn,
+    input: gameMachine.actions.input,
+  });
   return (
     <QueryClientProvider client={queryClient}>
       <div>
-        <Gamepad {...padController} isComputerTurn={gameState.isComputerTurn} />
-        <button onClick={gameState.startSequence}>start</button>
+        <Gamepad {...padController} isComputerTurn={isComputerTurn} />
+        <button onClick={gameMachine.actions.start}>start</button>
         <div>
-          <h1>DISABLED: {JSON.stringify(gameState.isComputerTurn)}</h1>
-          <h1>State: {JSON.stringify(gameState.state.value, null, 2)}</h1>
           <pre>
-            <code>{JSON.stringify(gameState.state, null, 2)}</code>
+            <code>{JSON.stringify(gameMachine, null, 2)}</code>
           </pre>
         </div>
         <HighScore />
