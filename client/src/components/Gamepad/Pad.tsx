@@ -6,9 +6,9 @@ export interface PadProps {
   padId: PadId;
   active: boolean;
   onPointerDown: () => void;
+  onDisabledPointerDown: () => void;
   onPointerUp: () => void;
   disabled: boolean;
-  bypassDisabled: boolean;
 }
 
 export const Pad = (props: PadProps) => {
@@ -18,7 +18,9 @@ export const Pad = (props: PadProps) => {
   const key = pads[props.padId].key;
 
   const handlePointerDown = () => {
-    if (!props.disabled || props.bypassDisabled) {
+    if (props.disabled) {
+      props.onDisabledPointerDown();
+    } else {
       props.onPointerDown();
     }
   };

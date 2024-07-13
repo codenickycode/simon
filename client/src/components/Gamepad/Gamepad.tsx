@@ -11,6 +11,9 @@ interface GamepadProps {
 }
 
 export const Gamepad = (props: GamepadProps) => {
+  /** We allow pointer down while disabled and the machine will check if they
+   * can "jump start" their turn */
+  const onDisabledPointerDown = props.onPadDown;
   return (
     <div className="relative inline-block">
       <div className="flex flex-row">
@@ -18,17 +21,17 @@ export const Gamepad = (props: GamepadProps) => {
           padId="green"
           active={isPadActive("green", props.activePads)}
           onPointerDown={() => props.onPadDown("green")}
+          onDisabledPointerDown={() => onDisabledPointerDown("green")}
           onPointerUp={() => props.onPadUp("green")}
           disabled={!props.isUserTurn}
-          bypassDisabled={props.isComputerTurn}
         />
         <Pad
           padId="red"
           active={isPadActive("red", props.activePads)}
           onPointerDown={() => props.onPadDown("red")}
+          onDisabledPointerDown={() => onDisabledPointerDown("red")}
           onPointerUp={() => props.onPadUp("red")}
           disabled={!props.isUserTurn}
-          bypassDisabled={props.isComputerTurn}
         />
       </div>
       <div className="flex flex-row">
@@ -36,17 +39,17 @@ export const Gamepad = (props: GamepadProps) => {
           padId="yellow"
           active={isPadActive("yellow", props.activePads)}
           onPointerDown={() => props.onPadDown("yellow")}
+          onDisabledPointerDown={() => onDisabledPointerDown("yellow")}
           onPointerUp={() => props.onPadUp("yellow")}
           disabled={!props.isUserTurn}
-          bypassDisabled={props.isComputerTurn}
         />
         <Pad
           padId="blue"
           active={isPadActive("blue", props.activePads)}
           onPointerDown={() => props.onPadDown("blue")}
+          onDisabledPointerDown={() => onDisabledPointerDown("blue")}
           onPointerUp={() => props.onPadUp("blue")}
           disabled={!props.isUserTurn}
-          bypassDisabled={props.isComputerTurn}
         />
       </div>
       {/* center circle */}
