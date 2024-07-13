@@ -1,5 +1,6 @@
 import { ActivePads, PadId } from "./types";
 import { Pad } from "./Pad";
+import { isPadActive } from "../../utils/pads";
 
 interface GamepadProps {
   activePads: ActivePads;
@@ -46,11 +47,5 @@ export const Gamepad = (props: GamepadProps) => {
       {/* center circle */}
       <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 bg-black rounded-full z-10"></div>
     </div>
-  );
-};
-
-const isPadActive = (padId: PadId, activePads: ActivePads) => {
-  return !!Object.entries(activePads).find(
-    ([id, active]) => id === padId && active
   );
 };
