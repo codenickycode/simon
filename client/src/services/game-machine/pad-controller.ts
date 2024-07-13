@@ -38,11 +38,11 @@ export const usePadController = ({
 
   const userPadDown = useCallback(
     (padId: PadId) => {
+      setUserPadsActive((prev) => ({ ...prev, [padId]: true }));
       if (arePadsDisabled) {
         onJumpStart(padId);
         return;
       }
-      setUserPadsActive((prev) => ({ ...prev, [padId]: true }));
       onUserPadDown(padId);
     },
     [arePadsDisabled, onJumpStart, onUserPadDown]
