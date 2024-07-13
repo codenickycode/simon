@@ -1,14 +1,14 @@
 import { PadTone } from "../../types/pad";
 import { getSequencer } from "../sequencer";
 import { gameLogic, NEW_GAME_STATE } from "./logic";
-import { GameStatus, GameMachineState } from "./types";
+import { GameState, GameMachineState } from "./types";
 
 const transition = ({
   currentState,
   to,
 }: {
   currentState: GameMachineState;
-  to: GameStatus;
+  to: GameState;
 }): GameMachineState => {
   switch (to) {
     case "newGame":
@@ -16,19 +16,19 @@ const transition = ({
     case "computerTurn":
       return {
         ...currentState,
-        status: "computerTurn",
+        state: "computerTurn",
         userScore: currentState.userSeqIndex,
         userSeqIndex: 0,
       };
     case "userTurn":
-      return { ...currentState, status: "userTurn" };
+      return { ...currentState, state: "userTurn" };
     case "gameOver":
       return {
         ...currentState,
-        status: "gameOver",
+        state: "gameOver",
       };
     default:
-      throw new Error("invalid status for transition");
+      throw new Error("invalid state for transition");
   }
 };
 
@@ -37,7 +37,7 @@ const start = ({
 }: {
   currentState: GameMachineState;
 }): GameMachineState => {
-  if (currentState.status !== "newGame" && currentState.status !== "gameOver") {
+  if (currentState.state !== "newGame" && currentState.state !== "gameOver") {
     return currentState;
   }
   getSequencer().resetSequence();
@@ -54,7 +54,7 @@ const input = ({
   currentState: GameMachineState;
   pad: PadTone;
 }): GameMachineState => {
-  if (currentState.status !== "userTurn") {
+  if (currentState.state !== "userTurn") {
     return currentState;
   }
   if (!gameLogic.checkInput(pad, currentState.userSeqIndex)) {

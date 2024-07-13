@@ -1,16 +1,19 @@
 import { useCallback, useReducer } from "react";
 import { PadTone } from "../../types/pad";
-import { GameStatus } from "./types";
-import { gameStateReducer } from "./reducer";
+import { GameState } from "./types";
+import { gameMachineReducer } from "./reducer";
 import { useOnEntry } from "./hooks";
 import { NEW_GAME_STATE } from "./logic";
 
 export const useGameMachine = () => {
-  const [gameState, dispatch] = useReducer(gameStateReducer, NEW_GAME_STATE);
+  const [gameMachine, dispatch] = useReducer(
+    gameMachineReducer,
+    NEW_GAME_STATE
+  );
 
   // *** Actions ***
   const transition = useCallback(
-    (status: GameStatus) => dispatch({ type: "transition", status }),
+    (state: GameState) => dispatch({ type: "transition", state }),
     []
   );
   const start = useCallback(() => dispatch({ type: "start" }), []);
@@ -20,12 +23,12 @@ export const useGameMachine = () => {
   );
 
   // *** Hooks ***
-  useOnEntry({ status: gameState.status, transition });
+  useOnEntry({ state: gameMachine.state, transition });
 
   // *** Derived values ***
-  const isComputerTurn = gameState.status === "computerTurn";
-  const isGameOver = gameState.status === "gameOver";
-  const userScore = gameState.userScore;
+  const isComputerTurn = gameMachine.state === "computerTurn";
+  const isGameOver = gameMachine.state === "gameOver";
+  const userScore = gameMachine.userScore;
 
   return {
     isComputerTurn,

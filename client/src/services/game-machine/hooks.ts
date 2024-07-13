@@ -1,17 +1,17 @@
 import { useEffect } from "react";
-import { GameStatus, Transition } from "./types";
+import { GameState, Transition } from "./types";
 import { gameLogic } from "./logic";
 
-/** "on entry" hooks to execute once after status change */
+/** "on entry" hooks to execute once after state change */
 export const useOnEntry = ({
-  status,
+  state,
   transition,
 }: {
-  status: GameStatus;
+  state: GameState;
   transition: Transition;
 }) => {
   useEffect(() => {
-    switch (status) {
+    switch (state) {
       case "computerTurn": {
         gameLogic.nextSequence().then(() => transition("userTurn"));
         return;
@@ -20,5 +20,5 @@ export const useOnEntry = ({
         return;
       }
     }
-  }, [status, transition]);
+  }, [state, transition]);
 };
