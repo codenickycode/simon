@@ -1,7 +1,7 @@
 import { pads } from "../components/Gamepad/schema";
 import { PadKey, PadTone } from "../components/Gamepad/types";
 
-export const padKeyToPadTone = (key: string): PadTone | undefined => {
+export const padKeyToPadTone = (key: PadKey): PadTone | undefined => {
   const pad = Object.values(pads).find((pad) => pad.key === key);
   return pad?.tone;
 };
