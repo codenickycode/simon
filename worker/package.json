@@ -8,6 +8,7 @@
 		"deploy": "pnpm run build && pnpm exec wrangler deploy",
 		"dev": "pnpm run build && wrangler dev",
 		"lint": "eslint .",
+		"test": "echo 'test script not implemented for worker package'",
 		"start": "wrangler dev",
 		"typecheck": "tsc --noEmit"
 	},
