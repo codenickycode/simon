@@ -24,7 +24,7 @@ export const Gamepad = (props: GamepadProps) => {
           onDisabledPointerDown={() => onDisabledPointerDown("green")}
           onPointerUp={() => props.onPadUp("green")}
           disabled={!props.isUserTurn}
-          className="justify-self-end self-end"
+          className="justify-self-end self-end pad-color-green rounded-tl-full"
         />
         <Pad
           padId="red"
@@ -33,7 +33,7 @@ export const Gamepad = (props: GamepadProps) => {
           onDisabledPointerDown={() => onDisabledPointerDown("red")}
           onPointerUp={() => props.onPadUp("red")}
           disabled={!props.isUserTurn}
-          className="self-end"
+          className="self-end pad-color-red rounded-tr-full"
         />
         <Pad
           padId="yellow"
@@ -42,7 +42,7 @@ export const Gamepad = (props: GamepadProps) => {
           onDisabledPointerDown={() => onDisabledPointerDown("yellow")}
           onPointerUp={() => props.onPadUp("yellow")}
           disabled={!props.isUserTurn}
-          className="justify-self-end"
+          className="justify-self-end pad-color-yellow rounded-bl-full"
         />
         <Pad
           padId="blue"
@@ -51,7 +51,7 @@ export const Gamepad = (props: GamepadProps) => {
           onDisabledPointerDown={() => onDisabledPointerDown("blue")}
           onPointerUp={() => props.onPadUp("blue")}
           disabled={!props.isUserTurn}
-          className=""
+          className="pad-color-blue rounded-br-full"
         />
         {/* center circle */}
         <div className="absolute inset-0 m-auto rounded-full w-32 aspect-square bg-black"></div>
