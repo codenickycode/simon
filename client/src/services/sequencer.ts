@@ -76,11 +76,16 @@ class Sequencer {
   }
 
   playPadTone(padId: PadId) {
-    this.synth.triggerAttackRelease(
-      pads[padId].tone,
-      this.noteDurationS,
-      Tone.getContext().currentTime // play immediately
-    );
+    try {
+      this.synth.triggerAttackRelease(
+        pads[padId].tone,
+        this.noteDurationS,
+        Tone.getContext().currentTime // play immediately
+      );
+    } catch (e) {
+      console.error(e);
+      // ignore it!
+    }
   }
 }
 
