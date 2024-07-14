@@ -1,3 +1,5 @@
+import plugin from "tailwindcss/plugin";
+
 type RecursiveObject = {
   [key: string]: string | RecursiveObject;
 };
@@ -68,3 +70,5 @@ export const pad3d = ({ addComponents }: TWPluginArgs) => {
     },
   });
 };
+
+export const plugins = [plugin(customVarPadColors), plugin(pad3d)];
