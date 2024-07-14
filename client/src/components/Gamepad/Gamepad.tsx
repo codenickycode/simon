@@ -15,8 +15,8 @@ export const Gamepad = (props: GamepadProps) => {
    * can "jump start" their turn */
   const onDisabledPointerDown = props.onPadDown;
   return (
-    <div className="relative w-full">
-      <div className="absolute inset-0 w-full aspect-square rounded-full bg-black grid grid-cols-2">
+    <div className="w-full aspect-square rounded-full bg-black flex items-center justify-center">
+      <div className="relative w-80 grid grid-cols-2">
         <Pad
           padId="green"
           active={isPadActive("green", props.activePads)}
@@ -24,6 +24,7 @@ export const Gamepad = (props: GamepadProps) => {
           onDisabledPointerDown={() => onDisabledPointerDown("green")}
           onPointerUp={() => props.onPadUp("green")}
           disabled={!props.isUserTurn}
+          className="justify-self-end self-end pad-color-green rounded-tl-full"
         />
         <Pad
           padId="red"
@@ -32,6 +33,7 @@ export const Gamepad = (props: GamepadProps) => {
           onDisabledPointerDown={() => onDisabledPointerDown("red")}
           onPointerUp={() => props.onPadUp("red")}
           disabled={!props.isUserTurn}
+          className="self-end pad-color-red rounded-tr-full"
         />
         <Pad
           padId="yellow"
@@ -40,6 +42,7 @@ export const Gamepad = (props: GamepadProps) => {
           onDisabledPointerDown={() => onDisabledPointerDown("yellow")}
           onPointerUp={() => props.onPadUp("yellow")}
           disabled={!props.isUserTurn}
+          className="justify-self-end pad-color-yellow rounded-bl-full"
         />
         <Pad
           padId="blue"
@@ -48,10 +51,11 @@ export const Gamepad = (props: GamepadProps) => {
           onDisabledPointerDown={() => onDisabledPointerDown("blue")}
           onPointerUp={() => props.onPadUp("blue")}
           disabled={!props.isUserTurn}
+          className="pad-color-blue rounded-br-full"
         />
+        {/* center circle */}
+        <div className="absolute inset-0 m-auto rounded-full w-32 aspect-square bg-black"></div>
       </div>
-      {/* center circle */}
-      <div className="rounded-full absolute inset-0 w-1/4 h-1/4 bg-blue-600"></div>
     </div>
   );
 };

@@ -9,12 +9,10 @@ export interface PadProps {
   onDisabledPointerDown: () => void;
   onPointerUp: () => void;
   disabled: boolean;
+  className: string;
 }
 
 export const Pad = (props: PadProps) => {
-  const bgActiveClass = pads[props.padId].bgActiveColor;
-  const bgClass = props.active ? bgActiveClass : pads[props.padId].bgColor;
-  const borderRadiusClass = pads[props.padId].borderRadius;
   const key = pads[props.padId].key;
 
   const handlePointerDown = () => {
@@ -24,12 +22,16 @@ export const Pad = (props: PadProps) => {
       props.onPointerDown();
     }
   };
-
   return (
     <button
       onPointerDown={handlePointerDown}
       onPointerUp={props.onPointerUp}
-      className={classnames(bgClass, borderRadiusClass)}
+      className={classnames(
+        "w-full aspect-square pad-3d",
+        props.active ? "brightness-100" : "brightness-75",
+        // todo: twMerge
+        props.className
+      )}
       disabled={props.disabled}
     >
       {props.disabled ? null : key}
