@@ -24,7 +24,6 @@ export const Pad = (props: PadProps) => {
       props.onPointerDown();
     }
   };
-  console.log(padColorClass);
   return (
     <button
       onPointerDown={handlePointerDown}
