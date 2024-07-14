@@ -4,8 +4,7 @@ export type PadKey = "q" | "w" | "s" | "a";
 export interface PadConfig {
   tone: PadTone;
   key: PadKey;
-  bgColor: string;
-  bgActiveColor: string;
+  customPadColor: string;
   borderRadius: string;
 }
 

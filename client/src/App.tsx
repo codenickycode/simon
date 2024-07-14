@@ -27,10 +27,10 @@ function App() {
         </div>
         <div className="h-24 flex flex-col items-center">
           <button onClick={gameMachine.actions.startNewGame}>start</button>
+          {gameMachine.isGameOver && (
+            <p className="mt-4 text-2xl font-bold">Game Over</p>
+          )}
         </div>
-        {gameMachine.isGameOver && (
-          <h1 className="mt-4 text-2xl font-bold">Game Over</h1>
-        )}
       </div>
     </QueryClientProvider>
   );
