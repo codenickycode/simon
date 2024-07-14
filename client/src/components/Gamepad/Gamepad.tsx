@@ -15,8 +15,8 @@ export const Gamepad = (props: GamepadProps) => {
    * can "jump start" their turn */
   const onDisabledPointerDown = props.onPadDown;
   return (
-    <div className="relative inline-block">
-      <div className="flex flex-row">
+    <div className="relative w-full">
+      <div className="absolute inset-0 w-full aspect-square rounded-full bg-black grid grid-cols-2">
         <Pad
           padId="green"
           active={isPadActive("green", props.activePads)}
@@ -33,8 +33,6 @@ export const Gamepad = (props: GamepadProps) => {
           onPointerUp={() => props.onPadUp("red")}
           disabled={!props.isUserTurn}
         />
-      </div>
-      <div className="flex flex-row">
         <Pad
           padId="yellow"
           active={isPadActive("yellow", props.activePads)}
@@ -53,7 +51,7 @@ export const Gamepad = (props: GamepadProps) => {
         />
       </div>
       {/* center circle */}
-      <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 bg-black rounded-full z-10"></div>
+      <div className="rounded-full absolute inset-0 w-1/4 h-1/4 bg-blue-600"></div>
     </div>
   );
 };

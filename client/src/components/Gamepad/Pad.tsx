@@ -29,10 +29,10 @@ export const Pad = (props: PadProps) => {
     <button
       onPointerDown={handlePointerDown}
       onPointerUp={props.onPointerUp}
-      className={classnames("w-16 h-16", bgClass, borderRadiusClass)}
+      className={classnames(bgClass, borderRadiusClass)}
       disabled={props.disabled}
     >
-      {key}
+      {props.disabled ? null : key}
     </button>
   );
 };

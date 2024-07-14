@@ -9,20 +9,28 @@ function App() {
   const gameMachine = useGameMachine();
   return (
     <QueryClientProvider client={queryClient}>
-      <div>
-        <Gamepad
-          activePads={gameMachine.activePads}
-          onPadDown={gameMachine.actions.userPadDown}
-          onPadUp={gameMachine.actions.userPadUp}
-          isComputerTurn={gameMachine.isComputerTurn}
-          isUserTurn={gameMachine.isUserTurn}
-        />
-        <button onClick={gameMachine.actions.startNewGame}>start</button>
-        <HighScore
-          isGameOver={gameMachine.isGameOver}
-          userScore={gameMachine.userScore}
-        />
-        {gameMachine.isGameOver && <h1>Game Over</h1>}
+      <div className="min-h-screen p-4 flex flex-col items-center justify-between">
+        <div className="h-24">
+          <HighScore
+            isGameOver={gameMachine.isGameOver}
+            userScore={gameMachine.userScore}
+          />
+        </div>
+        <div className="w-full max-w-full aspect-square">
+          <Gamepad
+            activePads={gameMachine.activePads}
+            onPadDown={gameMachine.actions.userPadDown}
+            onPadUp={gameMachine.actions.userPadUp}
+            isComputerTurn={gameMachine.isComputerTurn}
+            isUserTurn={gameMachine.isUserTurn}
+          />
+        </div>
+        <div className="h-24 flex flex-col items-center">
+          <button onClick={gameMachine.actions.startNewGame}>start</button>
+        </div>
+        {gameMachine.isGameOver && (
+          <h1 className="mt-4 text-2xl font-bold">Game Over</h1>
+        )}
       </div>
     </QueryClientProvider>
   );
