@@ -18,10 +18,10 @@ class Sequencer {
   noteDurationS = INIT_NOTE_DURATION_S;
   noteDurationMs = INIT_NOTE_DURATION_S * 1000;
 
-  private onPlayPadTone: (padId: PadId | undefined) => void = () => {
+  private onPlayPadTone: (padId: PadId) => void = () => {
     throw new Error("onPlayPadTone has not been initialized");
   };
-  setOnPlayPadTone(onPlayPadTone: (padId: PadId | undefined) => void) {
+  setOnPlayPadTone(onPlayPadTone: (padId: PadId) => void) {
     this.onPlayPadTone = onPlayPadTone;
   }
 
@@ -30,7 +30,7 @@ class Sequencer {
       this.synth.triggerAttackRelease(tone, this.noteDurationS, time);
       Tone.getDraw().schedule(() => {
         const padId = padToneToPadId(tone);
-        this.onPlayPadTone(padId);
+        padId && this.onPlayPadTone(padId);
       }, time);
     }, []);
     sequence.loop = false;

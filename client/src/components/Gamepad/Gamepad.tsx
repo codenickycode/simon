@@ -1,53 +1,50 @@
-import { ActivePads, PadId } from "./types";
+import { PadId } from "./types";
 import { Pad } from "./Pad";
-import { isPadActive, padKeyToPadId } from "../../utils/pads";
-import { useEffect } from "react";
+import { isPadActive } from "../../utils/pads";
+import { usePadController } from "./pad-controller";
 
 interface GamepadProps {
-  activePads: ActivePads;
-  onUserPadDown: (padId: PadId) => void;
-  onUserPadUp: (padId: PadId) => void;
   isComputerTurn: boolean;
   isUserTurn: boolean;
+  onUserPadDown: (padId: PadId) => void;
 }
 
 export const Gamepad = (props: GamepadProps) => {
-  useKeyListeners({
+  const padController = usePadController({
     onUserPadDown: props.onUserPadDown,
-    onUserPadUp: props.onUserPadUp,
   });
   return (
     <div className="w-full aspect-square rounded-full bg-black flex items-center justify-center">
       <div className="relative w-80 grid grid-cols-2">
         <Pad
           padId="green"
-          active={isPadActive("green", props.activePads)}
-          onPointerDown={() => props.onUserPadDown("green")}
-          onPointerUp={() => props.onUserPadUp("green")}
+          active={isPadActive("green", padController.activePads)}
+          onPointerDown={() => padController.userPadDown("green")}
+          onPointerUp={() => padController.userPadUp("green")}
           disabled={!props.isUserTurn}
           className="justify-self-end self-end pad-color-green rounded-tl-full"
         />
         <Pad
           padId="red"
-          active={isPadActive("red", props.activePads)}
-          onPointerDown={() => props.onUserPadDown("red")}
-          onPointerUp={() => props.onUserPadUp("red")}
+          active={isPadActive("red", padController.activePads)}
+          onPointerDown={() => padController.userPadDown("red")}
+          onPointerUp={() => padController.userPadUp("red")}
           disabled={!props.isUserTurn}
           className="self-end pad-color-red rounded-tr-full"
         />
         <Pad
           padId="yellow"
-          active={isPadActive("yellow", props.activePads)}
-          onPointerDown={() => props.onUserPadDown("yellow")}
-          onPointerUp={() => props.onUserPadUp("yellow")}
+          active={isPadActive("yellow", padController.activePads)}
+          onPointerDown={() => padController.userPadDown("yellow")}
+          onPointerUp={() => padController.userPadUp("yellow")}
           disabled={!props.isUserTurn}
           className="justify-self-end pad-color-yellow rounded-bl-full"
         />
         <Pad
           padId="blue"
-          active={isPadActive("blue", props.activePads)}
-          onPointerDown={() => props.onUserPadDown("blue")}
-          onPointerUp={() => props.onUserPadUp("blue")}
+          active={isPadActive("blue", padController.activePads)}
+          onPointerDown={() => padController.userPadDown("blue")}
+          onPointerUp={() => padController.userPadUp("blue")}
           disabled={!props.isUserTurn}
           className="pad-color-blue rounded-br-full"
         />
@@ -56,44 +53,4 @@ export const Gamepad = (props: GamepadProps) => {
       </div>
     </div>
   );
-};
-
-const useKeyListeners = ({
-  onUserPadDown,
-  onUserPadUp,
-}: {
-  onUserPadDown: (padId: PadId) => void;
-  onUserPadUp: (padId: PadId) => void;
-}) => {
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.repeat) {
-        event.preventDefault();
-        return;
-      }
-      const padId = padKeyToPadId(event.key);
-      if (!padId) {
-        return;
-      }
-      onUserPadDown(padId);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [onUserPadDown]);
-
-  useEffect(() => {
-    const onKeyUp = (event: KeyboardEvent) => {
-      const padId = padKeyToPadId(event.key);
-      if (!padId) {
-        return;
-      }
-      onUserPadUp(padId);
-    };
-    window.addEventListener("keyup", onKeyUp);
-    return () => {
-      window.removeEventListener("keyup", onKeyUp);
-    };
-  }, [onUserPadUp]);
 };

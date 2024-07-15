@@ -18,11 +18,9 @@ function App() {
         </div>
         <div className="w-full max-w-full aspect-square">
           <Gamepad
-            activePads={gameMachine.activePads}
-            onPadDown={gameMachine.actions.userPadDown}
-            onPadUp={gameMachine.actions.userPadUp}
             isComputerTurn={gameMachine.isComputerTurn}
             isUserTurn={gameMachine.isUserTurn}
+            onUserPadDown={gameMachine.actions.input}
           />
         </div>
         <div className="h-24 flex flex-col items-center">

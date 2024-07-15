@@ -22,8 +22,4 @@ export type GameMachineAction =
   | {
       type: "input";
       padId: PadId;
-    }
-  | {
-      type: "jumpStartUserTurn";
-      padId: PadId;
     };
