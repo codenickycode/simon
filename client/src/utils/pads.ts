@@ -6,7 +6,7 @@ import {
   PadTone,
 } from "../components/Gamepad/types";
 
-export const padKeyToPadId = (key: string): PadId | undefined => {
+export const keyToPadId = (key: string): PadId | undefined => {
   const [padId] = Object.entries(pads).find(([, pad]) => pad.key === key) || [];
   // Object.entries is erasing the type of entries[0] which is the PadId
   return padId as PadId | undefined;

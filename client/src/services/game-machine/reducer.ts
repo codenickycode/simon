@@ -19,9 +19,8 @@ export const gameMachineReducer = (
       getSequencer().resetSequence();
       return { ...NEW_GAME_STATE, state: "computerTurn" };
     }
-    case "jumpStartUserTurn":
     case "input": {
-      getSequencer().stopSequence();
+      getSequencer().stopSequence(); // if user jump-started their turn
       getSequencer().playPadTone(action.padId);
       if (
         !gameLogic.checkInput(action.padId, currentMachineState.userSeqIndex)
@@ -59,9 +58,8 @@ const actionGuard = (
     case "startNewGame":
       return ["newGame", "gameOver"].includes(currentMachineState.state);
     case "input":
-      return currentMachineState.state === "userTurn";
-    case "jumpStartUserTurn":
-      return currentMachineState.state === "computerTurn";
+      // the user can jump start their turn by inputting during computer turn
+      return ["userTurn", "computerTurn"].includes(currentMachineState.state);
     default:
       throw new Error("action guard not implemented for action type");
   }

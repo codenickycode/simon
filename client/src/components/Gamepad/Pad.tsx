@@ -6,7 +6,6 @@ export interface PadProps {
   padId: PadId;
   active: boolean;
   onPointerDown: () => void;
-  onDisabledPointerDown: () => void;
   onPointerUp: () => void;
   disabled: boolean;
   className: string;
@@ -14,17 +13,9 @@ export interface PadProps {
 
 export const Pad = (props: PadProps) => {
   const key = pads[props.padId].key;
-
-  const handlePointerDown = () => {
-    if (props.disabled) {
-      props.onDisabledPointerDown();
-    } else {
-      props.onPointerDown();
-    }
-  };
   return (
     <button
-      onPointerDown={handlePointerDown}
+      onPointerDown={props.onPointerDown}
       onPointerUp={props.onPointerUp}
       className={classnames(
         "w-full aspect-square pad-3d",
@@ -32,6 +23,11 @@ export const Pad = (props: PadProps) => {
         // todo: twMerge
         props.className
       )}
+      // Note: this attribute will tell the user the pad is disabled, however it
+      // will still receive pointer events. To disable pointer events, add
+      // pointer-events: none to classes. We allow pointer events so the user
+      // can "jump start" their turn without waiting for the computer's last
+      // tone to complete.
       disabled={props.disabled}
     >
       {props.disabled ? null : key}

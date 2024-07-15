@@ -2,22 +2,22 @@ import { pads } from "../components/Gamepad/schema";
 import { ActivePads, PadKey, PadTone } from "../components/Gamepad/types";
 import {
   isPadActive,
-  padKeyToPadId,
+  keyToPadId,
   padKeyToPadTone,
   padToneToPadId,
   padToneToPadKey,
 } from "./pads";
 
-describe("padKeyToPadId", () => {
+describe("keyToPadId", () => {
   test.each(Object.entries(pads))(
     "finds the pad id for the %s pad via key",
     (padId, pad) => {
-      const result = padKeyToPadId(pad.key);
+      const result = keyToPadId(pad.key);
       expect(result).toEqual(padId);
     }
   );
   test("returns undefined if it does not find the id", () => {
-    const result = padKeyToPadId("foo");
+    const result = keyToPadId("foo");
     expect(result).toBeUndefined();
   });
 });
