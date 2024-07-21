@@ -5,6 +5,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
+  className?: string;
 }
 
 export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
@@ -29,7 +30,7 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
   return (
     <div
       className={classNames(
-        "fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center",
+        "fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50",
         isOpen ? "animate-fadeIn" : "animate-fadeOut"
       )}
       onClick={onClose}
@@ -37,7 +38,7 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
     >
       <div
         className={classNames(
-          "bg-white rounded-lg p-6",
+          "rounded-lg p-6 m-4 bg-gradient-to-b from-slate-700 to-sky-950",
           isOpen ? "animate-scaleIn" : "animate-scaleOut"
         )}
         onClick={(e) => e.stopPropagation()}

@@ -32,7 +32,7 @@ async function updateHighScore(request: Request, env: Env, headers: Headers) {
 		} else {
 			const response: UpdateHighScoreResponse = {
 				success: false,
-				error: 'The score you submitted is not higher than the current high score',
+				error: `The score you submitted is not higher than the current high score of ${currentHighScore.score}`,
 			};
 			return new Response(JSON.stringify(response), { headers });
 		}

@@ -11,7 +11,13 @@ const highScoreUrl = `${workerUrl}${WORKER_PATH_HIGH_SCORE}`;
 
 const HIGH_SCORE_QUERY_KEY = "highScore";
 
-export function useHighScoreApi(params?: { onMutationSuccess?: () => void }) {
+const DEFAULT_ERROR_REASON =
+  "Unable to save high score.\nPlease check your connection and try again.";
+
+export function useHighScoreApi(params?: {
+  onMutationSuccess?: () => void;
+  onMutationError?: (reason: string) => void;
+}) {
   const queryClient = useQueryClient();
 
   const query = useQuery<HighScoreEntry>({
@@ -42,13 +48,31 @@ export function useHighScoreApi(params?: { onMutationSuccess?: () => void }) {
       if (data?.success) {
         queryClient.invalidateQueries({ queryKey: [HIGH_SCORE_QUERY_KEY] });
         params?.onMutationSuccess?.();
-      } else if (data?.success === false) {
-        console.warn("couldnt update high score, maybe its not high enough");
-      } else if (error) {
-        console.error("Mutation failed:", error);
+      } else {
+        const reason = getReason(data, error);
+        params?.onMutationError?.(reason);
       }
     },
   });
 
   return { query, mutation };
 }
+
+const getReason = (
+  data: UpdateHighScoreResponse | undefined,
+  error: Error | null
+): string => {
+  if (!data) {
+    if (!error) {
+      return DEFAULT_ERROR_REASON;
+    }
+    if (error.message.match("Failed to fetch")) {
+      return DEFAULT_ERROR_REASON;
+    }
+    return error.message;
+  }
+  if (data.success === false) {
+    return data.error;
+  }
+  return DEFAULT_ERROR_REASON;
+};

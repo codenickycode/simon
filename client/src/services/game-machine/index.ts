@@ -49,6 +49,7 @@ export const useGameMachine = () => {
     actions: {
       startNewGame,
       input,
+      transition,
     },
   };
 };
