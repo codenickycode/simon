@@ -30,7 +30,9 @@ export const Pad = (props: PadProps) => {
       // tone to complete.
       disabled={props.disabled}
     >
-      {props.disabled ? null : key}
+      <span className="font-bold text-xl md:text-2xl">
+        {props.disabled ? null : key}
+      </span>
     </button>
   );
 };

@@ -9,6 +9,9 @@ export default {
         scaleIn: "scaleIn 0.3s ease-out forwards",
         scaleOut: "scaleOut 0.3s ease-out forwards",
       },
+      fontFamily: {
+        sans: ["Ubuntu", "sans-serif"],
+      },
       keyframes: {
         fadeIn: {
           "0%": { opacity: "0" },

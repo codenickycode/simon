@@ -31,6 +31,8 @@ export const usePadController = ({
   const userPadDown = useCallback(
     (padId: PadId) => {
       setUserPadsActive((prev) => ({ ...prev, [padId]: true }));
+      sequencer.stopSequence();
+      sequencer.playPadTone(padId);
       onUserPadDown(padId);
     },
     [onUserPadDown]

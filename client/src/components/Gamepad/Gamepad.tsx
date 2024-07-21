@@ -24,7 +24,7 @@ export const Gamepad = (props: GamepadProps) => {
           onPointerUp={() => padController.userPadUp("green")}
           disabled={!props.isUserTurn}
           className={classNames(
-            "justify-self-end self-end rounded-tl-full",
+            "justify-self-end self-end rounded-tl-full text-green-600",
             isPadActive("green", padController.activePads)
               ? "bg-green-500"
               : "bg-green-700"
@@ -37,7 +37,7 @@ export const Gamepad = (props: GamepadProps) => {
           onPointerUp={() => padController.userPadUp("red")}
           disabled={!props.isUserTurn}
           className={classNames(
-            "self-end rounded-tr-full",
+            "self-end rounded-tr-full text-rose-500",
             isPadActive("red", padController.activePads)
               ? "bg-rose-500"
               : "bg-rose-700"
@@ -50,7 +50,7 @@ export const Gamepad = (props: GamepadProps) => {
           onPointerUp={() => padController.userPadUp("yellow")}
           disabled={!props.isUserTurn}
           className={classNames(
-            "justify-self-end rounded-bl-full",
+            "justify-self-end rounded-bl-full text-amber-500",
             isPadActive("yellow", padController.activePads)
               ? "bg-amber-400"
               : "bg-amber-600"
@@ -63,7 +63,7 @@ export const Gamepad = (props: GamepadProps) => {
           onPointerUp={() => padController.userPadUp("blue")}
           disabled={!props.isUserTurn}
           className={classNames(
-            "rounded-br-full",
+            "rounded-br-full text-blue-500",
             isPadActive("blue", padController.activePads)
               ? "bg-blue-500"
               : "bg-blue-700"
