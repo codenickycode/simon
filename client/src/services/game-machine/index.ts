@@ -14,7 +14,8 @@ export const useGameMachine = () => {
 
   // *** Actions ***
   const transition = useCallback(
-    (to: GameState) => dispatch({ type: "transition", to }),
+    (to: GameState, onlyIfState?: GameState) =>
+      dispatch({ type: "transition", to, onlyIfState }),
     []
   );
   const startNewGame = useCallback(
