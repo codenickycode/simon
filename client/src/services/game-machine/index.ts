@@ -29,8 +29,9 @@ export const useGameMachine = () => {
   // *** Derived values / Aliases ***
   const isNewGame = gameMachine.state === "newGame";
   const isComputerTurn = gameMachine.state === "computerTurn";
-  const isGameOver = gameMachine.state === "gameOver";
   const isUserTurn = gameMachine.state === "userTurn";
+  const isPlaying = isUserTurn || isComputerTurn;
+  const isGameOver = gameMachine.state === "gameOver";
   const userScore = gameMachine.userScore;
   const currentScore = isComputerTurn ? userScore : gameMachine.userSeqIndex;
 
@@ -40,8 +41,9 @@ export const useGameMachine = () => {
   return {
     isNewGame,
     isComputerTurn,
-    isGameOver,
     isUserTurn,
+    isPlaying,
+    isGameOver,
     userScore,
     currentScore,
     actions: {

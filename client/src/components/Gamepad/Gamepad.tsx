@@ -5,11 +5,9 @@ import { usePadController } from "./pad-controller";
 import classNames from "classnames";
 
 interface GamepadProps {
-  isComputerTurn: boolean;
+  isPlaying: boolean;
   isUserTurn: boolean;
   onUserPadDown: (padId: PadId) => void;
-  onStartClick: () => void;
-  isStartDisabled: boolean;
   currentScore: number;
 }
 
@@ -18,7 +16,7 @@ export const Gamepad = (props: GamepadProps) => {
     onUserPadDown: props.onUserPadDown,
   });
   return (
-    <div className="w-[320px] sm:w-[480px] lg:w-[720px] xl:w-[900px] aspect-square rounded-full bg-slate-900 border-8 border-slate-950 flex items-center justify-center">
+    <div className="w-[320px] sm:w-[480px] lg:w-[720px] xl:w-[900px] max-w-[75dvh] aspect-square rounded-full bg-slate-900 border-8 border-slate-950 flex items-center justify-center">
       <div className="relative w-[95%] grid grid-cols-2 gap-1">
         <Pad
           padId="green"
@@ -72,15 +70,11 @@ export const Gamepad = (props: GamepadProps) => {
               : "bg-blue-700"
           )}
         />
-        <button
-          disabled={props.isStartDisabled}
-          onClick={props.onStartClick}
-          className="absolute inset-0 m-auto rounded-full w-1/3 aspect-square bg-slate-950 border-8 border-slate-900 flex items-center"
-        >
+        <div className="absolute inset-0 m-auto rounded-full w-1/3 aspect-square bg-slate-950 border-8 border-slate-900 flex items-center">
           <span className="w-full flex items-center justify-center sm:text-xl md:text-2xl lg:text-3xl">
-            {props.isStartDisabled ? "" : "start"}
+            {props.isPlaying ? props.currentScore : ""}
           </span>
-        </button>
+        </div>
       </div>
     </div>
   );
