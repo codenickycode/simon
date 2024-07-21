@@ -16,7 +16,7 @@ function App() {
             userScore={gameMachine.userScore}
           />
         </div>
-        <div className="w-full max-w-full aspect-square">
+        <div className="w-80">
           <Gamepad
             isComputerTurn={gameMachine.isComputerTurn}
             isUserTurn={gameMachine.isUserTurn}
