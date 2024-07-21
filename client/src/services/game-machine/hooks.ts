@@ -13,7 +13,9 @@ export const useOnEntry = ({
   useEffect(() => {
     switch (state) {
       case "computerTurn": {
-        gameLogic.nextSequence().then(() => transition("userTurn"));
+        gameLogic.nextSequence().then(() => {
+          transition({ to: "userTurn", onlyIfState: "computerTurn" });
+        });
         return;
       }
       default: {

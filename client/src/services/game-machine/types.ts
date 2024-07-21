@@ -2,7 +2,10 @@ import { PadId } from "../../components/Gamepad/types";
 
 export type GameState = "newGame" | "computerTurn" | "userTurn" | "gameOver";
 
-export type Transition = (to: GameState) => void;
+export type Transition = (params: {
+  to: GameState;
+  onlyIfState?: GameState;
+}) => void;
 
 export interface GameMachineState {
   state: GameState;
@@ -14,6 +17,7 @@ export type GameMachineAction =
   | {
       type: "transition";
       to: GameState;
+      onlyIfState?: GameState;
       nextMachineState?: GameMachineState;
     }
   | {

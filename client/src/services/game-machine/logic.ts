@@ -1,7 +1,7 @@
 import { pads } from "../../components/Gamepad/schema";
 import { PadId } from "../../components/Gamepad/types";
 import { delay } from "../../utils/delay";
-import { getSequencer } from "../sequencer";
+import { sequencer } from "../sequencer";
 import { GameMachineState } from "./types";
 
 /** A generic buffer to prevent feedback from happening to quickly for user */
@@ -15,14 +15,14 @@ export const NEW_GAME_STATE: GameMachineState = {
 
 export const gameLogic = {
   checkInput: (padId: PadId, currentIndex: number): boolean => {
-    return pads[padId].tone === getSequencer().valueAt(currentIndex);
+    return pads[padId].tone === sequencer.valueAt(currentIndex);
   },
   isSequenceComplete: (currentIndex: number): boolean => {
-    return currentIndex !== 0 && currentIndex === getSequencer().length();
+    return currentIndex !== 0 && currentIndex === sequencer.length();
   },
   nextSequence: async () => {
-    getSequencer().addRandomNoteToSequence();
+    sequencer.addRandomNoteToSequence();
     // play sequence after a short delay to ensure all is scheduled
-    return delay(TIMING_BUFFER_MS, () => getSequencer().playSequence());
+    return delay(TIMING_BUFFER_MS, () => sequencer.playSequence());
   },
 };

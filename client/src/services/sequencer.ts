@@ -1,6 +1,5 @@
 import * as Tone from "tone";
 import { PadId } from "../components/Gamepad/types";
-import { singleton } from "../utils/singleton";
 import { pads } from "../components/Gamepad/schema";
 import { padToneToPadId } from "../utils/pads";
 
@@ -8,7 +7,11 @@ const INIT_NOTE_DURATION_S = 0.3;
 
 class Sequencer {
   private transport = Tone.getTransport();
-  private synth = new Tone.Synth().toDestination();
+  private synth = new Tone.Synth({
+    envelope: {
+      attack: 0.004,
+    },
+  }).toDestination();
 
   private sequence = this.initSequence();
   length = () => this.sequence.events.length;
@@ -45,7 +48,7 @@ class Sequencer {
   }
 
   resetSequence() {
-    this.sequence.stop();
+    this.sequence.stop(0);
     this.sequence.clear();
     this.sequence.events = [];
   }
@@ -62,7 +65,7 @@ class Sequencer {
       this.transport.position = 0;
       const sequenceDuration = this.sequence.events.length * this.noteDurationS;
       this.sequenceCompleteId = this.transport.schedule(() => {
-        this.transport.stop();
+        this.transport.stop(Tone.now());
         res(undefined);
       }, sequenceDuration);
       this.sequence.start();
@@ -73,20 +76,46 @@ class Sequencer {
   stopSequence() {
     this.transport.stop();
     this.transport.clear(this.sequenceCompleteId);
+    this.transport.cancel(0);
   }
 
-  playPadTone(padId: PadId) {
+  // @ts-expect-error it is defined immediately after when creating the promise
+  audioReadyResolver: (value: unknown) => void;
+  audioReady = new Promise((res) => (this.audioReadyResolver = res));
+  previousTime = 0;
+
+  async playPadTone(padId: PadId) {
+    await this.audioReady;
+    const time = Tone.getContext().currentTime; // play immediately
+    if (time === this.previousTime) {
+      // prevent error of unknown origin where events get scheduled in the same tick
+      return;
+    }
+    this.previousTime = time;
     try {
       this.synth.triggerAttackRelease(
         pads[padId].tone,
         this.noteDurationS,
-        Tone.getContext().currentTime // play immediately
+        time
       );
     } catch (e) {
       console.error(e);
-      // ignore it!
     }
   }
 }
 
-export const getSequencer = () => singleton("sequencer", () => new Sequencer());
+export const sequencer = new Sequencer();
+
+/** Due to auto-play policy on chrome, the audio context can only be started on
+ * a user interaction. These events are considered a user interaction. */
+const initialClick = async () => {
+  await Tone.start();
+  console.log("audio is ready");
+  document.removeEventListener("keydown", initialClick);
+  document.removeEventListener("touchend", initialClick);
+  document.removeEventListener("click", initialClick);
+  sequencer.audioReadyResolver(0);
+};
+document.addEventListener("keydown", initialClick);
+document.addEventListener("touchend", initialClick);
+document.addEventListener("click", initialClick);

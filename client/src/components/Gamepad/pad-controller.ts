@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ActivePads, PadId } from "./types";
-import { getSequencer } from "../../services/sequencer";
+import { sequencer } from "../../services/sequencer";
 import { pads } from "./schema";
 import { keyToPadId } from "../../utils/pads";
 
@@ -18,12 +18,12 @@ export const usePadController = ({
   const [userPadsActive, setUserPadsActive] = useState(INIT_PADS_ACTIVE);
 
   useEffect(() => {
-    getSequencer().setOnPlayPadTone((padId: PadId) => {
+    sequencer.setOnPlayPadTone((padId: PadId) => {
       setComputerPadsActive((prev) => ({ ...prev, [padId]: true }));
       // after note duration, make it inactive
       setTimeout(
         () => setComputerPadsActive((prev) => ({ ...prev, [padId]: false })),
-        getSequencer().noteDurationMs / 2
+        sequencer.noteDurationMs / 2
       );
     });
   }, []);
