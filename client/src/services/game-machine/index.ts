@@ -1,6 +1,6 @@
 import { useCallback, useReducer } from "react";
 import { PadId } from "../../components/Gamepad/types";
-import { GameState } from "./types";
+import { Transition } from "./types";
 import { gameMachineReducer } from "./reducer";
 import { useOnEntry } from "./hooks";
 import { NEW_GAME_STATE } from "./logic";
@@ -13,9 +13,8 @@ export const useGameMachine = () => {
   console.log(gameMachine);
 
   // *** Actions ***
-  const transition = useCallback(
-    (to: GameState, onlyIfState?: GameState) =>
-      dispatch({ type: "transition", to, onlyIfState }),
+  const transition: Transition = useCallback(
+    ({ to, onlyIfState }) => dispatch({ type: "transition", to, onlyIfState }),
     []
   );
   const startNewGame = useCallback(
