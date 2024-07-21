@@ -56,7 +56,6 @@ class Sequencer {
   private sequenceCompleteId = 0;
   /** plays the sequence and resolves when complete */
   async playSequence() {
-    console.log("playing sequence");
     if (this.transport.state === "started") {
       // trying to prevent an error of unknown origin with this is called more than once
       return;
@@ -101,7 +100,6 @@ class Sequencer {
       );
     } catch (e) {
       console.error(e);
-      console.log({ time });
     }
   }
 }
@@ -109,7 +107,7 @@ class Sequencer {
 export const sequencer = new Sequencer();
 
 /** Due to auto-play policy on chrome, the audio context can only be started on
- * a user interaction. pointerdown is not considered a user interaction. */
+ * a user interaction. These events are considered a user interaction. */
 const initialClick = async () => {
   await Tone.start();
   console.log("audio is ready");
