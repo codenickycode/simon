@@ -9,7 +9,7 @@ function App() {
   const gameMachine = useGameMachine();
   return (
     <QueryClientProvider client={queryClient}>
-      <main className="font-sans overflow-hidden fixed h-dvh w-full touch-none p-4 flex flex-col items-center justify-between bg-slate-600">
+      <main className="font-sans text-stone-100 overflow-hidden fixed h-dvh w-full touch-none p-4 flex flex-col items-center justify-between bg-gradient-to-b from-slate-700 to-sky-950">
         <div className="h-24">
           <HighScore
             isGameOver={gameMachine.isGameOver}

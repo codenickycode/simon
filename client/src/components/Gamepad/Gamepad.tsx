@@ -15,7 +15,7 @@ export const Gamepad = (props: GamepadProps) => {
     onUserPadDown: props.onUserPadDown,
   });
   return (
-    <div className="w-80 aspect-square rounded-full bg-slate-900 border-4 border-slate-950 flex items-center justify-center">
+    <div className="w-80 aspect-square rounded-full bg-slate-900 border-8 border-slate-950 flex items-center justify-center">
       <div className="relative w-[95%] grid grid-cols-2 gap-1">
         <Pad
           padId="green"
@@ -70,7 +70,7 @@ export const Gamepad = (props: GamepadProps) => {
           )}
         />
         {/* center circle */}
-        <div className="absolute inset-0 m-auto rounded-full w-28 aspect-square bg-slate-950 border-4 border-slate-900"></div>
+        <div className="absolute inset-0 m-auto rounded-full w-1/3 aspect-square bg-slate-950 border-8 border-slate-900"></div>
       </div>
     </div>
   );

@@ -54,12 +54,6 @@ export const HighScore = (props: HighScoreProps) => {
 
   return (
     <div className="flex flex-col items-center">
-      <button
-        className="mb-2 px-4 py-2 bg-gray-200 rounded"
-        onClick={openModal}
-      >
-        open modal
-      </button>
       <div className="flex items-center space-x-2">
         <span className="font-bold">High Score:</span>
         <Spinner isSpinning={query.isFetching}>{query.data?.score}</Spinner>
