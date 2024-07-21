@@ -16,6 +16,9 @@ export const GameOverModal = (props: HighScoreProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = useCallback(() => setIsModalOpen(true), []);
+  /** To close the modal, use props.goToNewGameState. closeModal will be called
+   * in useEffect to respond to the change in game state. This is to prevent
+   * complex checks on whether or not to show the modal. */
   const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   /** This prevents the pads from being triggered by the user typing their name */
