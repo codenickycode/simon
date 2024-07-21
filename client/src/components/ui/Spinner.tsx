@@ -8,11 +8,11 @@ interface SpinnerProps {
 
 export const Spinner = ({ isSpinning, children }: SpinnerProps) => {
   return (
-    <div className="inline-flex items-center justify-center">
+    <span className="inline-flex items-center justify-center">
       {isSpinning && (
-        <div className="absolute">
-          <div className="animate-spin h-5 w-5 border-2 border-blue-500 rounded-full border-t-transparent" />
-        </div>
+        <span className="block absolute">
+          <span className="block animate-spin h-5 w-5 border-2 border-blue-500 rounded-full border-t-transparent" />
+        </span>
       )}
       <span
         className={classNames(
@@ -22,6 +22,6 @@ export const Spinner = ({ isSpinning, children }: SpinnerProps) => {
       >
         {children}
       </span>
-    </div>
+    </span>
   );
 };
