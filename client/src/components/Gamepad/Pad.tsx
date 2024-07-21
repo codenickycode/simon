@@ -18,7 +18,7 @@ export const Pad = (props: PadProps) => {
       onPointerDown={props.onPointerDown}
       onPointerUp={props.onPointerUp}
       className={classnames(
-        "w-full aspect-square pad-3d",
+        "w-full aspect-square",
         props.active ? "brightness-100" : "brightness-75",
         // todo: twMerge
         props.className
