@@ -9,25 +9,31 @@ function App() {
   const gameMachine = useGameMachine();
   return (
     <QueryClientProvider client={queryClient}>
-      <main className="font-sans text-stone-100 overflow-hidden fixed h-dvh w-full touch-none p-4 flex flex-col items-center justify-between bg-gradient-to-b from-slate-700 to-sky-950">
-        <div className="h-24">
-          <HighScore
-            isGameOver={gameMachine.isGameOver}
-            userScore={gameMachine.userScore}
-          />
-        </div>
-        <div className="w-80">
-          <Gamepad
-            isComputerTurn={gameMachine.isComputerTurn}
-            isUserTurn={gameMachine.isUserTurn}
-            onUserPadDown={gameMachine.actions.input}
-          />
-        </div>
-        <div className="h-24 flex flex-col items-center">
-          <button onClick={gameMachine.actions.startNewGame}>start</button>
-          {gameMachine.isGameOver && (
-            <p className="mt-4 text-2xl font-bold">Game Over</p>
-          )}
+      <main className="font-sans text-stone-100 overflow-hidden fixed h-dvh w-full touch-none bg-gradient-to-b from-slate-700 to-sky-950 flex items-center justify-center">
+        <div className="w-full h-full max-h-[750px] flex flex-col max-w-screen-xl items-center justify-evenly">
+          <div className="h-24 w-full flex items-start justify-center">
+            <HighScore
+              isGameOver={gameMachine.isGameOver}
+              userScore={gameMachine.userScore}
+            />
+          </div>
+          <div>
+            <Gamepad
+              isComputerTurn={gameMachine.isComputerTurn}
+              isUserTurn={gameMachine.isUserTurn}
+              onUserPadDown={gameMachine.actions.input}
+              onStartClick={gameMachine.actions.startNewGame}
+              isStartDisabled={
+                gameMachine.isUserTurn || gameMachine.isComputerTurn
+              }
+              currentScore={gameMachine.currentScore}
+            />
+          </div>
+          <div className="h-24 flex flex-col items-center">
+            {gameMachine.isGameOver && (
+              <p className="mt-4 text-2xl font-bold">Game Over</p>
+            )}
+          </div>
         </div>
       </main>
     </QueryClientProvider>

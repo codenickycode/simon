@@ -26,20 +26,24 @@ export const useGameMachine = () => {
     []
   );
 
-  // *** Derived values ***
+  // *** Derived values / Aliases ***
+  const isNewGame = gameMachine.state === "newGame";
   const isComputerTurn = gameMachine.state === "computerTurn";
   const isGameOver = gameMachine.state === "gameOver";
   const isUserTurn = gameMachine.state === "userTurn";
   const userScore = gameMachine.userScore;
+  const currentScore = isComputerTurn ? userScore : gameMachine.userSeqIndex;
 
   // *** State Hooks ***
   useOnEntry({ state: gameMachine.state, transition });
 
   return {
+    isNewGame,
     isComputerTurn,
     isGameOver,
     isUserTurn,
     userScore,
+    currentScore,
     actions: {
       startNewGame,
       input,

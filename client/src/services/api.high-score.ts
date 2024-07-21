@@ -11,11 +11,7 @@ const highScoreUrl = `${workerUrl}${WORKER_PATH_HIGH_SCORE}`;
 
 const HIGH_SCORE_QUERY_KEY = "highScore";
 
-export function useHighScoreApi({
-  onMutationSuccess,
-}: {
-  onMutationSuccess: () => void;
-}) {
+export function useHighScoreApi(params?: { onMutationSuccess?: () => void }) {
   const queryClient = useQueryClient();
 
   const query = useQuery<HighScoreEntry>({
@@ -45,7 +41,7 @@ export function useHighScoreApi({
     onSettled: (data: UpdateHighScoreResponse | undefined, error) => {
       if (data?.success) {
         queryClient.invalidateQueries({ queryKey: [HIGH_SCORE_QUERY_KEY] });
-        onMutationSuccess();
+        params?.onMutationSuccess?.();
       } else if (data?.success === false) {
         console.warn("couldnt update high score, maybe its not high enough");
       } else if (error) {
