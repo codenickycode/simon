@@ -1,5 +1,5 @@
-import { pads } from "../components/Gamepad/schema";
-import { ActivePads, PadKey, PadTone } from "../components/Gamepad/types";
+import { pads } from "../components/gamepad/schema";
+import { ActivePads, PadKey, PadTone } from "../components/gamepad/types";
 import {
   isPadActive,
   keyToPadId,

@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { useHighScoreApi } from "../services/api.high-score";
-import { Modal } from "./ui/Modal";
-import { ANIMATION_DURATION } from "../config";
-import { NewHighScore } from "./NewHighScore";
+import { useHighScoreApi } from "../../services/api.high-score";
+import { Modal } from "../ui-elements/modal";
+import { ANIMATION_DURATION } from "../../config";
+import { NewHighScore } from "./new-high-score";
+import { CurrentHighScore } from "../shared/current-high-score";
 
 export interface GameOverModalProps {
   isGameOver: boolean;
@@ -84,7 +85,14 @@ export const GameOverModal = (props: GameOverModalProps) => {
           pending={mutation.isPending || !!mutation.data?.success}
         />
       ) : (
-        <div>GAME OVER</div>
+        <div>
+          <h3 className="font-bold mb-1 text-xl">💥 GAME OVER 💥</h3>
+          <p className="mb-4">
+            Your score is {props.userScore}. Try again to beat the global high
+            score!
+          </p>
+          <CurrentHighScore highScore={query.data} />
+        </div>
       )}
     </Modal>
   );

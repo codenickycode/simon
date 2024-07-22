@@ -1,5 +1,5 @@
-import { pads } from "../../components/Gamepad/schema";
-import { PadId } from "../../components/Gamepad/types";
+import { pads } from "../../components/gamepad/schema";
+import { PadId } from "../../components/gamepad/types";
 import { delay } from "../../utils/delay";
 import { sequencer } from "../sequencer";
 import { GameMachineState } from "./types";
