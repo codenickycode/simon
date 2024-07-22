@@ -25,7 +25,7 @@ async function updateHighScore(request: Request, env: Env, headers: Headers) {
 		}
 		const currentHighScore = await getCurrentHighScore(env);
 		if (score > currentHighScore.score) {
-			const newHighScore = { score, name: name.trim() || 'Anonymous' };
+			const newHighScore = { score, name: name.trim() || 'Anonymous', timestamp: Date.now() };
 			await env.db.put('highScore', JSON.stringify(newHighScore));
 			const response: UpdateHighScoreResponse = { success: true, newHighScore };
 			return new Response(JSON.stringify(response), { headers });
@@ -45,7 +45,7 @@ async function updateHighScore(request: Request, env: Env, headers: Headers) {
 async function getCurrentHighScore(env: Env): Promise<HighScoreEntry> {
 	const currentHighScore = await env.db.get<HighScoreEntry>('highScore', 'json');
 	if (!currentHighScore) {
-		return { score: 0, name: 'Anonymous' };
+		return { score: 0, name: 'Anonymous', timestamp: 0 };
 	}
 	return currentHighScore;
 }
