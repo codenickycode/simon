@@ -15,28 +15,33 @@ export interface HighScoreProps {
 export const GameOverModal = (props: HighScoreProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openModal = useCallback(() => setIsModalOpen(true), []);
+  /** This prevents the pads from being triggered by the user typing their name */
+  const stopProp = useCallback((e: KeyboardEvent) => e.stopPropagation(), []);
+
+  const openModal = useCallback(() => {
+    setIsModalOpen(true);
+    document.addEventListener("keydown", stopProp);
+  }, [stopProp]);
+
   /** To close the modal, use props.goToNewGameState. closeModal will be called
    * in useEffect to respond to the change in game state. This is to prevent
    * complex checks on whether or not to show the modal. */
-  const closeModal = useCallback(() => setIsModalOpen(false), []);
-
-  /** This prevents the pads from being triggered by the user typing their name */
-  const stopProp = useCallback((e: KeyboardEvent) => e.stopPropagation(), []);
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+    document.removeEventListener("keydown", stopProp);
+  }, [stopProp]);
 
   useEffect(() => {
     if (props.isGameOver && !isModalOpen) {
       openModal();
-      document.addEventListener("keydown", stopProp);
     }
-  }, [isModalOpen, openModal, props.isGameOver, stopProp]);
+  }, [isModalOpen, openModal, props.isGameOver]);
 
   useEffect(() => {
     if (isModalOpen && !props.isGameOver) {
       closeModal();
-      document.removeEventListener("keydown", stopProp);
     }
-  }, [closeModal, isModalOpen, props.isGameOver, stopProp]);
+  }, [closeModal, isModalOpen, props.isGameOver]);
 
   const [error, setError] = useState("");
   const [userName, setUserName] = useState("");
@@ -70,7 +75,11 @@ export const GameOverModal = (props: HighScoreProps) => {
     mutation.data?.success;
 
   return (
-    <Modal isOpen={isModalOpen} onClose={props.goToNewGameState}>
+    <Modal
+      isOpen={isModalOpen}
+      onClose={props.goToNewGameState}
+      className="max-w-xl"
+    >
       {showNewHighScore ? (
         <div>
           <h2 className="text-2xl mb-4">
@@ -90,10 +99,11 @@ export const GameOverModal = (props: HighScoreProps) => {
               placeholder="Enter your name"
               disabled={mutation.isPending}
               className="mr-2"
+              maxLength={48}
             />
             <Button type="submit" disabled={mutation.isPending}>
-              {/* Keep spinning on success because we are animating away the modal. This will prevent a flash. */}
               <Spinner
+                // Keep spinning on success because we are animating away the modal. This will prevent a flash.
                 isSpinning={mutation.isPending || !!mutation.data?.success}
               >
                 <span className="font-bold">save</span>

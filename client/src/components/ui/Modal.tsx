@@ -8,7 +8,7 @@ interface ModalProps {
   className?: string;
 }
 
-export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
+export const Modal = ({ isOpen, onClose, children, className }: ModalProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
@@ -39,7 +39,9 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
       <div
         className={classNames(
           "rounded-lg p-6 m-4 bg-gradient-to-b from-slate-700 to-sky-950",
-          isOpen ? "animate-scaleIn" : "animate-scaleOut"
+          isOpen ? "animate-scaleIn" : "animate-scaleOut",
+          // todo: twMerge
+          className ?? ""
         )}
         onClick={(e) => e.stopPropagation()}
       >
