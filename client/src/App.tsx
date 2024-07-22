@@ -3,7 +3,7 @@ import { Gamepad } from "./components/Gamepad/Gamepad";
 import { useGameMachine } from "./services/game-machine";
 import { HighScore } from "./components/HighScore";
 import { Button } from "./components/ui/Button";
-import { GameOverModal } from "./components/GameOver";
+import { GameOverModal } from "./components/GameOverModal";
 
 const queryClient = new QueryClient();
 
