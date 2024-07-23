@@ -6,7 +6,6 @@ export const gameMachineReducer = (
   currentMachineState: GameMachineState,
   action: GameMachineAction
 ): GameMachineState => {
-  console.log(action);
   if (!actionGuard(currentMachineState, action)) {
     return currentMachineState;
   }
