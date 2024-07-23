@@ -84,8 +84,8 @@ class Sequencer {
   stopSequence() {
     this.sequence.stop(0);
     this.transport.stop(Tone.now());
-    this.transport.position = 0;
     this.transport.clear(this.sequenceCompleteId);
+    this.transport.position = 0;
   }
 }
 
