@@ -1,4 +1,5 @@
 import * as Tone from "tone";
+import { noOp } from "../../utils/no-op";
 
 export class MonoSynth {
   private synth = new Tone.Synth({
@@ -24,10 +25,9 @@ export class MonoSynth {
     this.audioReadyResolver(0);
   };
 
-  // @ts-expect-error it is defined immediately after when creating the promise
-  audioReadyResolver: (value: unknown) => void;
-  audioReady = new Promise((res) => (this.audioReadyResolver = res));
-  previousTime = 0;
+  private audioReadyResolver: (value: unknown) => void = noOp; // noOp is a placeholder
+  private audioReady = new Promise((res) => (this.audioReadyResolver = res));
+  private previousTime = 0;
 
   async playNote({
     note,
