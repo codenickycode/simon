@@ -1,8 +1,6 @@
 import * as Tone from "tone";
-import { PadId } from "../../components/gamepad/types";
-import { pads } from "../../components/gamepad/schema";
-import { padToneToPadId } from "../../utils/pads";
 import { MonoSynth } from "./mono-synth";
+import { Note } from "./types";
 
 const INIT_NOTE_DURATION_S = 0.3;
 
@@ -21,8 +19,7 @@ class Sequencer {
   private sequence = new Tone.Sequence((time, note) => {
     this.synth.playNote({ note, duration: this.noteDurationS, time });
     Tone.getDraw().schedule(() => {
-      const padId = padToneToPadId(note);
-      padId && this.onPlaySynthComputer(padId);
+      this.onPlaySynthComputer(note);
     }, time);
   }, []);
 
@@ -37,27 +34,26 @@ class Sequencer {
     return this.sequence.events[index];
   }
 
-  /** Caller can set a callback which will fire whenever the computer plays a pad */
-  setOnPlaySynthComputer(onPlaySynthComputer: (padId: PadId) => void) {
+  /** Caller can set a callback which will fire whenever the computer plays a note */
+  setOnPlaySynthComputer(onPlaySynthComputer: (note: Note) => void) {
     this.onPlaySynthComputer = onPlaySynthComputer;
   }
-  private onPlaySynthComputer: (padId: PadId) => void = () => {
+  private onPlaySynthComputer: (note: Note) => void = () => {
     throw new Error("onPlaySynthComputer has not been initialized");
   };
 
-  playSynthUser(padId: PadId) {
+  playSynthUser(note: Note) {
     this.stopSequence();
     this.synth.playNote({
-      note: pads[padId].tone,
+      note,
       duration: this.noteDurationS,
     });
   }
 
-  addRandomNoteToSequence() {
-    const tones = Object.values(pads).map((p) => p.tone);
-    const index = Math.floor(Math.random() * 4);
-    const padTone = tones[index];
-    this.sequence.events.push(padTone);
+  addRandomNoteToSequence(notes: Note[]) {
+    const index = Math.floor(Math.random() * notes.length);
+    const note = notes[index];
+    this.sequence.events.push(note);
   }
 
   resetSequence() {

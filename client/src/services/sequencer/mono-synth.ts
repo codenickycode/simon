@@ -1,5 +1,6 @@
 import * as Tone from "tone";
 import { noOp } from "../../utils/no-op";
+import { Note } from "./types";
 
 export class MonoSynth {
   private synth = new Tone.Synth({
@@ -34,7 +35,7 @@ export class MonoSynth {
     duration,
     time = Tone.getContext().currentTime, // play immediately,
   }: {
-    note: Tone.Unit.Frequency;
+    note: Note;
     duration: number;
     time?: number;
   }) {
