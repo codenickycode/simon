@@ -7,8 +7,8 @@ export interface PadProps {
   active: boolean;
   onPointerDown: () => void;
   onPointerUp: () => void;
-  disabled: boolean;
   className: string;
+  showKey: boolean;
 }
 
 export const Pad = (props: PadProps) => {
@@ -23,15 +23,9 @@ export const Pad = (props: PadProps) => {
         // todo: twMerge
         props.className
       )}
-      // Note: this attribute will tell the user the pad is disabled, however it
-      // will still receive pointer events. To disable pointer events, add
-      // pointer-events: none to classes. We allow pointer events so the user
-      // can "jump start" their turn without waiting for the computer's last
-      // tone to complete.
-      disabled={props.disabled}
     >
       <span className="font-bold text-xl md:text-2xl">
-        {props.disabled ? null : key}
+        {props.showKey ? key : null}
       </span>
     </button>
   );

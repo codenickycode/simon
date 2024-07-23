@@ -10,7 +10,6 @@ export const useGameMachine = () => {
     gameMachineReducer,
     NEW_GAME_STATE
   );
-  console.log(gameMachine);
 
   // *** Actions ***
   const transition: Transition = useCallback(
