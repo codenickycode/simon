@@ -1,7 +1,7 @@
 import * as Tone from "tone";
-import { PadId } from "../components/gamepad/types";
-import { pads } from "../components/gamepad/schema";
-import { padToneToPadId } from "../utils/pads";
+import { PadId } from "../../components/gamepad/types";
+import { pads } from "../../components/gamepad/schema";
+import { padToneToPadId } from "../../utils/pads";
 
 const INIT_NOTE_DURATION_S = 0.3;
 
