@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ActivePads, PadId } from "./types";
+import { PadId } from "./types";
 import { sequencer } from "../../services/sequencer";
-import { pads } from "./schema";
 import { keyToPadId } from "../../utils/pads";
+import { toggleSetItem } from "../../utils/set";
 
-const INIT_PADS_ACTIVE: ActivePads = Object.fromEntries(
-  Object.keys(pads).map((padId) => [padId, false as boolean | undefined])
-);
+const INIT_PADS_ACTIVE = new Set<PadId>();
 
 export const usePadController = ({
   onUserPadDown,
@@ -19,10 +17,15 @@ export const usePadController = ({
 
   useEffect(() => {
     sequencer.setOnPlaySynthComputer((padId: PadId) => {
-      setComputerPadsActive((prev) => ({ ...prev, [padId]: true }));
+      setComputerPadsActive((prev) => {
+        return toggleSetItem({ set: prev, item: padId, op: "add" });
+      });
       // after note duration, make it inactive
       setTimeout(
-        () => setComputerPadsActive((prev) => ({ ...prev, [padId]: false })),
+        () =>
+          setComputerPadsActive((prev) => {
+            return toggleSetItem({ set: prev, item: padId, op: "delete" });
+          }),
         sequencer.noteDurationMs / 2
       );
     });
@@ -30,7 +33,9 @@ export const usePadController = ({
 
   const userPadDown = useCallback(
     (padId: PadId) => {
-      setUserPadsActive((prev) => ({ ...prev, [padId]: true }));
+      setUserPadsActive((prev) => {
+        return toggleSetItem({ set: prev, item: padId, op: "add" });
+      });
       sequencer.playSynthUser(padId);
       onUserPadDown(padId);
     },
@@ -38,19 +43,16 @@ export const usePadController = ({
   );
 
   const userPadUp = useCallback((padId: PadId) => {
-    setUserPadsActive((prev) => ({ ...prev, [padId]: false }));
+    setUserPadsActive((prev) => {
+      return toggleSetItem({ set: prev, item: padId, op: "delete" });
+    });
   }, []);
 
   useKeyListeners({ onKeydown: userPadDown, onKeyup: userPadUp });
 
   // pads are active if either the user or computer has them active
-  const activePads = useMemo<ActivePads>(
-    () =>
-      Object.fromEntries(
-        Object.keys(pads).map((padId) => {
-          return [padId, computerPadsActive[padId] || userPadsActive[padId]];
-        })
-      ),
+  const activePads = useMemo<Set<PadId>>(
+    () => new Set<PadId>([...computerPadsActive, ...userPadsActive]),
     [computerPadsActive, userPadsActive]
   );
 

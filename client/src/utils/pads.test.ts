@@ -1,7 +1,6 @@
 import { pads } from "../components/gamepad/schema";
-import { ActivePads, PadKey, PadTone } from "../components/gamepad/types";
+import { PadKey, PadTone } from "../components/gamepad/types";
 import {
-  isPadActive,
   keyToPadId,
   padKeyToPadTone,
   padToneToPadId,
@@ -61,22 +60,5 @@ describe("padToneToPadKey", () => {
   test("returns undefined if it does not find the tone", () => {
     const result = padToneToPadKey("foo" as PadTone);
     expect(result).toBeUndefined();
-  });
-});
-
-describe("isPadActive", () => {
-  const activePads: ActivePads = {
-    green: false,
-    blue: false,
-    yellow: false,
-    red: false,
-  };
-  it("returns true if the current pad is active", () => {
-    const result = isPadActive("green", { ...activePads, green: true });
-    expect(result).toBe(true);
-  });
-  it("returns false if the current pad is active", () => {
-    const result = isPadActive("green", { ...activePads, green: false });
-    expect(result).toBe(false);
   });
 });
