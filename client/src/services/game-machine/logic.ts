@@ -18,7 +18,7 @@ export const gameLogic = {
     return pads[padId].tone === sequencer.valueAt(currentIndex);
   },
   isSequenceComplete: (currentIndex: number): boolean => {
-    return currentIndex !== 0 && currentIndex === sequencer.length();
+    return currentIndex !== 0 && currentIndex === sequencer.sequenceLength;
   },
   nextSequence: async () => {
     sequencer.addRandomNoteToSequence();

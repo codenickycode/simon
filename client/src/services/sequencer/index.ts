@@ -11,8 +11,12 @@ class Sequencer {
   private synth = new MonoSynth();
 
   // todo: allow tempo changes
-  noteDurationS = INIT_NOTE_DURATION_S;
-  noteDurationMs = INIT_NOTE_DURATION_S * 1000;
+  get noteDurationS() {
+    return INIT_NOTE_DURATION_S;
+  }
+  get noteDurationMs() {
+    return INIT_NOTE_DURATION_S * 1000;
+  }
 
   private sequence = new Tone.Sequence((time, note) => {
     this.synth.playNote({ note, duration: this.noteDurationS, time });
@@ -26,8 +30,12 @@ class Sequencer {
     this.sequence.loop = false;
   }
 
-  length = () => this.sequence.events.length;
-  valueAt = (index: number) => this.sequence.events[index];
+  get sequenceLength() {
+    return this.sequence.events.length;
+  }
+  valueAt(index: number) {
+    return this.sequence.events[index];
+  }
 
   /** Caller can set a callback which will fire whenever the computer plays a pad */
   setOnPlaySynthComputer(onPlaySynthComputer: (padId: PadId) => void) {
@@ -53,7 +61,6 @@ class Sequencer {
   }
 
   resetSequence() {
-    this.sequence.stop(0);
     this.sequence.clear();
     this.sequence.events = [];
   }
@@ -62,16 +69,11 @@ class Sequencer {
 
   /** plays the sequence and resolves when complete */
   async playSequence() {
-    if (this.transport.state === "started") {
-      // trying to prevent an error of unknown origin with this is called more than once
-      return;
-    }
+    this.stopSequence();
     return new Promise((res) => {
-      this.transport.clear(this.sequenceCompleteId);
-      this.transport.position = 0;
-      const sequenceDuration = this.sequence.events.length * this.noteDurationS;
+      const sequenceDuration = this.sequenceLength * this.noteDurationS;
       this.sequenceCompleteId = this.transport.schedule(() => {
-        this.transport.stop(Tone.now());
+        this.stopSequence();
         res(undefined);
       }, sequenceDuration);
       this.sequence.start();
@@ -80,9 +82,10 @@ class Sequencer {
   }
 
   stopSequence() {
-    this.transport.stop();
+    this.sequence.stop(0);
+    this.transport.stop(Tone.now());
+    this.transport.position = 0;
     this.transport.clear(this.sequenceCompleteId);
-    this.transport.cancel(0);
   }
 }
 
