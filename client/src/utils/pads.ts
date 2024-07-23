@@ -14,6 +14,9 @@ export const padKeyToPadTone = (key: PadKey): PadTone | undefined => {
 export const noteToPadId = (note: Note): PadId | undefined => {
   const [padId] =
     Object.entries(pads).find(([, pad]) => pad.tone === note) || [];
+  if (!padId) {
+    console.warn("could not find padId from note");
+  }
   // Object.entries is erasing the type of entries[0] which is the PadId
   return padId as PadId | undefined;
 };
