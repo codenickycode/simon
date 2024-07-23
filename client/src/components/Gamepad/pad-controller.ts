@@ -18,7 +18,7 @@ export const usePadController = ({
   const [userPadsActive, setUserPadsActive] = useState(INIT_PADS_ACTIVE);
 
   useEffect(() => {
-    sequencer.setOnPlayPadTone((padId: PadId) => {
+    sequencer.setOnPlaySynthComputer((padId: PadId) => {
       setComputerPadsActive((prev) => ({ ...prev, [padId]: true }));
       // after note duration, make it inactive
       setTimeout(
@@ -31,8 +31,7 @@ export const usePadController = ({
   const userPadDown = useCallback(
     (padId: PadId) => {
       setUserPadsActive((prev) => ({ ...prev, [padId]: true }));
-      sequencer.stopSequence();
-      sequencer.playPadTone(padId);
+      sequencer.playSynthUser(padId);
       onUserPadDown(padId);
     },
     [onUserPadDown]

@@ -2,42 +2,47 @@ import * as Tone from "tone";
 import { PadId } from "../../components/gamepad/types";
 import { pads } from "../../components/gamepad/schema";
 import { padToneToPadId } from "../../utils/pads";
+import { MonoSynth } from "./mono-synth";
 
 const INIT_NOTE_DURATION_S = 0.3;
 
 class Sequencer {
   private transport = Tone.getTransport();
-  private synth = new Tone.Synth({
-    envelope: {
-      attack: 0.004,
-    },
-  }).toDestination();
-
-  private sequence = this.initSequence();
-  length = () => this.sequence.events.length;
-  valueAt = (index: number) => this.sequence.events[index];
+  private synth = new MonoSynth();
 
   // todo: allow tempo changes
   noteDurationS = INIT_NOTE_DURATION_S;
   noteDurationMs = INIT_NOTE_DURATION_S * 1000;
 
-  private onPlayPadTone: (padId: PadId) => void = () => {
-    throw new Error("onPlayPadTone has not been initialized");
-  };
-  setOnPlayPadTone(onPlayPadTone: (padId: PadId) => void) {
-    this.onPlayPadTone = onPlayPadTone;
+  private sequence = new Tone.Sequence((time, note) => {
+    this.synth.playNote({ note, duration: this.noteDurationS, time });
+    Tone.getDraw().schedule(() => {
+      const padId = padToneToPadId(note);
+      padId && this.onPlaySynthComputer(padId);
+    }, time);
+  }, []);
+
+  constructor() {
+    this.sequence.loop = false;
   }
 
-  private initSequence() {
-    const sequence = new Tone.Sequence((time, tone) => {
-      this.synth.triggerAttackRelease(tone, this.noteDurationS, time);
-      Tone.getDraw().schedule(() => {
-        const padId = padToneToPadId(tone);
-        padId && this.onPlayPadTone(padId);
-      }, time);
-    }, []);
-    sequence.loop = false;
-    return sequence;
+  length = () => this.sequence.events.length;
+  valueAt = (index: number) => this.sequence.events[index];
+
+  /** Caller can set a callback which will fire whenever the computer plays a pad */
+  setOnPlaySynthComputer(onPlaySynthComputer: (padId: PadId) => void) {
+    this.onPlaySynthComputer = onPlaySynthComputer;
+  }
+  private onPlaySynthComputer: (padId: PadId) => void = () => {
+    throw new Error("onPlaySynthComputer has not been initialized");
+  };
+
+  playSynthUser(padId: PadId) {
+    this.stopSequence();
+    this.synth.playNote({
+      note: pads[padId].tone,
+      duration: this.noteDurationS,
+    });
   }
 
   addRandomNoteToSequence() {
@@ -54,6 +59,7 @@ class Sequencer {
   }
 
   private sequenceCompleteId = 0;
+
   /** plays the sequence and resolves when complete */
   async playSequence() {
     if (this.transport.state === "started") {
@@ -78,44 +84,6 @@ class Sequencer {
     this.transport.clear(this.sequenceCompleteId);
     this.transport.cancel(0);
   }
-
-  // @ts-expect-error it is defined immediately after when creating the promise
-  audioReadyResolver: (value: unknown) => void;
-  audioReady = new Promise((res) => (this.audioReadyResolver = res));
-  previousTime = 0;
-
-  async playPadTone(padId: PadId) {
-    await this.audioReady;
-    const time = Tone.getContext().currentTime; // play immediately
-    if (time === this.previousTime) {
-      // prevent error of unknown origin where events get scheduled in the same tick
-      return;
-    }
-    this.previousTime = time;
-    try {
-      this.synth.triggerAttackRelease(
-        pads[padId].tone,
-        this.noteDurationS,
-        time
-      );
-    } catch (e) {
-      console.error(e);
-    }
-  }
 }
 
 export const sequencer = new Sequencer();
-
-/** Due to auto-play policy on chrome, the audio context can only be started on
- * a user interaction. These events are considered a user interaction. */
-const initialClick = async () => {
-  await Tone.start();
-  console.log("audio is ready");
-  document.removeEventListener("keydown", initialClick);
-  document.removeEventListener("touchend", initialClick);
-  document.removeEventListener("click", initialClick);
-  sequencer.audioReadyResolver(0);
-};
-document.addEventListener("keydown", initialClick);
-document.addEventListener("touchend", initialClick);
-document.addEventListener("click", initialClick);

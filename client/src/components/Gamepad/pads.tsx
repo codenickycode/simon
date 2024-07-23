@@ -23,7 +23,7 @@ export const Pads = (props: PadsProps) => {
           active={isPadActive("green", padController.activePads)}
           onPointerDown={() => padController.userPadDown("green")}
           onPointerUp={() => padController.userPadUp("green")}
-          disabled={!props.isUserTurn}
+          showKey={props.isUserTurn}
           className={classNames(
             "justify-self-end self-end rounded-tl-full text-green-600",
             isPadActive("green", padController.activePads)
@@ -36,7 +36,7 @@ export const Pads = (props: PadsProps) => {
           active={isPadActive("red", padController.activePads)}
           onPointerDown={() => padController.userPadDown("red")}
           onPointerUp={() => padController.userPadUp("red")}
-          disabled={!props.isUserTurn}
+          showKey={props.isUserTurn}
           className={classNames(
             "self-end rounded-tr-full text-rose-500",
             isPadActive("red", padController.activePads)
@@ -49,7 +49,7 @@ export const Pads = (props: PadsProps) => {
           active={isPadActive("yellow", padController.activePads)}
           onPointerDown={() => padController.userPadDown("yellow")}
           onPointerUp={() => padController.userPadUp("yellow")}
-          disabled={!props.isUserTurn}
+          showKey={props.isUserTurn}
           className={classNames(
             "justify-self-end rounded-bl-full text-amber-500",
             isPadActive("yellow", padController.activePads)
@@ -62,7 +62,7 @@ export const Pads = (props: PadsProps) => {
           active={isPadActive("blue", padController.activePads)}
           onPointerDown={() => padController.userPadDown("blue")}
           onPointerUp={() => padController.userPadUp("blue")}
-          disabled={!props.isUserTurn}
+          showKey={props.isUserTurn}
           className={classNames(
             "rounded-br-full text-blue-500",
             isPadActive("blue", padController.activePads)
