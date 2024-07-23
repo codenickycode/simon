@@ -5,6 +5,3 @@ export interface PadConfig {
   tone: PadTone;
   key: PadKey;
 }
-
-// it's better for padId to be a string here for convenience
-export type ActivePads = Record<string, boolean | undefined>;
