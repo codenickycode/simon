@@ -21,7 +21,7 @@ export const gameLogic = {
     return currentIndex !== 0 && currentIndex === sequencer.sequenceLength;
   },
   nextSequence: async () => {
-    sequencer.addRandomNoteToSequence();
+    sequencer.addRandomNoteToSequence(Object.values(pads).map((p) => p.tone));
     // play sequence after a short delay to ensure all is scheduled
     return delay(TIMING_BUFFER_MS, () => sequencer.playSequence());
   },

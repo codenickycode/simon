@@ -3,7 +3,7 @@ import { PadKey, PadTone } from "../components/gamepad/types";
 import {
   keyToPadId,
   padKeyToPadTone,
-  padToneToPadId,
+  noteToPadId,
   padToneToPadKey,
 } from "./pads";
 
@@ -35,16 +35,16 @@ describe("padKeyToPadTone", () => {
   });
 });
 
-describe("padToneToPadId", () => {
+describe("noteToPadId", () => {
   test.each(Object.entries(pads))(
     "finds the pad id for the %s pad via tone",
     (padId, pad) => {
-      const result = padToneToPadId(pad.tone);
+      const result = noteToPadId(pad.tone);
       expect(result).toEqual(padId);
     }
   );
   test("returns undefined if it does not find the id", () => {
-    const result = padToneToPadId("foo" as PadTone);
+    const result = noteToPadId("foo" as PadTone);
     expect(result).toBeUndefined();
   });
 });

@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { PadId } from "./types";
 import { sequencer } from "../../services/sequencer";
-import { keyToPadId } from "../../utils/pads";
+import { keyToPadId, noteToPadId } from "../../utils/pads";
 import { toggleSetItem } from "../../utils/set";
+import { Note } from "../../services/sequencer/types";
+import { pads } from "./schema";
 
 const INIT_PADS_ACTIVE = new Set<PadId>();
 
@@ -16,15 +18,19 @@ export const usePadController = ({
   const [userPadsActive, setUserPadsActive] = useState(INIT_PADS_ACTIVE);
 
   useEffect(() => {
-    sequencer.setOnPlaySynthComputer((padId: PadId) => {
+    sequencer.setOnPlaySynthComputer((note: Note) => {
       setComputerPadsActive((prev) => {
-        return toggleSetItem({ set: prev, item: padId, op: "add" });
+        const item = noteToPadId(note);
+        return item ? toggleSetItem({ set: prev, item, op: "add" }) : prev;
       });
       // after note duration, make it inactive
       setTimeout(
         () =>
           setComputerPadsActive((prev) => {
-            return toggleSetItem({ set: prev, item: padId, op: "delete" });
+            const item = noteToPadId(note);
+            return item
+              ? toggleSetItem({ set: prev, item, op: "delete" })
+              : prev;
           }),
         sequencer.noteDurationMs / 2
       );
@@ -36,7 +42,7 @@ export const usePadController = ({
       setUserPadsActive((prev) => {
         return toggleSetItem({ set: prev, item: padId, op: "add" });
       });
-      sequencer.playSynthUser(padId);
+      sequencer.playSynthUser(pads[padId].tone);
       onUserPadDown(padId);
     },
     [onUserPadDown]
