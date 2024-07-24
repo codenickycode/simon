@@ -1,6 +1,6 @@
 import * as Tone from "tone";
 import { MonoSynth } from "./mono-synth";
-import { Note } from "./types";
+import { NoteOctave } from "./types";
 
 const INIT_NOTE_DURATION_S = 0.3;
 
@@ -38,14 +38,14 @@ class Sequencer {
   }
 
   /** Caller can set a callback which will fire whenever the computer plays a note */
-  setOnPlaySynthComputer(onPlaySynthComputer: (note: Note) => void) {
+  setOnPlaySynthComputer(onPlaySynthComputer: (note: NoteOctave) => void) {
     this.onPlaySynthComputer = onPlaySynthComputer;
   }
-  private onPlaySynthComputer: (note: Note) => void = () => {
+  private onPlaySynthComputer: (note: NoteOctave) => void = () => {
     throw new Error("onPlaySynthComputer has not been initialized");
   };
 
-  playSynthUser(note: Note) {
+  playSynthUser(note: NoteOctave) {
     this.stopSequence();
     this.synth.playNote({
       note,
@@ -53,7 +53,7 @@ class Sequencer {
     });
   }
 
-  addRandomNoteToSequence(notes: Note[]) {
+  addRandomNoteToSequence(notes: NoteOctave[]) {
     const index = Math.floor(Math.random() * notes.length);
     const note = notes[index];
     this.sequence.events.push(note);

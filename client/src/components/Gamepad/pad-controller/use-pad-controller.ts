@@ -10,6 +10,8 @@ export const usePadController = ({
   resetActivePads,
 }: {
   onUserPadDown: (padId: PadId) => void;
+  /** Toggle this boolean to reset all active pads to null. Useful to prevent
+   * "sticky" pads lit up when game state changes. */
   resetActivePads: boolean;
 }) => {
   const { activePads, setUserPadActive, setUserPadInactive } =

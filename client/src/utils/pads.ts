@@ -1,6 +1,6 @@
 import { pads } from "../components/gamepad/schema";
 import { PadId, PadKey, PadTone } from "../components/gamepad/types";
-import { Note } from "../services/sequencer/types";
+import { NoteOctave } from "../services/sequencer/types";
 
 export const keyToPadId = (key: string): PadId | undefined => {
   const [padId] = Object.entries(pads).find(([, pad]) => pad.key === key) || [];
@@ -11,7 +11,7 @@ export const padKeyToPadTone = (key: PadKey): PadTone | undefined => {
   const pad = Object.values(pads).find((pad) => pad.key === key);
   return pad?.tone;
 };
-export const noteToPadId = (note: Note): PadId | undefined => {
+export const noteToPadId = (note: NoteOctave): PadId | undefined => {
   const [padId] =
     Object.entries(pads).find(([, pad]) => pad.tone === note) || [];
   if (!padId) {
