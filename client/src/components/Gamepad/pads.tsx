@@ -1,6 +1,6 @@
 import { PadId } from "./types";
 import { Pad } from "./pad";
-import { usePadController } from "./use-pad-controller";
+import { usePadController } from "./pad-controller";
 import classNames from "classnames";
 
 interface PadsProps {
@@ -13,6 +13,7 @@ interface PadsProps {
 export const Pads = (props: PadsProps) => {
   const padController = usePadController({
     onUserPadDown: props.onUserPadDown,
+    resetActivePads: !props.isPlaying,
   });
   return (
     <div className="w-[320px] sm:w-[480px] lg:w-[720px] xl:w-[900px] max-w-[75dvh] aspect-square rounded-full bg-slate-900 border-8 border-slate-950 flex items-center justify-center">
