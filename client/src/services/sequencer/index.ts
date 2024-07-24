@@ -73,7 +73,9 @@ class Sequencer {
         res(undefined);
       }, sequenceDuration);
       this.sequence.start();
-      this.transport.start();
+      // best to start the transport a little late
+      // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
+      this.transport.start("+0.1");
     });
   }
 

@@ -3,11 +3,7 @@ import { noOp } from "../../utils/no-op";
 import { Note } from "./types";
 
 export class MonoSynth {
-  private synth = new Tone.Synth({
-    envelope: {
-      attack: 0.004,
-    },
-  }).toDestination();
+  private synth = new Tone.Synth().toDestination();
 
   constructor() {
     document.addEventListener("keydown", this.startAudioContext);
@@ -46,7 +42,10 @@ export class MonoSynth {
     }
     this.previousTime = time;
     try {
-      this.synth.triggerAttackRelease(note, duration, time);
+      // schedule a little in advance to prevent pops
+      // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
+      const attackTime = time + 0.004;
+      this.synth.triggerAttackRelease(note, duration, attackTime);
     } catch (e) {
       console.error(e);
     }
