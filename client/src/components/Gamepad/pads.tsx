@@ -1,6 +1,6 @@
 import { PadId } from "./types";
 import { Pad } from "./pad";
-import { usePadController } from "./pad-controller";
+import { usePadController } from "./use-pad-controller";
 import classNames from "classnames";
 
 interface PadsProps {
