@@ -25,6 +25,9 @@ class Sequencer {
 
   constructor() {
     this.sequence.loop = false;
+    // we start our sequence at 0,
+    // and use transport start/stop for playback
+    this.sequence.start(0);
   }
 
   get sequenceLength() {
@@ -72,7 +75,6 @@ class Sequencer {
         this.stopSequence();
         res(undefined);
       }, sequenceDuration);
-      this.sequence.start();
       // best to start the transport a little late
       // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
       this.transport.start("+0.1");
@@ -80,7 +82,6 @@ class Sequencer {
   }
 
   stopSequence() {
-    this.sequence.stop(0);
     this.transport.stop(Tone.now());
     this.transport.clear(this.sequenceCompleteId);
     this.transport.position = 0;
