@@ -11,7 +11,7 @@ interface GamepadProps {
 
 export const Gamepad = ({ gameMachine, padController }: GamepadProps) => {
   return (
-    <div className="w-full h-full flex flex-col landscape:flex-row max-w-screen-xl items-center justify-evenly">
+    <div className="w-full h-full flex flex-col landscape:flex-row max-w-screen-2xl items-center justify-evenly">
       <div className="h-24 landscape:h-auto w-full flex items-center justify-center">
         {!gameMachine.isPlaying && <HighScore />}
       </div>

@@ -3,6 +3,7 @@ import { useHighScoreApi } from "../../services/api.high-score";
 import { Spinner } from "../ui-elements/spinner";
 import { Modal } from "../ui-elements/modal";
 import { CurrentHighScore } from "../shared/current-high-score";
+import { Button } from "../ui-elements/button";
 
 export const HighScore = () => {
   const { query } = useHighScoreApi();
@@ -11,17 +12,18 @@ export const HighScore = () => {
   const closeModal = useCallback(() => setModalOpen(false), []);
   return (
     <div className="flex items-center">
-      <button
+      <Button
+        variant="secondary"
         onClick={openModal}
-        className="md:text-lg font-bold text-center "
         disabled={query.isFetching || query.isError}
       >
         High Score:<span className="mx-1"></span>
         <Spinner isSpinning={query.isFetching}>
           {query.data?.score ?? "?"}
         </Spinner>
-      </button>
+      </Button>
       <Modal isOpen={modalOpen} onClose={closeModal} className="max-w-xl">
+        <h2 className="text-2xl mb-6">🏆</h2>
         <CurrentHighScore highScore={query.data} />
       </Modal>
     </div>
