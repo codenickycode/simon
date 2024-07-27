@@ -1,15 +1,36 @@
 import classNames from "classnames";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
   className?: string;
+  closeOnEsc?: boolean;
 }
 
-export const Modal = ({ isOpen, onClose, children, className }: ModalProps) => {
+export const Modal = ({
+  isOpen,
+  onClose,
+  children,
+  closeOnEsc = true,
+  className,
+}: ModalProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
+
+  // Closes modal on 'esc'. This needs to be smarter if you will have more than
+  // one modal open at a time. We do not currently have that requirement.
+  useEffect(() => {
+    const closeModal = (e: KeyboardEvent) => {
+      if (closeOnEsc && e.key === "Escape") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", closeModal);
+    return () => {
+      document.removeEventListener("keydown", closeModal);
+    };
+  }, [closeOnEsc, onClose]);
 
   useEffect(() => {
     if (isOpen) {
@@ -17,11 +38,11 @@ export const Modal = ({ isOpen, onClose, children, className }: ModalProps) => {
     }
   }, [isOpen]);
 
-  const handleAnimationEnd = () => {
+  const handleAnimationEnd = useCallback(() => {
     if (!isOpen) {
       setIsAnimating(false);
     }
-  };
+  }, [isOpen]);
 
   if (!isOpen && !isAnimating) {
     return null;
