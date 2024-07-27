@@ -9,26 +9,24 @@ export interface GameOverModalProps {
   isGameOver: boolean;
   userScore: number;
   goToNewGameState: () => void;
+  padKeyListeners: { pause: () => void; resume: () => void };
 }
 
 export const GameOverModal = (props: GameOverModalProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  /** This prevents the pads from being triggered by the user typing their name */
-  const stopProp = useCallback((e: KeyboardEvent) => e.stopPropagation(), []);
-
   const openModal = useCallback(() => {
     setIsModalOpen(true);
-    document.addEventListener("keydown", stopProp);
-  }, [stopProp]);
+    props.padKeyListeners.pause();
+  }, [props.padKeyListeners]);
 
   /** To close the modal, use props.goToNewGameState. closeModal will be called
    * in useEffect to respond to the change in game state. This is to prevent
    * complex checks on whether or not to show the modal. */
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
-    document.removeEventListener("keydown", stopProp);
-  }, [stopProp]);
+    props.padKeyListeners.resume();
+  }, [props.padKeyListeners]);
 
   useEffect(() => {
     if (props.isGameOver && !isModalOpen) {
