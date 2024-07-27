@@ -6,6 +6,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "ci": "pnpm lint && pnpm typecheck && pnpm test",
     "client": "pnpm --filter client",
     "shared": "pnpm --filter shared",
     "worker": "pnpm --filter worker",
