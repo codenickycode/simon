@@ -18,7 +18,7 @@ fi
 # Stash unstaged changes
 git stash -q --keep-index
 
-if ! pnpm run lint:fix; then
+if ! pnpm run lint:fix -- $STAGED_FILES; then
     echo "Linting failed. Please fix the errors and try committing again."
     git stash pop -q
     exit 1
