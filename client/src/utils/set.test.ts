@@ -1,5 +1,5 @@
 import { immutableSetOp, useSet } from "./set";
-import { renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 
 describe("immutableSetOp", () => {
   it("can add an item immutably", () => {
@@ -27,23 +27,31 @@ describe("useSet", () => {
   });
   it("adds items", () => {
     const rendered = renderHook(() => useSet(new Set([1, 2, 3])));
-    rendered.result.current.add(4);
-    rendered.result.current.add(5);
-    rendered.rerender();
+    act(() => {
+      rendered.result.current.add(4);
+      rendered.result.current.add(5);
+      rendered.rerender();
+    });
     expect([...rendered.result.current.items]).toEqual([1, 2, 3, 4, 5]);
   });
   it("deletes items", () => {
     const rendered = renderHook(() => useSet(new Set([1, 2, 3])));
-    rendered.result.current.delete(3);
-    rendered.result.current.delete(2);
-    rendered.rerender();
+    act(() => {
+      rendered.result.current.delete(3);
+      rendered.result.current.delete(2);
+      rendered.rerender();
+    });
+
     expect([...rendered.result.current.items]).toEqual([1]);
   });
   it("ignores already added or deleted", () => {
     const rendered = renderHook(() => useSet(new Set([1, 2, 3])));
-    rendered.result.current.add(1);
-    rendered.result.current.delete(4);
-    rendered.rerender();
+    act(() => {
+      rendered.result.current.add(1);
+      rendered.result.current.delete(4);
+      rendered.rerender();
+    });
+
     expect([...rendered.result.current.items]).toEqual([1, 2, 3]);
   });
 });
