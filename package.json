@@ -10,9 +10,9 @@
     "shared": "pnpm --filter shared",
     "worker": "pnpm --filter worker",
     "clean": "rm -rf node_modules pnpm-lock.yaml client/node_modules worker/node_module && pnpm i",
-    "lint": "pnpm -r exec eslint .",
-    "lint:fix": "pnpm -r exec eslint . --fix",
-    "test": "pnpm -r run test",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "test": "pnpm -r test",
     "test:watch": "pnpm -r test:watch",
     "typecheck": "pnpm -r typecheck"
   },

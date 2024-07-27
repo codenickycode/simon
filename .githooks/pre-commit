@@ -15,7 +15,7 @@ if [[ "$?" == 1 ]]; then
     exit 1
 fi
 
-pnpm run lint:fix --silent -- $STAGED_FILES
+pnpm run lint:fix -- $STAGED_FILES
 
 if [[ "$?" == 1 ]]; then
     echo "Linting failed. Please fix the errors and try committing again."
