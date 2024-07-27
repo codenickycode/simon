@@ -8,7 +8,10 @@ const INIT_NOTE_DURATION_S = 0.3;
 
 class Sequencer {
   private transport = Tone.getTransport();
-  private synth = new MonoSynth();
+  private sequenceSynth = new MonoSynth(new Tone.Synth());
+  private melodySynth = new MonoSynth(
+    new Tone.Synth({ oscillator: { type: "amsquare16" }, volume: -3 })
+  );
 
   // todo: allow tempo changes
   get noteDurationS() {
@@ -19,7 +22,7 @@ class Sequencer {
   }
 
   private sequence = new Tone.Sequence((time, note) => {
-    this.synth.playNote({ note, duration: this.noteDurationS, time });
+    this.sequenceSynth.playNote({ note, duration: this.noteDurationS, time });
     Tone.getDraw().schedule(() => {
       this.onPlaySynthComputer(note);
     }, time);
@@ -49,7 +52,7 @@ class Sequencer {
 
   playSynthUser(note: NoteOctave) {
     this.stopSequence();
-    this.synth.playNote({
+    this.sequenceSynth.playNote({
       note,
       duration: this.noteDurationS,
     });
@@ -86,10 +89,23 @@ class Sequencer {
   async playMelody(melody: keyof typeof melodies) {
     // this effectively stops the sequencer if playing
     this.sequence.mute = true;
-    // delay the start of melody to allow trailing notes to finish
-    await delay(this.noteDurationMs / 2, () => melodies[melody]());
+    this.sequenceSynth.mute();
+    // let the last note trail off a bit before playing
+    await delay(this.noteDurationMs / 3);
+    const melodyNotes = melodies[melody];
+    const now = Tone.now();
+    for (const { note, duration, offset } of melodyNotes) {
+      this.melodySynth.playNote({
+        note,
+        duration,
+        time: now + offset,
+      });
+    }
     // unmute the sequencer for next playback
-    delay(MELODY_LENGTH_MS, () => (this.sequence.mute = false));
+    delay(MELODY_LENGTH_MS, () => {
+      this.sequenceSynth.unMute();
+      this.sequence.mute = false;
+    });
   }
 
   stopSequence() {

@@ -3,7 +3,14 @@ import type { Duration, NoteOctave } from "./types";
 import { audioCtxReady } from "./audio-context";
 
 export class MonoSynth {
-  private synth = new Tone.Synth().toDestination();
+  private synth;
+  private volume;
+
+  constructor(synth: Tone.Synth) {
+    this.synth = synth;
+    this.volume = this.synth.volume.value;
+    this.synth.toDestination();
+  }
 
   private previousTime = 0;
 
@@ -30,5 +37,14 @@ export class MonoSynth {
     } catch (e) {
       console.error(e);
     }
+  }
+
+  mute() {
+    this.volume = this.synth.volume.value;
+    this.synth.volume.rampTo(-Infinity, 0.004);
+  }
+
+  unMute() {
+    this.synth.volume.rampTo(this.volume, 0.004);
   }
 }
