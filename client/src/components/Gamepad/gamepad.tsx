@@ -2,7 +2,7 @@ import { useGameMachine } from "../../services/game-machine";
 import { HighScore } from "./high-score";
 import { Button } from "../ui-elements/button";
 import { Pads } from "./pads";
-import { usePadController } from "./pad-controller";
+import { usePadController } from "../pad-controller";
 
 interface GamepadProps {
   gameMachine: ReturnType<typeof useGameMachine>;
