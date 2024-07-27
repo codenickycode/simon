@@ -1,41 +1,27 @@
 #!/bin/sh
 
-# Get staged files
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM )
 
 if [[ "$STAGED_FILES" = "" ]]; then
-    echo "No staged files to lint"
     exit 0
 fi
 
-echo "Running lint:fix script on: $STAGED_FILES"
+echo "Running lint:fix script"
 
-if ! command -v pnpm &> /dev/null; then
+which pnpm &> /dev/null
+if [[ "$?" == 1 ]]; then
     echo "pnpm not found. Please install pnpm"
     exit 1
 fi
 
-# Stash unstaged changes
-git stash -q --keep-index
+pnpm run lint:fix -- $STAGED_FILES
 
-# Run ESLint on staged files, grouped by directory
-for dir in $(echo "$STAGED_FILES" | xargs -n1 dirname | sort | uniq); do
-    files=$(echo "$STAGED_FILES" | grep "^$dir/")
-    if [ -n "$files" ]; then
-        echo "Linting files in $dir"
-        if ! (cd "$dir" && STAGED_FILES="$files" pnpm run lint:fix); then
-            echo "Linting failed in $dir. Please fix the errors and try committing again."
-            git stash pop -q
-            exit 1
-        fi
-    fi
-done
+if [[ "$?" == 1 ]]; then
+    echo "Linting failed. Please fix the errors and try committing again."
+    exit 1
+fi
 
 # Add fixed files back to staging
 git add $STAGED_FILES
 
-# Restore unstaged changes
-git stash pop -q
-
-echo "Linting completed successfully"
 exit 0
