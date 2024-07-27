@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useHighScoreApi } from "../../services/api.high-score";
 import { Modal } from "../ui-elements/modal";
 import { ANIMATION_DURATION } from "../../config";
@@ -53,13 +53,10 @@ export const GameOverModal = (props: GameOverModalProps) => {
     mutation.mutate({ name, score: props.userScore });
   };
 
-  const melodyPlayedRef = useRef(false);
-
   if (!isModalOpen) {
     // reset everything after the modal closes
     setTimeout(() => {
       mutation.reset();
-      melodyPlayedRef.current = false;
     }, ANIMATION_DURATION);
   }
 
@@ -72,11 +69,10 @@ export const GameOverModal = (props: GameOverModalProps) => {
     mutation.data?.success;
 
   useEffect(() => {
-    if (!isModalOpen || melodyPlayedRef.current) {
+    if (!isModalOpen) {
       return;
     }
     sequencer.playMelody(showNewHighScore ? "highScore" : "gameOver");
-    melodyPlayedRef.current = true;
   }, [isModalOpen, showNewHighScore]);
 
   return (
