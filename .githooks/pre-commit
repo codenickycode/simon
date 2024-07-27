@@ -1,5 +1,12 @@
 #!/bin/sh
 
+echo "***"
+echo "***"
+echo "***"
+echo "***"
+echo "***"
+echo "***"
+
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.(js|jsx|ts|tsx)$")
 
 if [[ "$STAGED_FILES" = "" ]]; then
