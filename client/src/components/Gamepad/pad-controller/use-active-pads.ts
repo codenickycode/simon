@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { useToggleItems } from "../../../utils/set";
+import { useSet } from "../../../utils/set";
 import { PadId } from "../types";
 import { sequencer } from "../../../services/sequencer";
 import { noteToPadId } from "../../../utils/pads";
 import { NoteOctave } from "../../../services/sequencer/types";
 
 export const useActivePads = (resetActivePads: boolean) => {
-  const computerPadsActive = useToggleItems<PadId>();
-  const userPadsActive = useToggleItems<PadId>();
+  const computerPadsActive = useSet<PadId>();
+  const userPadsActive = useSet<PadId>();
   const [reset, setReset] = useState(false);
 
   if (resetActivePads !== reset) {
@@ -19,11 +19,11 @@ export const useActivePads = (resetActivePads: boolean) => {
   useEffect(() => {
     sequencer.setOnPlaySynthComputer((note: NoteOctave) => {
       const item = noteToPadId(note);
-      item && computerPadsActive.on(item);
+      item && computerPadsActive.add(item);
       // after note duration, make it inactive
       setTimeout(() => {
         const item = noteToPadId(note);
-        item && computerPadsActive.off(item);
+        item && computerPadsActive.delete(item);
       }, sequencer.noteDurationMs / 2);
     });
   }, [computerPadsActive]);
@@ -37,7 +37,7 @@ export const useActivePads = (resetActivePads: boolean) => {
 
   return {
     activePads,
-    setUserPadActive: userPadsActive.on,
-    setUserPadInactive: userPadsActive.off,
+    setUserPadActive: userPadsActive.add,
+    setUserPadInactive: userPadsActive.delete,
   };
 };
