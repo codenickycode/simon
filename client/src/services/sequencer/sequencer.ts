@@ -83,15 +83,12 @@ class Sequencer {
     });
   }
 
-  /**
-   * 1. mute the sequencer (there are edge cases where it can remain playing)
-   * 2. delay the start of melody to allow trailing notes to finish
-   * 3. play the melody
-   * 4. unmute the sequencer for next playback
-   */
   async playMelody(melody: keyof typeof melodies) {
+    // this effectively stops the sequencer if playing
     this.sequence.mute = true;
+    // delay the start of melody to allow trailing notes to finish
     await delay(this.noteDurationMs / 2, () => melodies[melody]());
+    // unmute the sequencer for next playback
     delay(MELODY_LENGTH_MS, () => (this.sequence.mute = false));
   }
 
