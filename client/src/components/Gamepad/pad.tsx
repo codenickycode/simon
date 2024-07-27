@@ -17,6 +17,7 @@ export const Pad = (props: PadProps) => {
     <button
       onPointerDown={props.onPointerDown}
       onPointerUp={props.onPointerUp}
+      onPointerLeave={props.onPointerUp}
       className={classnames(
         "w-full aspect-square cursor-pointer",
         props.active ? "brightness-100" : "brightness-75",
