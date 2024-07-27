@@ -1,8 +1,8 @@
-import { pads } from "../../components/gamepad/schema";
-import { PadId } from "../../components/gamepad/types";
+import { pads } from "../../components/pad-controller/schema";
+import type { PadId } from "../../components/pad-controller/types";
 import { delay } from "../../utils/delay";
 import { sequencer } from "../sequencer";
-import { GameMachineState } from "./types";
+import type { GameMachineState } from "./types";
 
 /** A generic buffer to prevent feedback from happening to quickly for user */
 const TIMING_BUFFER_MS = 500;

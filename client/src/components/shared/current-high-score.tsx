@@ -1,5 +1,5 @@
 import { formatDate } from "../../utils/date";
-import { HighScoreEntry } from "@simon/shared";
+import type { HighScoreEntry } from "@simon/shared";
 
 export const CurrentHighScore = (props: {
   highScore: HighScoreEntry | undefined;

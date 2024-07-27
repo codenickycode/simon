@@ -1,16 +1,19 @@
+/* eslint-env node */
 module.exports = {
   root: true,
-  env: { es2020: true },
+  env: { es2022: true },
   extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
-  plugins: ["@typescript-eslint"],
-  rules: {
-    "@typescript-eslint/consistent-type-exports": "error",
-    "@typescript-eslint/consistent-type-imports": "error",
-  },
-  ignorePatterns: ["dist", ".eslintrc.js"],
   parser: "@typescript-eslint/parser",
+  parserOptions: {
+    project: "./tsconfig.json",
+    tsconfigRootDir: __dirname,
+    ecmaVersion: 2022,
+    sourceType: "module",
+  },
   rules: {
     "default-case": "error",
+    "@typescript-eslint/consistent-type-exports": "warn",
+    "@typescript-eslint/consistent-type-imports": "warn",
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-unused-expressions": [
       "error",
@@ -20,4 +23,5 @@ module.exports = {
   settings: {
     "max-warnings": 0,
   },
+  ignorePatterns: ["dist"],
 };

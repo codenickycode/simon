@@ -1,5 +1,6 @@
 import classNames from "classnames";
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import type { ReactNode} from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface ModalProps {
   isOpen: boolean;

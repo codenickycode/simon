@@ -1,5 +1,5 @@
-import { pads } from "../components/gamepad/schema";
-import { PadKey, PadTone } from "../components/gamepad/types";
+import { pads } from "../components/pad-controller/schema";
+import type { PadKey, PadTone } from "../components/pad-controller/types";
 import {
   keyToPadId,
   padKeyToPadTone,

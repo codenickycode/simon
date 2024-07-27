@@ -1,6 +1,6 @@
 import * as Tone from "tone";
 import { MonoSynth } from "./mono-synth";
-import { NoteOctave } from "./types";
+import type { NoteOctave } from "./types";
 
 const INIT_NOTE_DURATION_S = 0.3;
 

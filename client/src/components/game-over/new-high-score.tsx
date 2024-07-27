@@ -1,4 +1,5 @@
-import { FormEvent, useState } from "react";
+import type { FormEvent} from "react";
+import { useState } from "react";
 import { Input } from "../ui-elements/input";
 import { Button } from "../ui-elements/button";
 import { Spinner } from "../ui-elements/spinner";

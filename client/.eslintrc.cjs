@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ["../.eslintrc.js", "plugin:react-hooks/recommended"],
+  extends: ["../.eslintrc.cjs", "plugin:react-hooks/recommended"],
   env: { browser: true },
   plugins: ["react-refresh"],
   rules: {

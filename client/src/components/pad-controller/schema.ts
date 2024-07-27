@@ -1,5 +1,5 @@
-import { DeepReadonly } from "../../types";
-import { PadConfig, PadId } from "./types";
+import type { DeepReadonly } from "../../types";
+import type { PadConfig, PadId } from "./types";
 
 export const pads: DeepReadonly<{ [key in PadId]: PadConfig }> = {
   green: {

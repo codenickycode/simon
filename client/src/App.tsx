@@ -19,6 +19,7 @@ function App() {
         <GameOverModal
           isGameOver={gameMachine.isGameOver}
           userScore={gameMachine.userScore}
+          // todo use callback
           goToNewGameState={() =>
             gameMachine.actions.transition({ to: "newGame" })
           }
