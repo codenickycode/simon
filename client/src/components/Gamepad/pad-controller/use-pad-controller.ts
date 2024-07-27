@@ -33,7 +33,10 @@ export const usePadController = ({
     [setUserPadInactive]
   );
 
-  usePadKeyListeners({ onKeydown: userPadDown, onKeyup: userPadUp });
+  const padKeyListeners = usePadKeyListeners({
+    onKeydown: userPadDown,
+    onKeyup: userPadUp,
+  });
 
-  return { activePads, userPadDown, userPadUp };
+  return { activePads, userPadDown, userPadUp, padKeyListeners };
 };

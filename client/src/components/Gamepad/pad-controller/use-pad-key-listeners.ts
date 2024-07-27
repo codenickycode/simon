@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { PadId } from "../types";
 import { keyToPadId } from "../../../utils/pads";
 
@@ -10,8 +10,13 @@ export const usePadKeyListeners = ({
   onKeydown: (padId: PadId) => void;
   onKeyup: (padId: PadId) => void;
 }) => {
+  const [paused, setPaused] = useState(false);
+
   useEffect(() => {
     const keydownListener = (event: KeyboardEvent) => {
+      if (paused) {
+        return;
+      }
       if (event.repeat) {
         event.preventDefault();
         return;
@@ -26,7 +31,7 @@ export const usePadKeyListeners = ({
     return () => {
       window.removeEventListener("keydown", keydownListener);
     };
-  }, [onKeydown]);
+  }, [onKeydown, paused]);
 
   useEffect(() => {
     const keyupListener = (event: KeyboardEvent) => {
@@ -41,4 +46,13 @@ export const usePadKeyListeners = ({
       window.removeEventListener("keyup", keyupListener);
     };
   }, [onKeyup]);
+
+  const pause = useCallback(() => {
+    setPaused(true);
+  }, []);
+  const resume = useCallback(() => {
+    setPaused(false);
+  }, []);
+
+  return useMemo(() => ({ pause, resume }), [pause, resume]);
 };
