@@ -2,9 +2,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useGameMachine } from "./services/game-machine";
 import { GameOverModal } from "./components/game-over/game-over-modal";
 import { Gamepad } from "./components/gamepad/gamepad";
-import { PadId, usePadController } from "./components/pad-controller";
+import type { PadId} from "./components/pad-controller";
+import { usePadController } from "./components/pad-controller";
 
-// @ts-expect-error asdfffffff
+// @ts-expect-error asdffffffff
 const pad: PadId = 1;
 
 const queryClient = new QueryClient();
