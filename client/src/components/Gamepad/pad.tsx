@@ -15,6 +15,7 @@ export const Pad = (props: PadProps) => {
   const key = pads[props.padId].key;
   return (
     <button
+      aria-label={`${props.padId} pad`}
       onPointerDown={props.onPointerDown}
       onPointerUp={props.onPointerUp}
       onPointerLeave={props.onPointerUp}
