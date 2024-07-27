@@ -1,6 +1,5 @@
 #!/bin/sh
 
-# Get staged files
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.(js|jsx|ts|tsx)$")
 
 if [[ "$STAGED_FILES" = "" ]]; then
@@ -15,7 +14,7 @@ if [[ "$?" == 1 ]]; then
     exit 1
 fi
 
-pnpm run lint:fix -- $STAGED_FILES
+pnpm run lint:fix
 
 if [[ "$?" == 1 ]]; then
     echo "Linting failed. Please fix the errors and try committing again."
