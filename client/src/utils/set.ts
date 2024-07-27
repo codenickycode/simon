@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 
-/** Toggles an item in a set immutably by first making a copy. */
-export const toggleSetItem = <T>({
+/** Operates on a set immutably, by first creating a copy. */
+export const immutableSetOp = <T>({
   set,
   item,
   op,
@@ -15,19 +15,19 @@ export const toggleSetItem = <T>({
   return newSet;
 };
 
-/** Toggle items of a set on/off */
-export const useToggleItems = <T>(init: Set<T> = new Set()) => {
+/** React state hook for a Set */
+export const useSet = <T>(init: Set<T> = new Set()) => {
   const [items, setItems] = useState(init);
 
-  const on = useCallback((item: T) => {
+  const add = useCallback((item: T) => {
     setItems((prev) => {
-      return toggleSetItem({ set: prev, item, op: "add" });
+      return immutableSetOp({ set: prev, item, op: "add" });
     });
   }, []);
 
-  const off = useCallback((item: T) => {
+  const del = useCallback((item: T) => {
     setItems((prev) => {
-      return toggleSetItem({ set: prev, item, op: "delete" });
+      return immutableSetOp({ set: prev, item, op: "delete" });
     });
   }, []);
 
@@ -35,5 +35,5 @@ export const useToggleItems = <T>(init: Set<T> = new Set()) => {
     setItems(new Set(init));
   }, [init]);
 
-  return { items, on, off, reset };
+  return { items, add, delete: del, reset };
 };
