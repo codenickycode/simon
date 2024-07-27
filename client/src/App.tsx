@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useGameMachine } from "./services/game-machine";
 import { GameOverModal } from "./components/game-over/game-over-modal";
-import { Gamepad } from "./components/gamepad/gamepad";
+import { Gamepad } from "./components/gamepad";
 import { usePadController } from "./components/pad-controller";
 
 const queryClient = new QueryClient();
