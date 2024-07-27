@@ -11,7 +11,7 @@
     "worker": "pnpm --filter worker",
     "clean": "rm -rf node_modules pnpm-lock.yaml client/node_modules worker/node_module && pnpm i",
     "lint": "pnpm -r lint",
-    "lint:fix": "echo 'Running lint:fix on:' $STAGED_FILES && eslint $STAGED_FILES --fix --quiet && echo 'Linting completed, files modified:' && git diff --name-only $STAGED_FILES",
+    "lint:fix": "eslint $STAGED_FILES --fix --quiet",
     "test": "pnpm -r test",
     "test:watch": "pnpm -r test:watch",
     "typecheck": "pnpm -r typecheck"

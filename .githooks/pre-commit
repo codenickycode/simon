@@ -18,11 +18,18 @@ fi
 # Stash unstaged changes
 git stash -q --keep-index
 
-if ! pnpm run lint:fix -- $STAGED_FILES; then
-    echo "Linting failed. Please fix the errors and try committing again."
-    git stash pop -q
-    exit 1
-fi
+# Run ESLint on staged files, grouped by directory
+for dir in $(echo "$STAGED_FILES" | xargs -n1 dirname | sort | uniq); do
+    files=$(echo "$STAGED_FILES" | grep "^$dir/")
+    if [ -n "$files" ]; then
+        echo "Linting files in $dir"
+        if ! (cd "$dir" && STAGED_FILES="$files" pnpm run lint:fix); then
+            echo "Linting failed in $dir. Please fix the errors and try committing again."
+            git stash pop -q
+            exit 1
+        fi
+    fi
+done
 
 # Add fixed files back to staging
 git add $STAGED_FILES
