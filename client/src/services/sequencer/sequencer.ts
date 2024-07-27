@@ -1,6 +1,8 @@
 import * as Tone from "tone";
 import { MonoSynth } from "./mono-synth";
 import type { NoteOctave } from "./types";
+import { melodies, MELODY_LENGTH_MS } from "./melodies";
+import { delay } from "../../utils/delay";
 
 const INIT_NOTE_DURATION_S = 0.3;
 
@@ -79,6 +81,18 @@ class Sequencer {
       // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
       this.transport.start("+0.1");
     });
+  }
+
+  /**
+   * 1. mute the sequencer (there are edge cases where it can remain playing)
+   * 2. delay the start of melody to allow trailing notes to finish
+   * 3. play the melody
+   * 4. unmute the sequencer for next playback
+   */
+  async playMelody(melody: keyof typeof melodies) {
+    this.sequence.mute = true;
+    await delay(this.noteDurationMs / 2, () => melodies[melody]());
+    delay(MELODY_LENGTH_MS, () => (this.sequence.mute = false));
   }
 
   stopSequence() {

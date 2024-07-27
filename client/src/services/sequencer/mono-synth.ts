@@ -1,5 +1,5 @@
 import * as Tone from "tone";
-import type { NoteOctave } from "./types";
+import type { Duration, NoteOctave } from "./types";
 import { audioCtxReady } from "./audio-context";
 
 export class MonoSynth {
@@ -13,7 +13,7 @@ export class MonoSynth {
     time = Tone.getContext().currentTime, // play immediately,
   }: {
     note: NoteOctave;
-    duration: number;
+    duration: Duration;
     time?: number;
   }) {
     await audioCtxReady;
