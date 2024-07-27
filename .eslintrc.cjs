@@ -14,8 +14,8 @@ module.exports = {
     "default-case": "error",
     "@typescript-eslint/consistent-type-exports": "warn",
     "@typescript-eslint/consistent-type-imports": "warn",
-    "@typescript-eslint/no-unused-vars": "off",
-    "@typescript-eslint/no-unused-expressions": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-unused-expressions": "warn",
   },
   settings: {
     "max-warnings": 0,
