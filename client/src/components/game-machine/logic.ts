@@ -1,7 +1,7 @@
 import { pads } from "../../components/pad-controller/schema";
 import type { PadId } from "../../components/pad-controller/types";
 import { delay } from "../../utils/delay";
-import { sequencer } from "../sequencer";
+import { sequencer } from "../../services/sequencer";
 import type { GameMachineState } from "./types";
 
 /** A generic buffer to prevent feedback from happening to quickly for user */

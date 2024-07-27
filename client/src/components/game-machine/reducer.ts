@@ -1,4 +1,4 @@
-import { sequencer } from "../sequencer";
+import { sequencer } from "../../services/sequencer";
 import { gameLogic, NEW_GAME_STATE } from "./logic";
 import type { GameMachineAction, GameMachineState } from "./types";
 

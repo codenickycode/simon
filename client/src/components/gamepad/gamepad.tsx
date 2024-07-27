@@ -1,4 +1,4 @@
-import type { useGameMachine } from "../../services/game-machine";
+import type { useGameMachine } from "../game-machine";
 import { HighScore } from "./high-score";
 import { Button } from "../ui-elements/button";
 import { Pads } from "./pads";
