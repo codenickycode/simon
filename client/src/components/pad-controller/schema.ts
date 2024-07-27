@@ -7,15 +7,15 @@ export const pads: DeepReadonly<{ [key in PadId]: PadConfig }> = {
     key: "q",
   },
   red: {
-    tone: "C#4",
+    tone: "C4",
     key: "w",
   },
   blue: {
-    tone: "E5",
+    tone: "C5",
     key: "s",
   },
   yellow: {
-    tone: "A4",
+    tone: "G4",
     key: "a",
   },
 } as const;
