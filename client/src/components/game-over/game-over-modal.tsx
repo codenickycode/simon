@@ -4,6 +4,7 @@ import { Modal } from "../ui-elements/modal";
 import { ANIMATION_DURATION } from "../../config";
 import { NewHighScore } from "./new-high-score";
 import { CurrentHighScore } from "../shared/current-high-score";
+import { sequencer } from "../../services/sequencer";
 
 export interface GameOverModalProps {
   isGameOver: boolean;
@@ -66,6 +67,13 @@ export const GameOverModal = (props: GameOverModalProps) => {
     // successful (and the query re-validates), so to prevent a "game over"
     // flash, check if their update succeeded
     mutation.data?.success;
+
+  useEffect(() => {
+    if (!isModalOpen) {
+      return;
+    }
+    sequencer.playMelody(showNewHighScore ? "highScore" : "gameOver");
+  }, [isModalOpen, showNewHighScore]);
 
   return (
     <Modal
