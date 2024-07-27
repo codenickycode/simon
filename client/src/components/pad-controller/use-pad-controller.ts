@@ -1,9 +1,9 @@
 import { useCallback } from "react";
-import { PadId } from "../types";
-import { sequencer } from "../../../services/sequencer";
-import { pads } from "../schema";
+import { sequencer } from "./../../services/sequencer";
 import { useActivePads } from "./use-active-pads";
 import { usePadKeyListeners } from "./use-pad-key-listeners";
+import type { PadId } from "./types";
+import { pads } from "./schema";
 
 export const usePadController = ({
   onUserPadDown,

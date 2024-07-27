@@ -1,4 +1,4 @@
-import { NoOp } from "./no-op";
+import type { NoOp } from "./no-op";
 
 /** Promise that resolves after provided timeout. If cb provided, awaits its
  * resolution before resolving. */

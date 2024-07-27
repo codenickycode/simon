@@ -1,7 +1,8 @@
+import type {
+  HighScoreEntry,
+  UpdateHighScoreResponse} from "@simon/shared";
 import {
   getWorkerUrl,
-  HighScoreEntry,
-  UpdateHighScoreResponse,
   WORKER_PATH_HIGH_SCORE,
 } from "@simon/shared";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";

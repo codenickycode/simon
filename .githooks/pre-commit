@@ -1,0 +1,27 @@
+#!/bin/sh
+
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.(js|jsx|ts|tsx)$" )
+
+if [[ "$STAGED_FILES" = "" ]]; then
+    exit 0
+fi
+
+echo "Running lint:fix script"
+
+which pnpm &> /dev/null
+if [[ "$?" == 1 ]]; then
+    echo "pnpm not found. Please install pnpm"
+    exit 1
+fi
+
+pnpm run lint:fix -- $STAGED_FILES
+
+if [[ "$?" == 1 ]]; then
+    echo "Linting failed. Please fix the errors and try committing again."
+    exit 1
+fi
+
+# Add fixed files back to staging
+git add $STAGED_FILES
+
+exit 0

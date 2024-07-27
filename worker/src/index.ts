@@ -1,6 +1,6 @@
 import { WORKER_PATH_HIGH_SCORE } from '@simon/shared';
 import highScoreHandler from './high-score';
-import { Env } from './types';
+import type { Env } from './types';
 
 export default {
 	async fetch(request: Request, env: Env) {

@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useGameMachine } from "./services/game-machine";
 import { GameOverModal } from "./components/game-over/game-over-modal";
 import { Gamepad } from "./components/gamepad/gamepad";
-import { usePadController } from "./components/gamepad/pad-controller";
+import { usePadController } from "./components/pad-controller";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +19,7 @@ function App() {
         <GameOverModal
           isGameOver={gameMachine.isGameOver}
           userScore={gameMachine.userScore}
+          // todo use callback
           goToNewGameState={() =>
             gameMachine.actions.transition({ to: "newGame" })
           }

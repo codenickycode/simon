@@ -1,5 +1,5 @@
 import * as Tone from "tone";
-import { NoteOctave } from "./types";
+import type { NoteOctave } from "./types";
 import { audioCtxReady } from "./audio-context";
 
 export class MonoSynth {

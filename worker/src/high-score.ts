@@ -1,5 +1,5 @@
-import { HighScoreEntry, UpdateHighScoreResponse } from '@simon/shared';
-import { Env } from './types';
+import type { HighScoreEntry, UpdateHighScoreResponse } from '@simon/shared';
+import type { Env } from './types';
 
 export default async function highScoreHandler(request: Request, env: Env, headers: Headers) {
 	switch (request.method) {

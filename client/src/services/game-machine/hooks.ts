@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { GameState, Transition } from "./types";
+import type { GameState, Transition } from "./types";
 import { gameLogic } from "./logic";
 
 /** "on entry" hooks to execute once after state change */
