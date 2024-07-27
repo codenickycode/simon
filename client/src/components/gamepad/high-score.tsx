@@ -23,7 +23,9 @@ export const HighScore = () => {
         </Spinner>
       </Button>
       <Modal isOpen={modalOpen} onClose={closeModal} className="max-w-xl">
-        <h2 className="text-2xl mb-6">🏆</h2>
+        <h2 className="text-xl mb-8">
+          🏆 <span className="px-2">High Score</span> 🏆
+        </h2>
         <CurrentHighScore highScore={query.data} />
       </Modal>
     </div>
