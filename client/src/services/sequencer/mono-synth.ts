@@ -41,9 +41,10 @@ export class MonoSynth {
 
   mute() {
     this.volume = this.synth.volume.value;
-    this.synth.volume.rampTo(-Infinity, 4);
+    this.synth.volume.rampTo(-Infinity, 0.004);
   }
+
   unMute() {
-    this.synth.volume.rampTo(this.volume, 4);
+    this.synth.volume.rampTo(this.volume, 0.004);
   }
 }
