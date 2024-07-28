@@ -9,7 +9,8 @@
 		"deploy": "pnpm run build && pnpm exec wrangler deploy",
 		"dev": "pnpm run build && wrangler dev",
 		"lint": "eslint .",
-		"test": "echo 'test script not implemented for worker package'",
+		"test": "vitest run",
+		"test:watch": "vitest",
 		"start": "wrangler dev",
 		"typecheck": "pnpm exec tsc --build"
 	},
@@ -17,7 +18,11 @@
 		"@simon/shared": "workspace:*"
 	},
 	"devDependencies": {
-		"@cloudflare/workers-types": "^4.20240620.0",
-		"wrangler": "^3.60.3"
+		"@cloudflare/vitest-pool-workers": "^0.4.16",
+		"@cloudflare/workers-types": "^4.20240718.0",
+		"@vitest/runner": "1.5.0",
+		"@vitest/snapshot": "1.5.0",
+		"vitest": "1.5.0",
+		"wrangler": "^3.67.1"
 	}
 }
