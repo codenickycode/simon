@@ -7,10 +7,10 @@
   "main": "index.js",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "ci": "pnpm lint && pnpm typecheck && pnpm test",
     "client": "pnpm --filter client",
     "shared": "pnpm --filter shared",
     "worker": "pnpm --filter worker",
+    "ci": "pnpm lint && pnpm typecheck && pnpm test",
     "clean": "rm -rf node_modules pnpm-lock.yaml client/node_modules worker/node_module && pnpm i",
     "lint": "pnpm -r lint",
     "lint:fix": "pnpm exec eslint --fix",
