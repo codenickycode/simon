@@ -1,23 +1,26 @@
 {
-	"name": "@simon/worker",
-	"type": "module",
-	"version": "0.0.0",
-	"private": true,
-	"scripts": {
-		"prebuild": "rm -rf dist",
-		"build": "pnpm run prebuild && vite build",
-		"deploy": "pnpm run build && pnpm exec wrangler deploy",
-		"dev": "pnpm run build && wrangler dev",
-		"lint": "eslint .",
-		"test": "echo 'test script not implemented for worker package'",
-		"start": "wrangler dev",
-		"typecheck": "pnpm exec tsc --build"
-	},
-	"dependencies": {
-		"@simon/shared": "workspace:*"
-	},
-	"devDependencies": {
-		"@cloudflare/workers-types": "^4.20240620.0",
-		"wrangler": "^3.60.3"
-	}
+  "name": "@simon/worker",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "build": "pnpm run prebuild && vite build",
+    "deploy": "pnpm run build && pnpm exec wrangler deploy",
+    "dev": "pnpm run build && wrangler dev",
+    "lint": "eslint .",
+    "test": "pnpm run build && vitest run",
+    "start": "wrangler dev",
+    "typecheck": "pnpm exec tsc --build"
+  },
+  "dependencies": {
+    "@simon/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.4.16",
+    "@cloudflare/workers-types": "^4.20240718.0",
+    "vite": "^5.3.2",
+    "vitest": "1.5.0",
+    "wrangler": "^3.67.1"
+  }
 }

@@ -1,3 +1,3 @@
 export interface Env {
-	db: KVNamespace;
+  db: KVNamespace;
 }
