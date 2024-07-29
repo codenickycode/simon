@@ -9,7 +9,7 @@
     "deploy": "pnpm run build && pnpm exec wrangler deploy",
     "dev": "pnpm run build && wrangler dev",
     "lint": "eslint .",
-    "test": "vitest run",
+    "test": "pnpm run build && vitest run",
     "test:watch": "vitest",
     "start": "wrangler dev",
     "typecheck": "pnpm exec tsc --build"
