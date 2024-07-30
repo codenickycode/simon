@@ -1,10 +1,10 @@
-import { pads } from "../components/pad-controller/schema";
+import { pads } from '../components/pad-controller/schema';
 import type {
   PadId,
   PadKey,
   PadTone,
-} from "../components/pad-controller/types";
-import type { NoteOctave } from "../services/sequencer/types";
+} from '../components/pad-controller/types';
+import type { NoteOctave } from '../services/sequencer/types';
 
 export const keyToPadId = (key: string): PadId | undefined => {
   const [padId] = Object.entries(pads).find(([, pad]) => pad.key === key) || [];
@@ -19,7 +19,7 @@ export const noteToPadId = (note: NoteOctave): PadId | undefined => {
   const [padId] =
     Object.entries(pads).find(([, pad]) => pad.tone === note) || [];
   if (!padId) {
-    console.warn("could not find padId from note");
+    console.warn('could not find padId from note');
   }
   // Object.entries is erasing the type of entries[0] which is the PadId
   return padId as PadId | undefined;

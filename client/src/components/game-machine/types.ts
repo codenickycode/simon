@@ -1,6 +1,6 @@
-import type { PadId } from "../../components/pad-controller/types";
+import type { PadId } from '../../components/pad-controller/types';
 
-export type GameState = "newGame" | "computerTurn" | "userTurn" | "gameOver";
+export type GameState = 'newGame' | 'computerTurn' | 'userTurn' | 'gameOver';
 
 export type Transition = (params: {
   to: GameState;
@@ -15,15 +15,15 @@ export interface GameMachineState {
 
 export type GameMachineAction =
   | {
-      type: "transition";
+      type: 'transition';
       to: GameState;
       onlyIfState?: GameState;
       nextMachineState?: GameMachineState;
     }
   | {
-      type: "startNewGame";
+      type: 'startNewGame';
     }
   | {
-      type: "input";
+      type: 'input';
       padId: PadId;
     };

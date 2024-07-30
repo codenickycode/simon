@@ -1,9 +1,9 @@
-import { useCallback } from "react";
-import { sequencer } from "./../../services/sequencer";
-import { useActivePads } from "./use-active-pads";
-import { usePadKeyListeners } from "./use-pad-key-listeners";
-import type { PadId } from "./types";
-import { pads } from "./schema";
+import { useCallback } from 'react';
+import { sequencer } from './../../services/sequencer';
+import { useActivePads } from './use-active-pads';
+import { usePadKeyListeners } from './use-pad-key-listeners';
+import type { PadId } from './types';
+import { pads } from './schema';
 
 export const usePadController = ({
   onUserPadDown,
@@ -23,14 +23,14 @@ export const usePadController = ({
       sequencer.playSynthUser(pads[padId].tone);
       onUserPadDown(padId);
     },
-    [onUserPadDown, setUserPadActive]
+    [onUserPadDown, setUserPadActive],
   );
 
   const userPadUp = useCallback(
     (padId: PadId) => {
       setUserPadInactive(padId);
     },
-    [setUserPadInactive]
+    [setUserPadInactive],
   );
 
   const padKeyListeners = usePadKeyListeners({

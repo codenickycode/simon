@@ -1,8 +1,8 @@
-import * as Tone from "tone";
-import { MonoSynth } from "./mono-synth";
-import type { NoteOctave } from "./types";
-import { melodies, MELODY_LENGTH_MS } from "./melodies";
-import { delay } from "../../utils/delay";
+import * as Tone from 'tone';
+import { MonoSynth } from './mono-synth';
+import type { NoteOctave } from './types';
+import { melodies, MELODY_LENGTH_MS } from './melodies';
+import { delay } from '../../utils/delay';
 
 const INIT_NOTE_DURATION_S = 0.3;
 
@@ -10,7 +10,7 @@ class Sequencer {
   private transport = Tone.getTransport();
   private sequenceSynth = new MonoSynth(new Tone.Synth());
   private melodySynth = new MonoSynth(
-    new Tone.Synth({ oscillator: { type: "amsquare16" }, volume: -3 })
+    new Tone.Synth({ oscillator: { type: 'amsquare16' }, volume: -3 }),
   );
 
   // todo: allow tempo changes
@@ -47,7 +47,7 @@ class Sequencer {
     this.onPlaySynthComputer = onPlaySynthComputer;
   }
   private onPlaySynthComputer: (note: NoteOctave) => void = () => {
-    throw new Error("onPlaySynthComputer has not been initialized");
+    throw new Error('onPlaySynthComputer has not been initialized');
   };
 
   playSynthUser(note: NoteOctave) {
@@ -82,7 +82,7 @@ class Sequencer {
       }, sequenceDuration);
       // best to start the transport a little late
       // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
-      this.transport.start("+0.1");
+      this.transport.start('+0.1');
     });
   }
 

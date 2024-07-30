@@ -1,6 +1,6 @@
-import classNames from "classnames";
-import type { ReactNode} from "react";
-import { useCallback, useEffect, useState } from "react";
+import classNames from 'classnames';
+import type { ReactNode } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -23,13 +23,13 @@ export const Modal = ({
   // one modal open at a time. We do not currently have that requirement.
   useEffect(() => {
     const closeModal = (e: KeyboardEvent) => {
-      if (closeOnEsc && e.key === "Escape") {
+      if (closeOnEsc && e.key === 'Escape') {
         onClose();
       }
     };
-    document.addEventListener("keydown", closeModal);
+    document.addEventListener('keydown', closeModal);
     return () => {
-      document.removeEventListener("keydown", closeModal);
+      document.removeEventListener('keydown', closeModal);
     };
   }, [closeOnEsc, onClose]);
 
@@ -52,18 +52,18 @@ export const Modal = ({
   return (
     <div
       className={classNames(
-        "fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50",
-        isOpen ? "animate-fadeIn" : "animate-fadeOut"
+        'fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50',
+        isOpen ? 'animate-fadeIn' : 'animate-fadeOut',
       )}
       onClick={onClose}
       onAnimationEnd={handleAnimationEnd}
     >
       <div
         className={classNames(
-          "rounded-lg p-6 m-4 bg-gradient-to-b from-slate-700 to-sky-950",
-          isOpen ? "animate-scaleIn" : "animate-scaleOut",
+          'rounded-lg p-6 m-4 bg-gradient-to-b from-slate-700 to-sky-950',
+          isOpen ? 'animate-scaleIn' : 'animate-scaleOut',
           // todo: twMerge
-          className ?? ""
+          className ?? '',
         )}
         onClick={(e) => e.stopPropagation()}
       >

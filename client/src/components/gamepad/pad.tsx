@@ -1,6 +1,6 @@
-import classnames from "classnames";
-import type { PadId } from "../pad-controller/types";
-import { pads } from "../pad-controller/schema";
+import classnames from 'classnames';
+import type { PadId } from '../pad-controller/types';
+import { pads } from '../pad-controller/schema';
 
 export interface PadProps {
   padId: PadId;
@@ -20,10 +20,10 @@ export const Pad = (props: PadProps) => {
       onPointerUp={props.onPointerUp}
       onPointerLeave={props.onPointerUp}
       className={classnames(
-        "w-full aspect-square cursor-pointer",
-        props.active ? "brightness-100" : "brightness-75",
+        'w-full aspect-square cursor-pointer',
+        props.active ? 'brightness-100' : 'brightness-75',
         // todo: twMerge
-        props.className
+        props.className,
       )}
     >
       <span className="font-bold text-xl md:text-2xl">

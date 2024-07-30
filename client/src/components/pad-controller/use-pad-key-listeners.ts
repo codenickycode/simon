@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { keyToPadId } from "../../utils/pads";
-import type { PadId } from "./types";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { keyToPadId } from '../../utils/pads';
+import type { PadId } from './types';
 
 /** Listen for keydown events that are a pad input.
  * Can be paused, for instance when the user is typing. */
@@ -35,9 +35,9 @@ export const usePadKeyListeners = ({
       }
       onKeydown(padId);
     };
-    window.addEventListener("keydown", keydownListener);
+    window.addEventListener('keydown', keydownListener);
     return () => {
-      window.removeEventListener("keydown", keydownListener);
+      window.removeEventListener('keydown', keydownListener);
     };
   }, [onKeydown, paused]);
 
@@ -49,9 +49,9 @@ export const usePadKeyListeners = ({
       }
       onKeyup(padId);
     };
-    window.addEventListener("keyup", keyupListener);
+    window.addEventListener('keyup', keyupListener);
     return () => {
-      window.removeEventListener("keyup", keyupListener);
+      window.removeEventListener('keyup', keyupListener);
     };
   }, [onKeyup]);
 

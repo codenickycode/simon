@@ -4,7 +4,7 @@ import type { Env } from './types';
 export default async function highScoreHandler(
   request: Request,
   env: Env,
-  headers: Headers
+  headers: Headers,
 ) {
   switch (request.method) {
     case 'GET':
@@ -47,7 +47,7 @@ async function updateHighScore(request: Request, env: Env, headers: Headers) {
         JSON.stringify({
           error: `The score you submitted is not higher than the current high score of ${currentHighScore.score}`,
         }),
-        { status: 400, headers }
+        { status: 400, headers },
       );
     }
   } catch (error) {
@@ -55,7 +55,7 @@ async function updateHighScore(request: Request, env: Env, headers: Headers) {
       JSON.stringify({
         error: (error as Error)?.message || 'Failed to update high score',
       }),
-      { status: 400, headers }
+      { status: 400, headers },
     );
   }
 }
@@ -63,7 +63,7 @@ async function updateHighScore(request: Request, env: Env, headers: Headers) {
 async function getCurrentHighScore(env: Env): Promise<HighScoreEntry> {
   const currentHighScore = await env.db.get<HighScoreEntry>(
     'highScore',
-    'json'
+    'json',
   );
   if (!currentHighScore) {
     return { score: 0, name: 'Anonymous', timestamp: 0 };

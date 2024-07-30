@@ -1,5 +1,5 @@
-import classNames from "classnames";
-import type { ReactNode } from "react";
+import classNames from 'classnames';
+import type { ReactNode } from 'react';
 
 interface SpinnerProps {
   isSpinning: boolean;
@@ -16,8 +16,8 @@ export const Spinner = ({ isSpinning, children }: SpinnerProps) => {
       )}
       <span
         className={classNames(
-          "transition-opacity duration-300",
-          isSpinning ? "opacity-0" : "opacity-100"
+          'transition-opacity duration-300',
+          isSpinning ? 'opacity-0' : 'opacity-100',
         )}
       >
         {children}

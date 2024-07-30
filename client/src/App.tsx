@@ -1,8 +1,8 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useGameMachine } from "./components/game-machine";
-import { GameOverModal } from "./components/game-over/game-over-modal";
-import { Gamepad } from "./components/gamepad";
-import { usePadController } from "./components/pad-controller";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useGameMachine } from './components/game-machine';
+import { GameOverModal } from './components/game-over/game-over-modal';
+import { Gamepad } from './components/gamepad';
+import { usePadController } from './components/pad-controller';
 
 const queryClient = new QueryClient();
 
@@ -21,7 +21,7 @@ function App() {
           userScore={gameMachine.userScore}
           // todo use callback
           goToNewGameState={() =>
-            gameMachine.actions.transition({ to: "newGame" })
+            gameMachine.actions.transition({ to: 'newGame' })
           }
           padKeyListeners={padController.padKeyListeners}
         />

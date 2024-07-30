@@ -30,7 +30,7 @@ export function useHighScoreApi(params?: {
 
   const mutation = useMutation({
     mutationFn: async (
-      updateHighScore: Pick<HighScoreEntry, 'name' | 'score'>
+      updateHighScore: Pick<HighScoreEntry, 'name' | 'score'>,
     ) => {
       return fetch(highScoreUrl, {
         method: 'POST',
