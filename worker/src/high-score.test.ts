@@ -115,20 +115,17 @@ describe('POST', () => {
       });
     });
   });
-  describe('when score type is incorrect incorrect', async () => {
+  describe.each([
+    ['invalid score', { score: 'foo', name: 'valid' }],
+    ['invalid name', { score: 100, name: 0 }],
+  ])('when given an %s', async (_, body) => {
     it('should return 400 status', async () => {
-      const request = await createRequest('POST', {
-        score: 'foo',
-        name: 'name',
-      });
+      const request = await createRequest('POST', body);
       const response = await worker.fetch(request, env as Env);
       expect(response.status).toBe(400);
     });
     it('should return an error message', async () => {
-      const request = await createRequest('POST', {
-        score: 'foo',
-        name: 'name',
-      });
+      const request = await createRequest('POST', body);
       const response = await worker.fetch(request, env as Env);
       expect(await response.json()).toEqual({
         error: 'Invalid entry',
