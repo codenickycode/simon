@@ -1,1 +1,1 @@
-export { useGameMachine } from "./use-game-machine";
+export { useGameMachine } from './use-game-machine';

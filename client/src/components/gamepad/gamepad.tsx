@@ -1,8 +1,8 @@
-import type { useGameMachine } from "../game-machine";
-import { HighScore } from "./high-score";
-import { Button } from "../ui-elements/button";
-import { Pads } from "./pads";
-import type { usePadController } from "../pad-controller";
+import type { useGameMachine } from '../game-machine';
+import { HighScore } from './high-score';
+import { Button } from '../ui-elements/button';
+import { Pads } from './pads';
+import type { usePadController } from '../pad-controller';
 
 interface GamepadProps {
   gameMachine: ReturnType<typeof useGameMachine>;

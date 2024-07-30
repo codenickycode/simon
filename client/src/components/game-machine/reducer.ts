@@ -1,34 +1,34 @@
-import { sequencer } from "../../services/sequencer";
-import { gameLogic, NEW_GAME_STATE } from "./logic";
-import type { GameMachineAction, GameMachineState } from "./types";
+import { sequencer } from '../../services/sequencer';
+import { gameLogic, NEW_GAME_STATE } from './logic';
+import type { GameMachineAction, GameMachineState } from './types';
 
 export const gameMachineReducer = (
   currentMachineState: GameMachineState,
-  action: GameMachineAction
+  action: GameMachineAction,
 ): GameMachineState => {
   if (!actionGuard(currentMachineState, action)) {
     return currentMachineState;
   }
   switch (action.type) {
-    case "transition": {
+    case 'transition': {
       const nextMachineState = action.nextMachineState || currentMachineState;
       return { ...nextMachineState, state: action.to };
     }
-    case "startNewGame": {
+    case 'startNewGame': {
       sequencer.resetSequence();
-      return { ...NEW_GAME_STATE, state: "computerTurn" };
+      return { ...NEW_GAME_STATE, state: 'computerTurn' };
     }
-    case "input": {
+    case 'input': {
       if (
         !gameLogic.checkInput(action.padId, currentMachineState.userSeqIndex)
       ) {
-        return { ...currentMachineState, state: "gameOver" };
+        return { ...currentMachineState, state: 'gameOver' };
       }
       const nextIdx = currentMachineState.userSeqIndex + 1;
       if (gameLogic.isSequenceComplete(nextIdx)) {
         return {
           ...currentMachineState,
-          state: "computerTurn",
+          state: 'computerTurn',
           userScore: nextIdx,
           userSeqIndex: 0,
         };
@@ -36,31 +36,31 @@ export const gameMachineReducer = (
       return {
         ...currentMachineState,
         userSeqIndex: nextIdx,
-        state: "userTurn",
+        state: 'userTurn',
       };
     }
     default:
-      throw new Error("action not implemented");
+      throw new Error('action not implemented');
   }
 };
 
 /** Passes if action type is implemented for the current machine state */
 const actionGuard = (
   currentMachineState: GameMachineState,
-  action: GameMachineAction
+  action: GameMachineAction,
 ): boolean => {
   switch (action.type) {
-    case "transition":
+    case 'transition':
       if (action.onlyIfState) {
         return action.onlyIfState === currentMachineState.state;
       }
       return true;
-    case "startNewGame":
-      return ["newGame", "gameOver"].includes(currentMachineState.state);
-    case "input":
+    case 'startNewGame':
+      return ['newGame', 'gameOver'].includes(currentMachineState.state);
+    case 'input':
       // computer turn is acceptable because the user can "jump start" their turn
-      return ["computerTurn", "userTurn"].includes(currentMachineState.state);
+      return ['computerTurn', 'userTurn'].includes(currentMachineState.state);
     default:
-      throw new Error("action guard not implemented for action type");
+      throw new Error('action guard not implemented for action type');
   }
 };

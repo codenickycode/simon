@@ -1,9 +1,9 @@
-import { useCallback, useState } from "react";
-import { useHighScoreApi } from "../../services/api.high-score";
-import { Spinner } from "../ui-elements/spinner";
-import { Modal } from "../ui-elements/modal";
-import { CurrentHighScore } from "../shared/current-high-score";
-import { Button } from "../ui-elements/button";
+import { useCallback, useState } from 'react';
+import { useHighScoreApi } from '../../services/api.high-score';
+import { Spinner } from '../ui-elements/spinner';
+import { Modal } from '../ui-elements/modal';
+import { CurrentHighScore } from '../shared/current-high-score';
+import { Button } from '../ui-elements/button';
 
 export const HighScore = () => {
   const { query } = useHighScoreApi();
@@ -19,7 +19,7 @@ export const HighScore = () => {
       >
         High Score:<span className="mx-1"></span>
         <Spinner isSpinning={query.isFetching}>
-          {query.data?.score ?? "?"}
+          {query.data?.score ?? '?'}
         </Spinner>
       </Button>
       <Modal isOpen={modalOpen} onClose={closeModal} className="max-w-xl">

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState } from 'react';
 
 /** Operates on a set immutably, by first creating a copy. */
 export const immutableSetOp = <T>({
@@ -8,7 +8,7 @@ export const immutableSetOp = <T>({
 }: {
   set: Set<T>;
   item: T;
-  op: "add" | "delete";
+  op: 'add' | 'delete';
 }): Set<T> => {
   const newSet = new Set([...set]);
   newSet[op](item);
@@ -21,13 +21,13 @@ export const useSet = <T>(init: Set<T> = new Set()) => {
 
   const add = useCallback((item: T) => {
     setItems((prev) => {
-      return immutableSetOp({ set: prev, item, op: "add" });
+      return immutableSetOp({ set: prev, item, op: 'add' });
     });
   }, []);
 
   const del = useCallback((item: T) => {
     setItems((prev) => {
-      return immutableSetOp({ set: prev, item, op: "delete" });
+      return immutableSetOp({ set: prev, item, op: 'delete' });
     });
   }, []);
 

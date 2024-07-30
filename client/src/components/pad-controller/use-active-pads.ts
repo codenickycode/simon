@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { useSet } from "./../../utils/set";
-import { sequencer } from "./../../services/sequencer";
-import { noteToPadId } from "./../../utils/pads";
-import type { NoteOctave } from "./../../services/sequencer/types";
-import type { PadId } from "./types";
+import { useEffect, useMemo, useState } from 'react';
+import { useSet } from './../../utils/set';
+import { sequencer } from './../../services/sequencer';
+import { noteToPadId } from './../../utils/pads';
+import type { NoteOctave } from './../../services/sequencer/types';
+import type { PadId } from './types';
 
 export const useActivePads = (resetActivePads: boolean) => {
   const computerPadsActive = useSet<PadId>();
@@ -32,7 +32,7 @@ export const useActivePads = (resetActivePads: boolean) => {
   const activePads = useMemo<Set<PadId>>(
     () =>
       new Set<PadId>([...computerPadsActive.items, ...userPadsActive.items]),
-    [computerPadsActive, userPadsActive]
+    [computerPadsActive, userPadsActive],
   );
 
   return {

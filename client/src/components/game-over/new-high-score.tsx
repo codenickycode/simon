@@ -1,8 +1,8 @@
-import type { FormEvent} from "react";
-import { useState } from "react";
-import { Input } from "../ui-elements/input";
-import { Button } from "../ui-elements/button";
-import { Spinner } from "../ui-elements/spinner";
+import type { FormEvent } from 'react';
+import { useState } from 'react';
+import { Input } from '../ui-elements/input';
+import { Button } from '../ui-elements/button';
+import { Spinner } from '../ui-elements/spinner';
 
 interface NewHighScoreProps {
   onSubmit: (name: string) => void;
@@ -12,7 +12,7 @@ interface NewHighScoreProps {
 }
 
 export const NewHighScore = (props: NewHighScoreProps) => {
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState('');
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

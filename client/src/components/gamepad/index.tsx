@@ -1,1 +1,1 @@
-export { Gamepad } from "./gamepad";
+export { Gamepad } from './gamepad';

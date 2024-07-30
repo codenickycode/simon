@@ -1,6 +1,6 @@
-import * as Tone from "tone";
-import type { Duration, NoteOctave } from "./types";
-import { audioCtxReady } from "./audio-context";
+import * as Tone from 'tone';
+import type { Duration, NoteOctave } from './types';
+import { audioCtxReady } from './audio-context';
 
 export class MonoSynth {
   private synth;
