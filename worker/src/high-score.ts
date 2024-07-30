@@ -1,4 +1,4 @@
-import type { HighScoreEntry, UpdateHighScoreResponse } from '@simon/shared';
+import type { HighScoreEntry } from '@simon/shared';
 import type { Env } from './types';
 
 export default async function highScoreHandler(
@@ -28,7 +28,10 @@ async function updateHighScore(request: Request, env: Env, headers: Headers) {
       name: unknown;
     }>();
     if (typeof score !== 'number' || typeof name !== 'string') {
-      throw new Error('Invalid score or name');
+      return new Response(JSON.stringify({ error: 'Invalid entry' }), {
+        status: 400,
+        headers,
+      });
     }
     const currentHighScore = await getCurrentHighScore(env);
     if (score > currentHighScore.score) {
@@ -38,21 +41,22 @@ async function updateHighScore(request: Request, env: Env, headers: Headers) {
         timestamp: Date.now(),
       };
       await env.db.put('highScore', JSON.stringify(newHighScore));
-      const response: UpdateHighScoreResponse = { success: true, newHighScore };
-      return new Response(JSON.stringify(response), { headers });
+      return new Response(JSON.stringify({ newHighScore }), { headers });
     } else {
-      const response: UpdateHighScoreResponse = {
-        success: false,
-        error: `The score you submitted is not higher than the current high score of ${currentHighScore.score}`,
-      };
-      return new Response(JSON.stringify(response), { headers });
+      return new Response(
+        JSON.stringify({
+          error: `The score you submitted is not higher than the current high score of ${currentHighScore.score}`,
+        }),
+        { status: 400, headers }
+      );
     }
   } catch (error) {
-    const response: UpdateHighScoreResponse = {
-      success: false,
-      error: 'Invalid request body',
-    };
-    return new Response(JSON.stringify(response), { status: 400, headers });
+    return new Response(
+      JSON.stringify({
+        error: (error as Error)?.message || 'Failed to update high score',
+      }),
+      { status: 400, headers }
+    );
   }
 }
 
