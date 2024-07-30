@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
-import { useHighScoreApi } from "../../services/api.high-score";
-import { Modal } from "../ui-elements/modal";
-import { ANIMATION_DURATION } from "../../config";
-import { NewHighScore } from "./new-high-score";
-import { CurrentHighScore } from "../shared/current-high-score";
-import { sequencer } from "../../services/sequencer";
+import { useCallback, useEffect, useState } from 'react';
+import { useHighScoreApi } from '../../services/api.high-score';
+import { Modal } from '../ui-elements/modal';
+import { ANIMATION_DURATION } from '../../config';
+import { NewHighScore } from './new-high-score';
+import { CurrentHighScore } from '../shared/current-high-score';
+import { sequencer } from '../../services/sequencer';
 
 export interface GameOverModalProps {
   isGameOver: boolean;
@@ -41,7 +41,7 @@ export const GameOverModal = (props: GameOverModalProps) => {
     }
   }, [closeModal, isModalOpen, props.isGameOver]);
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const { query, mutation } = useHighScoreApi({
     onMutationSuccess: props.goToNewGameState,
@@ -49,7 +49,7 @@ export const GameOverModal = (props: GameOverModalProps) => {
   });
 
   const onSubmit = (name: string) => {
-    setError("");
+    setError('');
     mutation.mutate({ name, score: props.userScore });
   };
 
@@ -66,13 +66,13 @@ export const GameOverModal = (props: GameOverModalProps) => {
     // the line above will be falsy if the user's update to high score is
     // successful (and the query re-validates), so to prevent a "game over"
     // flash, check if their update succeeded
-    mutation.data?.success;
+    mutation.isSuccess;
 
   useEffect(() => {
     if (!isModalOpen) {
       return;
     }
-    sequencer.playMelody(showNewHighScore ? "highScore" : "gameOver");
+    sequencer.playMelody(showNewHighScore ? 'highScore' : 'gameOver');
   }, [isModalOpen, showNewHighScore]);
 
   return (
@@ -88,7 +88,7 @@ export const GameOverModal = (props: GameOverModalProps) => {
           // Disable the form while mutation is pending
           disabled={mutation.isPending}
           // Keep a pending state on success because we are animating away the modal. This will prevent a flash.
-          pending={mutation.isPending || !!mutation.data?.success}
+          pending={mutation.isPending || !!mutation.isSuccess}
         />
       ) : (
         <div>
