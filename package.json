@@ -12,6 +12,7 @@
     "worker": "pnpm --filter worker",
     "ci": "pnpm lint && pnpm typecheck && pnpm test",
     "clean": "rm -rf node_modules pnpm-lock && pnpm -r exec rm -rf node_modules && pnpm i",
+    "format": "pnpm exec prettier --write **/*.{js,ts,tsx,json,css,md}",
     "lint": "pnpm -r lint",
     "lint:fix": "pnpm exec eslint --fix",
     "test": "pnpm -r test",
