@@ -106,6 +106,9 @@ jobs:
       - name: 📥 Install deps
         run: pnpm install
 
+      - name: ⚙️ Build
+        run: pnpm build
+
       - name: 🚀 Publish to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_KEY }}

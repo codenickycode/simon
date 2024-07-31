@@ -2,12 +2,10 @@
 
 set -e
 
-if [[ "$GITHUB_REF_NAME" != "main" && "$GITHUB_REF_NAME" != "dev" ]]; then
-    echo "Not publishing: this branch is not main or dev."
-    exit 0
-fi
-
-pnpm client run build
+# if [[ "$GITHUB_REF_NAME" != "main" && "$GITHUB_REF_NAME" != "dev" ]]; then
+#     echo "Not publishing: this branch is not main or dev."
+#     exit 0
+# fi
 
 if [[ "$GITHUB_REF_NAME" == "dev" ]]; then
     # Deploy to preview for dev branch
