@@ -1,5 +1,3 @@
-name: 🚀 Deploy
-
 on:
   push:
     branches:
@@ -17,7 +15,7 @@ permissions:
 
 jobs:
   lint:
-    name: ⬣ ESLint
+    name: ⬣ lint
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
@@ -41,7 +39,7 @@ jobs:
         run: pnpm run lint
 
   typecheck:
-    name: ʦ TypeScript
+    name: ʦ typecheck
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
@@ -65,7 +63,7 @@ jobs:
         run: pnpm run typecheck
 
   test:
-    name: ⚡ Vitest
+    name: ⚡ test
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
@@ -94,7 +92,7 @@ jobs:
     permissions:
       contents: read
       deployments: write
-    name: 🚀 Publish to Cloudflare Pages
+    name: 🚀 deploy client
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
