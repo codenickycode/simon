@@ -10,6 +10,7 @@
     "client": "pnpm --filter client",
     "shared": "pnpm --filter shared",
     "worker": "pnpm --filter worker",
+    "build": "pnpm -r build",
     "ci": "pnpm lint && pnpm typecheck && pnpm test",
     "clean": "rm -rf node_modules pnpm-lock && pnpm -r exec rm -rf node_modules && pnpm i",
     "format": "pnpm exec prettier --write **/*.{js,ts,tsx,json,css,md}",
