@@ -113,8 +113,8 @@ jobs:
           GITHUB_REF_NAME: ${{ github.ref_name }}
           GITHUB_SHA: ${{ github.sha }}
         run: |
-          chmod +x ../scripts/publish-pages.sh
-          ../scripts/publish-pages.sh
+          chmod +x ./.github/scripts/publish-pages.sh
+          ./.github/scripts/publish-pages.sh
 
       - name: 🚀 Publish to Cloudflare Workers
         env:
