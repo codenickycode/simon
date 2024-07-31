@@ -6,8 +6,7 @@
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "pnpm run prebuild && vite build",
-    "deploy:dev": "pnpm wrangler deploy ./dist --project-name simon --branch \"dev\" --commit-hash \"$GITHUB_SHA\" --commit-message \"dev deployment\"",
-    "deploy:prod": "pnpm wrangler deploy ./dist --project-name simon",
+    "deploy": "pnpm wrangler deploy ./dist --project-name simon",
     "dev": "pnpm run build && wrangler dev",
     "lint": "eslint .",
     "test": "pnpm run build && vitest run",
