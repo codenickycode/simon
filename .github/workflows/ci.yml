@@ -87,6 +87,11 @@ jobs:
   publish:
     name: 🚀 Publish
     runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+      GITHUB_REF_NAME: ${{ github.ref_name }}
+      GITHUB_SHA: ${{ github.sha }}
     # needs: [lint, typecheck, test]
     steps:
       - name: ⬇️ Checkout repo
@@ -109,22 +114,22 @@ jobs:
       - name: ⚙️ Build
         run: pnpm build
 
-      - name: 🚀 Publish to Cloudflare Pages
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_KEY }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          GITHUB_REF_NAME: ${{ github.ref_name }}
-          GITHUB_SHA: ${{ github.sha }}
+      - name: 🚀 Publish client
         run: |
-          chmod +x ./.github/scripts/publish-client.sh
-          ./.github/scripts/publish-client.sh
+          if [[ "$GITHUB_REF_NAME" == "main" ]]; then
+            pnpm client run deploy:prod
+          elif [[ "$GITHUB_REF_NAME" == "dev" ]]; then
+            pnpm client run deploy:dev
+          else
+            echo "Not publishing client: this branch is not main or dev."
+          fi
 
-      - name: 🚀 Publish to Cloudflare Workers
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_KEY }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          GITHUB_REF_NAME: ${{ github.ref_name }}
-          GITHUB_SHA: ${{ github.sha }}
+      - name: 🚀 Publish worker
         run: |
-          chmod +x ./.github/scripts/publish-worker.sh
-          ./.github/scripts/publish-worker.sh
+          if [[ "$GITHUB_REF_NAME" == "main" ]]; then
+            pnpm worker run deploy:prod
+          elif [[ "$GITHUB_REF_NAME" == "dev" ]]; then
+            pnpm worker run deploy:dev
+          else
+            echo "Not publishing worker: this branch is not main or dev."
+          fi
