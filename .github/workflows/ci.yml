@@ -1,3 +1,5 @@
+name: ⚙️ CI/CD
+
 on:
   push:
     branches:
@@ -15,7 +17,7 @@ permissions:
 
 jobs:
   lint:
-    name: ⬣ lint
+    name: ⬣ ESLint
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
@@ -39,7 +41,7 @@ jobs:
         run: pnpm run lint
 
   typecheck:
-    name: ʦ typecheck
+    name: ʦ TypeScript
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
@@ -63,7 +65,7 @@ jobs:
         run: pnpm run typecheck
 
   test:
-    name: ⚡ test
+    name: ⚡ Vitest
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
@@ -86,13 +88,12 @@ jobs:
       - name: ⚡ Run vitest
         run: pnpm run test
 
-  deploy-client:
-    needs: [lint, typecheck, test]
+  publish-client:
+    name: 🚀 Publish to Cloudflare Pages
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      deployments: write
-    name: 🚀 deploy client
+    needs: [lint, typecheck, test]
+    # only deploy main/dev branches
+    if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
