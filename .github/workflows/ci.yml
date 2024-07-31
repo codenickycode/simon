@@ -106,8 +106,8 @@ jobs:
       - name: 📥 Install deps
         run: pnpm install
 
-      - name: 🛠️ Build client
-        run: pnpm client build
+      - name: 🛠️ Build
+        run: pnpm build
 
       - name: 🚀 Publish to Cloudflare Pages
         uses: cloudflare/pages-action@v1
@@ -118,10 +118,7 @@ jobs:
           directory: ./client/dist
           wranglerVersion: '3'
 
-      - name: 🚀 Publish to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_KEY }}
-          accountId: 777a470cbd4b1479fb105850496953f8
-          workingDirectory: ./worker
-          wranglerVersion: '3'
+      - name: Deploy Cloudflare Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_KEY }}
+        run: pnpm worker deploy
