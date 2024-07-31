@@ -119,15 +119,15 @@ jobs:
       - name: 🚀 Publish client
         run: |
           if [[ "$GITHUB_REF_NAME" == "main" ]]; then
-            pnpm client run deploy:prod
+            pnpm run client deploy:prod
           elif [[ "$GITHUB_REF_NAME" == "dev" ]]; then
-            pnpm client run deploy:dev
+            pnpm run client deploy:dev
           else
             echo "Not publishing client: this branch is not main or dev."
           fi
 
-  publish-worker:
-    name: 🚀 Publish worker
+  publish-server:
+    name: 🚀 Publish server
     # only deploy main/dev branch on pushes
     if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     needs: [lint, typecheck, test]
@@ -158,5 +158,5 @@ jobs:
       - name: ⚙️ Build
         run: pnpm build
 
-      - name: 🚀 Publish worker
-        run: pnpm worker run deploy
+      - name: 🚀 Publish server
+        run: pnpm run server run deploy

@@ -1,4 +1,4 @@
 {
   "extends": "./tsconfig.json",
-  "include": [".eslintrc.cjs", "client", "shared", "worker"]
+  "include": [".eslintrc.cjs", "client", "server", "shared"]
 }

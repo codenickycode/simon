@@ -1,5 +1,5 @@
 {
-  "name": "@simon/worker",
+  "name": "@simon/server",
   "type": "module",
   "version": "0.0.0",
   "private": true,
