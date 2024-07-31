@@ -29,6 +29,9 @@ importers:
       typescript:
         specifier: ^5.5.3
         version: 5.5.4
+      wrangler:
+        specifier: ^3.67.1
+        version: 3.67.1(@cloudflare/workers-types@4.20240725.0)
 
   client:
     dependencies:
@@ -111,9 +114,6 @@ importers:
       vitest:
         specifier: 1.5.0
         version: 1.5.0(@types/node@20.14.13)(jsdom@24.1.1)
-      wrangler:
-        specifier: ^3.67.1
-        version: 3.67.1(@cloudflare/workers-types@4.20240725.0)
 
 packages:
 

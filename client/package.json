@@ -4,8 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
+    "deploy:dev": "pnpm wrangler pages deploy ./dist --project-name simon --branch \"dev\" --commit-hash \"$GITHUB_SHA\" --commit-message \"dev deployment\"",
+    "deploy:prod": "pnpm wrangler pages deploy ./dist --project-name simon",
+    "dev": "vite --host 0.0.0.0",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
