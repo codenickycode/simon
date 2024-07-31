@@ -92,8 +92,6 @@ jobs:
     name: 🚀 Publish to Cloudflare
     runs-on: ubuntu-latest
     needs: [lint, typecheck, test]
-    # only deploy main/dev branches
-    if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
