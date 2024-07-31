@@ -89,6 +89,7 @@ jobs:
         run: pnpm run test
 
   deploy-client:
+    needs: [lint, typecheck, test]
     runs-on: ubuntu-latest
     permissions:
       contents: read
