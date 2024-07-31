@@ -30,7 +30,8 @@
     "@typescript-eslint/parser": "^7.14.1",
     "eslint": "^8.57.0",
     "prettier": "^3.3.3",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "wrangler": "^3.67.1"
   },
   "engines": {
     "node": ">=20.10.0",
