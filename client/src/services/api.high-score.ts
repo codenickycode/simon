@@ -1,9 +1,9 @@
 import type { HighScoreEntry } from '@simon/shared';
-import { getWorkerUrl, WORKER_PATH_HIGH_SCORE } from '@simon/shared';
+import { getServerUrl, WORKER_PATH_HIGH_SCORE } from '@simon/shared';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-const workerUrl = getWorkerUrl(import.meta.env.DEV);
-const highScoreUrl = `${workerUrl}${WORKER_PATH_HIGH_SCORE}`;
+const serverUrl = getServerUrl(import.meta.env.DEV);
+const highScoreUrl = `${serverUrl}${WORKER_PATH_HIGH_SCORE}`;
 
 const HIGH_SCORE_QUERY_KEY = 'highScore';
 
