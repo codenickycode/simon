@@ -106,17 +106,15 @@ jobs:
       - name: 📥 Install deps
         run: pnpm install
 
-      - name: 🛠️ Build
-        run: pnpm run build
-
       - name: 🚀 Publish to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_KEY }}
-          accountId: 777a470cbd4b1479fb105850496953f8
-          projectName: simon
-          directory: ./client/dist
-          wranglerVersion: '3'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_KEY }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          chmod +x ../scripts/publish-pages.sh
+          ../scripts/publish-pages.sh
 
       - name: 🚀 Publish to Cloudflare Workers
         env:
