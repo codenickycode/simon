@@ -6,7 +6,7 @@
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "pnpm run prebuild && vite build",
-    "deploy": "pnpm wrangler deploy ./dist --project-name simon",
+    "deploy": "pnpm wrangler deploy",
     "dev": "pnpm run build && wrangler dev",
     "lint": "eslint .",
     "test": "pnpm run build && vitest run",
