@@ -88,8 +88,8 @@ jobs:
       - name: ⚡ Run vitest
         run: pnpm run test
 
-  publish-client:
-    name: 🚀 Publish to Cloudflare Pages
+  publish:
+    name: 🚀 Publish to Cloudflare
     runs-on: ubuntu-latest
     needs: [lint, typecheck, test]
     # only deploy main/dev branches
@@ -122,4 +122,12 @@ jobs:
           accountId: 777a470cbd4b1479fb105850496953f8
           projectName: simon
           directory: ./client/dist
+          wranglerVersion: '3'
+
+      - name: 🚀 Publish to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_KEY }}
+          accountId: 777a470cbd4b1479fb105850496953f8
+          workingDirectory: ./worker
           wranglerVersion: '3'
