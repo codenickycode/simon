@@ -159,4 +159,4 @@ jobs:
         run: pnpm build
 
       - name: 🚀 Publish server
-        run: pnpm run server deploy
+        run: pnpm run server run deploy
