@@ -119,9 +119,9 @@ jobs:
       - name: 🚀 Publish client
         run: |
           if [[ "$GITHUB_REF_NAME" == "main" ]]; then
-            pnpm client run deploy:prod
+            pnpm run client deploy:prod
           elif [[ "$GITHUB_REF_NAME" == "dev" ]]; then
-            pnpm client run deploy:dev
+            pnpm run client deploy:dev
           else
             echo "Not publishing client: this branch is not main or dev."
           fi
@@ -159,4 +159,4 @@ jobs:
         run: pnpm build
 
       - name: 🚀 Publish server
-        run: pnpm server run deploy
+        run: pnpm run server deploy
