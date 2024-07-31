@@ -1,4 +1,4 @@
-name: ⚙️ CI
+name: CI
 
 on:
   push:
@@ -116,10 +116,15 @@ jobs:
           GITHUB_REF_NAME: ${{ github.ref_name }}
           GITHUB_SHA: ${{ github.sha }}
         run: |
-          chmod +x ./.github/scripts/publish-pages.sh
-          ./.github/scripts/publish-pages.sh
+          chmod +x ./.github/scripts/publish-client.sh
+          ./.github/scripts/publish-client.sh
 
       - name: 🚀 Publish to Cloudflare Workers
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_KEY }}
-        run: pnpm worker run deploy
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          chmod +x ./.github/scripts/publish-worker.sh
+          ./.github/scripts/publish-worker.sh
