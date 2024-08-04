@@ -15,7 +15,7 @@ export const gameMachineReducer = (
       return { ...nextMachineState, state: action.to };
     }
     case 'startNewGame': {
-      sequencer.resetSequence();
+      sequencer.sequence.reset();
       return { ...NEW_GAME_STATE, state: 'computerTurn' };
     }
     case 'input': {

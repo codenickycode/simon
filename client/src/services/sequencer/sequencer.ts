@@ -7,14 +7,11 @@ import { delay } from '../../utils/delay';
 const INIT_NOTE_DURATION_S = 0.3;
 
 class Sequencer {
-  private transport = Tone.getTransport();
+  private _transport = Tone.getTransport();
 
   // todo: allow tempo changes
-  get noteDurationS() {
-    return INIT_NOTE_DURATION_S;
-  }
-  get noteDurationMs() {
-    return INIT_NOTE_DURATION_S * 1000;
+  get noteDuration() {
+    return { s: INIT_NOTE_DURATION_S, ms: INIT_NOTE_DURATION_S * 1000 };
   }
 
   private _synths = {
@@ -30,19 +27,25 @@ class Sequencer {
     },
     user: {
       playNote: (note: NoteOctave) => {
-        this.stopSequence();
+        this.sequence.stop();
         this._synths.user.playNote({
           note,
-          duration: this.noteDurationS,
+          duration: this.noteDuration.s,
         });
       },
     },
   };
 
-  private sequence = new Tone.Sequence((time, note) => {
+  constructor() {
+    this._sequence.loop = false;
+    // we start our sequence at 0,
+    // and use transport start/stop for playback
+    this._sequence.start(0);
+  }
+  private _sequence = new Tone.Sequence((time, note) => {
     this._synths.sequence.playNote({
       note,
-      duration: this.noteDurationS,
+      duration: this.noteDuration.s,
       time,
     });
     Tone.getDraw().schedule(() => {
@@ -50,54 +53,49 @@ class Sequencer {
     }, time);
   }, []);
 
-  constructor() {
-    this.sequence.loop = false;
-    // we start our sequence at 0,
-    // and use transport start/stop for playback
-    this.sequence.start(0);
-  }
+  private _sequenceCompleteId = 0;
 
-  get sequenceLength() {
-    return this.sequence.events.length;
-  }
-  valueAt(index: number) {
-    return this.sequence.events[index];
-  }
-
-  addRandomNoteToSequence(notes: NoteOctave[]) {
-    const index = Math.floor(Math.random() * notes.length);
-    const note = notes[index];
-    this.sequence.events.push(note);
-  }
-
-  resetSequence() {
-    this.sequence.clear();
-    this.sequence.events = [];
-  }
-
-  private sequenceCompleteId = 0;
-
-  /** plays the sequence and resolves when complete */
-  async playSequence() {
-    this.stopSequence();
-    return new Promise((res) => {
-      const sequenceDuration = this.sequenceLength * this.noteDurationS;
-      this.sequenceCompleteId = this.transport.schedule(() => {
-        this.stopSequence();
-        res(undefined);
-      }, sequenceDuration);
-      // best to start the transport a little late
-      // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
-      this.transport.start('+0.1');
-    });
-  }
+  public sequence = {
+    length: () => this._sequence.events.length,
+    valueAt: (index: number) => {
+      return this._sequence.events[index];
+    },
+    addRandomNote: (notes: NoteOctave[]) => {
+      const index = Math.floor(Math.random() * notes.length);
+      const note = notes[index];
+      this._sequence.events.push(note);
+    },
+    reset: () => {
+      this._sequence.clear();
+      this._sequence.events = [];
+    },
+    /** plays the sequence and resolves when complete */
+    play: async () => {
+      this.sequence.stop();
+      return new Promise((res) => {
+        const sequenceDuration = this.sequence.length() * this.noteDuration.s;
+        this._sequenceCompleteId = this._transport.schedule(() => {
+          this.sequence.stop();
+          res(undefined);
+        }, sequenceDuration);
+        // best to start the transport a little late
+        // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
+        this._transport.start('+0.1');
+      });
+    },
+    stop: () => {
+      this._transport.stop(Tone.now());
+      this._transport.clear(this._sequenceCompleteId);
+      this._transport.position = 0;
+    },
+  };
 
   async playMelody(melody: keyof typeof melodies) {
     // this effectively stops the sequencer if playing
-    this.sequence.mute = true;
+    this._sequence.mute = true;
     this._synths.sequence.mute();
     // let the last note trail off a bit before playing
-    await delay(this.noteDurationMs / 3);
+    await delay(this.noteDuration.ms / 3);
     const melodyNotes = melodies[melody];
     const now = Tone.now();
     for (const { note, duration, offset } of melodyNotes) {
@@ -110,14 +108,8 @@ class Sequencer {
     // unmute the sequencer for next playback
     delay(MELODY_LENGTH_MS, () => {
       this._synths.sequence.unMute();
-      this.sequence.mute = false;
+      this._sequence.mute = false;
     });
-  }
-
-  stopSequence() {
-    this.transport.stop(Tone.now());
-    this.transport.clear(this.sequenceCompleteId);
-    this.transport.position = 0;
   }
 }
 

@@ -15,14 +15,14 @@ export const NEW_GAME_STATE: GameMachineState = {
 
 export const gameLogic = {
   checkInput: (padId: PadId, currentIndex: number): boolean => {
-    return pads[padId].tone === sequencer.valueAt(currentIndex);
+    return pads[padId].tone === sequencer.sequence.valueAt(currentIndex);
   },
   isSequenceComplete: (currentIndex: number): boolean => {
-    return currentIndex !== 0 && currentIndex === sequencer.sequenceLength;
+    return currentIndex !== 0 && currentIndex === sequencer.sequence.length();
   },
   nextSequence: async () => {
-    sequencer.addRandomNoteToSequence(Object.values(pads).map((p) => p.tone));
+    sequencer.sequence.addRandomNote(Object.values(pads).map((p) => p.tone));
     // play sequence after a short delay to ensure all is scheduled
-    return delay(TIMING_BUFFER_MS, () => sequencer.playSequence());
+    return delay(TIMING_BUFFER_MS, () => sequencer.sequence.play());
   },
 };

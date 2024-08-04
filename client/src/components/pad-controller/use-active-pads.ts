@@ -24,7 +24,7 @@ export const useActivePads = (resetActivePads: boolean) => {
       setTimeout(() => {
         const item = noteToPadId(note);
         item && computerPadsActive.delete(item);
-      }, sequencer.noteDurationMs / 2);
+      }, sequencer.noteDuration.ms / 2);
     });
   }, [computerPadsActive]);
 
