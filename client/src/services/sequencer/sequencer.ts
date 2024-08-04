@@ -1,6 +1,6 @@
 import * as Tone from 'tone';
-import { MonoSynth } from './mono-synth';
-import type { NoteOctave } from './types';
+import type { NoteOctave } from '../synth';
+import { melodySynth, sequenceSynth } from '../synth';
 import { melodies, MELODY_LENGTH_MS } from './melodies';
 import { delay } from '../../utils/delay';
 
@@ -14,28 +14,6 @@ class Sequencer {
     return { s: INIT_NOTE_DURATION_S, ms: INIT_NOTE_DURATION_S * 1000 };
   }
 
-  private _synths = {
-    sequence: new MonoSynth(new Tone.Synth()),
-    user: new MonoSynth(new Tone.Synth()),
-    melody: new MonoSynth(
-      new Tone.Synth({ oscillator: { type: 'amsquare16' }, volume: -3 }),
-    ),
-  };
-  public synths = {
-    sequence: {
-      subscribe: this._synths.sequence.subscribe,
-    },
-    user: {
-      playNote: (note: NoteOctave) => {
-        this.sequence.stop();
-        this._synths.user.playNote({
-          note,
-          duration: this.noteDuration.s,
-        });
-      },
-    },
-  };
-
   constructor() {
     this._sequence.loop = false;
     // we start our sequence at 0,
@@ -43,13 +21,13 @@ class Sequencer {
     this._sequence.start(0);
   }
   private _sequence = new Tone.Sequence((time, note) => {
-    this._synths.sequence.playNote({
+    sequenceSynth.playNote({
       note,
       duration: this.noteDuration.s,
       time,
     });
     Tone.getDraw().schedule(() => {
-      this._synths.sequence.notify(note);
+      sequenceSynth.notify(note);
     }, time);
   }, []);
 
@@ -93,13 +71,13 @@ class Sequencer {
   async playMelody(melody: keyof typeof melodies) {
     // this effectively stops the sequencer if playing
     this._sequence.mute = true;
-    this._synths.sequence.mute();
+    sequenceSynth.mute();
     // let the last note trail off a bit before playing
     await delay(this.noteDuration.ms / 3);
     const melodyNotes = melodies[melody];
     const now = Tone.now();
     for (const { note, duration, offset } of melodyNotes) {
-      this._synths.melody.playNote({
+      melodySynth.playNote({
         note,
         duration,
         time: now + offset,
@@ -107,7 +85,7 @@ class Sequencer {
     }
     // unmute the sequencer for next playback
     delay(MELODY_LENGTH_MS, () => {
-      this._synths.sequence.unMute();
+      sequenceSynth.unMute();
       this._sequence.mute = false;
     });
   }

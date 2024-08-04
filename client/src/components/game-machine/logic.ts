@@ -1,5 +1,5 @@
 import { pads } from '../../components/pad-controller/schema';
-import type { PadId } from '../../components/pad-controller/types';
+import type { PadId } from '../../components/pad-controller';
 import { delay } from '../../utils/delay';
 import { sequencer } from '../../services/sequencer';
 import type { GameMachineState } from './types';

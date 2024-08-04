@@ -1,5 +1,5 @@
 import { useCallback, useReducer } from 'react';
-import type { PadId } from '../../components/pad-controller/types';
+import type { PadId } from '../../components/pad-controller';
 import type { Transition } from './types';
 import { gameMachineReducer } from './reducer';
 import { useOnEntry } from './hooks';

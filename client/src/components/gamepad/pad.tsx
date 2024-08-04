@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import type { PadId } from '../pad-controller/types';
+import type { PadId } from '../pad-controller';
 import { pads } from '../pad-controller/schema';
 
 export interface PadProps {

@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSet } from './../../utils/set';
 import { sequencer } from './../../services/sequencer';
 import { noteToPadId } from './../../utils/pads';
-import type { NoteOctave } from './../../services/sequencer/types';
+import type { NoteOctave } from '../../services/synth';
+import { sequenceSynth } from '../../services/synth';
 import type { PadId } from './types';
 
 export const useActivePads = (resetActivePads: boolean) => {
@@ -17,17 +18,15 @@ export const useActivePads = (resetActivePads: boolean) => {
   }
 
   useEffect(() => {
-    const unsubscribe = sequencer.synths.sequence.subscribe(
-      (note: NoteOctave) => {
+    const unsubscribe = sequenceSynth.subscribe((note: NoteOctave) => {
+      const item = noteToPadId(note);
+      item && computerPadsActive.add(item);
+      // after note duration, make it inactive
+      setTimeout(() => {
         const item = noteToPadId(note);
-        item && computerPadsActive.add(item);
-        // after note duration, make it inactive
-        setTimeout(() => {
-          const item = noteToPadId(note);
-          item && computerPadsActive.delete(item);
-        }, sequencer.noteDuration.ms / 2);
-      },
-    );
+        item && computerPadsActive.delete(item);
+      }, sequencer.noteDuration.ms / 2);
+    });
     return () => unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [computerPadsActive.add, computerPadsActive.delete]);
