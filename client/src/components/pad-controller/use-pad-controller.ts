@@ -4,6 +4,7 @@ import { useActivePads } from './use-active-pads';
 import { usePadKeyListeners } from './use-pad-key-listeners';
 import type { PadId } from './types';
 import { pads } from './schema';
+import { userSynth } from '../../services/sequencer/synths';
 
 export const usePadController = ({
   onUserPadDown,
@@ -20,7 +21,10 @@ export const usePadController = ({
   const userPadDown = useCallback(
     (padId: PadId) => {
       setUserPadActive(padId);
-      sequencer.synths.user.playNote(pads[padId].tone);
+      userSynth.playNote({
+        note: pads[padId].tone,
+        duration: sequencer.noteDuration.s,
+      });
       onUserPadDown(padId);
     },
     [onUserPadDown, setUserPadActive],
