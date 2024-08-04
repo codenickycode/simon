@@ -1,15 +1,17 @@
 import * as Tone from 'tone';
 import type { Duration, NoteOctave } from './types';
 import { audioCtxReady } from './audio-context';
+import { SimpleObservable } from '../../utils/observable';
 
-export class MonoSynth {
-  private synth;
-  private volume;
+export class MonoSynth extends SimpleObservable<NoteOctave> {
+  private _synth;
+  private _volume;
 
   constructor(synth: Tone.Synth) {
-    this.synth = synth;
-    this.volume = this.synth.volume.value;
-    this.synth.toDestination();
+    super();
+    this._synth = synth;
+    this._volume = this._synth.volume.value;
+    this._synth.toDestination();
   }
 
   private previousTime = 0;
@@ -33,18 +35,18 @@ export class MonoSynth {
       // schedule a little in advance to prevent pops
       // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
       const attackTime = time + 0.004;
-      this.synth.triggerAttackRelease(note, duration, attackTime);
+      this._synth.triggerAttackRelease(note, duration, attackTime);
     } catch (e) {
       console.error(e);
     }
   }
 
   mute() {
-    this.volume = this.synth.volume.value;
-    this.synth.volume.rampTo(-Infinity, 0.004);
+    this._volume = this._synth.volume.value;
+    this._synth.volume.rampTo(-Infinity, 0.004);
   }
 
   unMute() {
-    this.synth.volume.rampTo(this.volume, 0.004);
+    this._synth.volume.rampTo(this._volume, 0.004);
   }
 }

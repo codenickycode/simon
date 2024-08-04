@@ -17,16 +17,20 @@ export const useActivePads = (resetActivePads: boolean) => {
   }
 
   useEffect(() => {
-    sequencer.setOnPlaySynthComputer((note: NoteOctave) => {
-      const item = noteToPadId(note);
-      item && computerPadsActive.add(item);
-      // after note duration, make it inactive
-      setTimeout(() => {
+    const unsubscribe = sequencer.synths.sequence.subscribe(
+      (note: NoteOctave) => {
         const item = noteToPadId(note);
-        item && computerPadsActive.delete(item);
-      }, sequencer.noteDurationMs / 2);
-    });
-  }, [computerPadsActive]);
+        item && computerPadsActive.add(item);
+        // after note duration, make it inactive
+        setTimeout(() => {
+          const item = noteToPadId(note);
+          item && computerPadsActive.delete(item);
+        }, sequencer.noteDuration.ms / 2);
+      },
+    );
+    return () => unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [computerPadsActive.add, computerPadsActive.delete]);
 
   // pads are active if either the user or computer has them active
   const activePads = useMemo<Set<PadId>>(
