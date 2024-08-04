@@ -20,6 +20,7 @@ class Sequencer {
     // and use transport start/stop for playback
     this._sequence.start(0);
   }
+
   private _sequence = new Tone.Sequence((time, note) => {
     sequenceSynth.playNote({
       note,
@@ -31,42 +32,45 @@ class Sequencer {
     }, time);
   }, []);
 
+  length = this._sequence.events.length;
+
+  valueAt(index: number) {
+    return this._sequence.events[index];
+  }
+
+  addRandomNote(notes: NoteOctave[]) {
+    const index = Math.floor(Math.random() * notes.length);
+    const note = notes[index];
+    this._sequence.events.push(note);
+  }
+
   private _sequenceCompleteId = 0;
 
-  public sequence = {
-    length: () => this._sequence.events.length,
-    valueAt: (index: number) => {
-      return this._sequence.events[index];
-    },
-    addRandomNote: (notes: NoteOctave[]) => {
-      const index = Math.floor(Math.random() * notes.length);
-      const note = notes[index];
-      this._sequence.events.push(note);
-    },
-    reset: () => {
-      this._sequence.clear();
-      this._sequence.events = [];
-    },
-    /** plays the sequence and resolves when complete */
-    play: async () => {
-      this.sequence.stop();
-      return new Promise((res) => {
-        const sequenceDuration = this.sequence.length() * this.noteDuration.s;
-        this._sequenceCompleteId = this._transport.schedule(() => {
-          this.sequence.stop();
-          res(undefined);
-        }, sequenceDuration);
-        // best to start the transport a little late
-        // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
-        this._transport.start('+0.1');
-      });
-    },
-    stop: () => {
-      this._transport.stop(Tone.now());
-      this._transport.clear(this._sequenceCompleteId);
-      this._transport.position = 0;
-    },
-  };
+  /** plays the sequence and resolves when complete */
+  async playSequence() {
+    this.stopSequence();
+    return new Promise((res) => {
+      const sequenceDuration = this.length * this.noteDuration.s;
+      this._sequenceCompleteId = this._transport.schedule(() => {
+        this.stopSequence();
+        res(undefined);
+      }, sequenceDuration);
+      // best to start the transport a little late
+      // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
+      this._transport.start('+0.1');
+    });
+  }
+
+  stopSequence() {
+    this._transport.stop(Tone.now());
+    this._transport.clear(this._sequenceCompleteId);
+    this._transport.position = 0;
+  }
+
+  resetSequence() {
+    this._sequence.clear();
+    this._sequence.events = [];
+  }
 
   async playMelody(melody: keyof typeof melodies) {
     // this effectively stops the sequencer if playing
