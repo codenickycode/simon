@@ -4,7 +4,7 @@ import { useActivePads } from './use-active-pads';
 import { usePadKeyListeners } from './use-pad-key-listeners';
 import type { PadId } from './types';
 import { pads } from './schema';
-import { userSynth } from '../../services/sequencer/synths';
+import { userSynth } from '../../services/synth';
 
 export const usePadController = ({
   onUserPadDown,

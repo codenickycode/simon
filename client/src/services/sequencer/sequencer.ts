@@ -1,8 +1,8 @@
 import * as Tone from 'tone';
-import type { NoteOctave } from './types';
+import type { NoteOctave } from '../synth';
+import { melodySynth, sequenceSynth } from '../synth';
 import { melodies, MELODY_LENGTH_MS } from './melodies';
 import { delay } from '../../utils/delay';
-import { melodySynth, sequenceSynth } from './synths';
 
 const INIT_NOTE_DURATION_S = 0.3;
 

@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSet } from './../../utils/set';
 import { sequencer } from './../../services/sequencer';
 import { noteToPadId } from './../../utils/pads';
-import type { NoteOctave } from './../../services/sequencer/types';
+import type { NoteOctave } from '../../services/synth';
+import { sequenceSynth } from '../../services/synth';
 import type { PadId } from './types';
-import { sequenceSynth } from '../../services/sequencer/synths';
 
 export const useActivePads = (resetActivePads: boolean) => {
   const computerPadsActive = useSet<PadId>();
