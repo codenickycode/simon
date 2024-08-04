@@ -17,7 +17,7 @@ export const useActivePads = (resetActivePads: boolean) => {
   }
 
   useEffect(() => {
-    sequencer.setOnPlaySynthComputer((note: NoteOctave) => {
+    sequencer.synths.sequence.subscribe((note: NoteOctave) => {
       const item = noteToPadId(note);
       item && computerPadsActive.add(item);
       // after note duration, make it inactive

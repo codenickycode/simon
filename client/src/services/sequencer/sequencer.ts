@@ -8,10 +8,6 @@ const INIT_NOTE_DURATION_S = 0.3;
 
 class Sequencer {
   private transport = Tone.getTransport();
-  private sequenceSynth = new MonoSynth(new Tone.Synth());
-  private melodySynth = new MonoSynth(
-    new Tone.Synth({ oscillator: { type: 'amsquare16' }, volume: -3 }),
-  );
 
   // todo: allow tempo changes
   get noteDurationS() {
@@ -21,10 +17,36 @@ class Sequencer {
     return INIT_NOTE_DURATION_S * 1000;
   }
 
+  private _synths = {
+    sequence: new MonoSynth(new Tone.Synth()),
+    user: new MonoSynth(new Tone.Synth()),
+    melody: new MonoSynth(
+      new Tone.Synth({ oscillator: { type: 'amsquare16' }, volume: -3 }),
+    ),
+  };
+  public synths = {
+    sequence: {
+      subscribe: this._synths.sequence.subscribe,
+    },
+    user: {
+      playNote: (note: NoteOctave) => {
+        this.stopSequence();
+        this._synths.user.playNote({
+          note,
+          duration: this.noteDurationS,
+        });
+      },
+    },
+  };
+
   private sequence = new Tone.Sequence((time, note) => {
-    this.sequenceSynth.playNote({ note, duration: this.noteDurationS, time });
+    this._synths.sequence.playNote({
+      note,
+      duration: this.noteDurationS,
+      time,
+    });
     Tone.getDraw().schedule(() => {
-      this.onPlaySynthComputer(note);
+      this._synths.sequence.notify(note);
     }, time);
   }, []);
 
@@ -40,22 +62,6 @@ class Sequencer {
   }
   valueAt(index: number) {
     return this.sequence.events[index];
-  }
-
-  /** Caller can set a callback which will fire whenever the computer plays a note */
-  setOnPlaySynthComputer(onPlaySynthComputer: (note: NoteOctave) => void) {
-    this.onPlaySynthComputer = onPlaySynthComputer;
-  }
-  private onPlaySynthComputer: (note: NoteOctave) => void = () => {
-    throw new Error('onPlaySynthComputer has not been initialized');
-  };
-
-  playSynthUser(note: NoteOctave) {
-    this.stopSequence();
-    this.sequenceSynth.playNote({
-      note,
-      duration: this.noteDurationS,
-    });
   }
 
   addRandomNoteToSequence(notes: NoteOctave[]) {
@@ -89,13 +95,13 @@ class Sequencer {
   async playMelody(melody: keyof typeof melodies) {
     // this effectively stops the sequencer if playing
     this.sequence.mute = true;
-    this.sequenceSynth.mute();
+    this._synths.sequence.mute();
     // let the last note trail off a bit before playing
     await delay(this.noteDurationMs / 3);
     const melodyNotes = melodies[melody];
     const now = Tone.now();
     for (const { note, duration, offset } of melodyNotes) {
-      this.melodySynth.playNote({
+      this._synths.melody.playNote({
         note,
         duration,
         time: now + offset,
@@ -103,7 +109,7 @@ class Sequencer {
     }
     // unmute the sequencer for next playback
     delay(MELODY_LENGTH_MS, () => {
-      this.sequenceSynth.unMute();
+      this._synths.sequence.unMute();
       this.sequence.mute = false;
     });
   }

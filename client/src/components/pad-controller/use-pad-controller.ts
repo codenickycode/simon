@@ -20,7 +20,7 @@ export const usePadController = ({
   const userPadDown = useCallback(
     (padId: PadId) => {
       setUserPadActive(padId);
-      sequencer.playSynthUser(pads[padId].tone);
+      sequencer.synths.user.playNote(pads[padId].tone);
       onUserPadDown(padId);
     },
     [onUserPadDown, setUserPadActive],
