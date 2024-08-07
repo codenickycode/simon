@@ -1,5 +1,5 @@
 import { pads } from '../../components/pad-controller/schema';
-import type { PadId } from '../../components/pad-controller/types';
+import type { PadId } from '../../components/pad-controller';
 import { delay } from '../../utils/delay';
 import { sequencer } from '../../services/sequencer';
 import type { GameMachineState } from './types';
@@ -18,10 +18,10 @@ export const gameLogic = {
     return pads[padId].tone === sequencer.valueAt(currentIndex);
   },
   isSequenceComplete: (currentIndex: number): boolean => {
-    return currentIndex !== 0 && currentIndex === sequencer.sequenceLength;
+    return currentIndex !== 0 && currentIndex === sequencer.length;
   },
   nextSequence: async () => {
-    sequencer.addRandomNoteToSequence(Object.values(pads).map((p) => p.tone));
+    sequencer.addRandomNote(Object.values(pads).map((p) => p.tone));
     // play sequence after a short delay to ensure all is scheduled
     return delay(TIMING_BUFFER_MS, () => sequencer.playSequence());
   },

@@ -3,3 +3,4 @@ node_modules
 .eslintcache
 repo.txt
 .env
+.DS_Store

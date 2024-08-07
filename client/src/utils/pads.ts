@@ -1,10 +1,6 @@
 import { pads } from '../components/pad-controller/schema';
-import type {
-  PadId,
-  PadKey,
-  PadTone,
-} from '../components/pad-controller/types';
-import type { NoteOctave } from '../services/sequencer/types';
+import type { PadId, PadKey, PadTone } from '../components/pad-controller';
+import type { NoteOctave } from '../services/synth';
 
 export const keyToPadId = (key: string): PadId | undefined => {
   const [padId] = Object.entries(pads).find(([, pad]) => pad.key === key) || [];
