@@ -58,8 +58,7 @@ const actionGuard = (
     case 'startNewGame':
       return ['newGame', 'gameOver'].includes(currentMachineState.state);
     case 'input':
-      // computer turn is acceptable because the user can "jump start" their turn
-      return ['computerTurn', 'userTurn'].includes(currentMachineState.state);
+      return ['userTurn'].includes(currentMachineState.state);
     default:
       throw new Error('action guard not implemented for action type');
   }

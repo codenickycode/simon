@@ -10,9 +10,11 @@ export const userSynth = new MonoSynth();
 
 export const usePadController = ({
   onUserPadDown,
+  disabled,
   resetActivePads,
 }: {
   onUserPadDown: (padId: PadId) => void;
+  disabled: boolean;
   /** Toggle this boolean to reset all active pads to null. Useful to prevent
    * "sticky" pads lit up when game state changes. */
   resetActivePads: boolean;
@@ -22,6 +24,9 @@ export const usePadController = ({
 
   const userPadDown = useCallback(
     (padId: PadId) => {
+      if (disabled) {
+        return;
+      }
       setUserPadActive(padId);
       userSynth.playNote({
         note: pads[padId].tone,
@@ -29,7 +34,7 @@ export const usePadController = ({
       });
       onUserPadDown(padId);
     },
-    [onUserPadDown, setUserPadActive],
+    [disabled, onUserPadDown, setUserPadActive],
   );
 
   const userPadUp = useCallback(
@@ -42,6 +47,7 @@ export const usePadController = ({
   const padKeyListeners = usePadKeyListeners({
     onKeydown: userPadDown,
     onKeyup: userPadUp,
+    disabled,
   });
 
   return { activePads, userPadDown, userPadUp, padKeyListeners };

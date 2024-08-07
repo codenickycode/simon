@@ -7,11 +7,14 @@ import type { PadId } from './types';
 export const usePadKeyListeners = ({
   onKeydown,
   onKeyup,
+  disabled,
 }: {
   onKeydown: (padId: PadId) => void;
   onKeyup: (padId: PadId) => void;
+  disabled: boolean;
 }) => {
   const [paused, setPaused] = useState(false);
+  const inactive = paused || disabled;
 
   const pause = useCallback(() => {
     setPaused(true);
@@ -22,7 +25,7 @@ export const usePadKeyListeners = ({
 
   useEffect(() => {
     const keydownListener = (event: KeyboardEvent) => {
-      if (paused) {
+      if (inactive) {
         return;
       }
       if (event.repeat) {
@@ -39,7 +42,7 @@ export const usePadKeyListeners = ({
     return () => {
       window.removeEventListener('keydown', keydownListener);
     };
-  }, [onKeydown, paused]);
+  }, [inactive, onKeydown]);
 
   useEffect(() => {
     const keyupListener = (event: KeyboardEvent) => {

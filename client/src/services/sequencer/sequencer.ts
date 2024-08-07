@@ -1,6 +1,6 @@
 import * as Tone from 'tone';
 import type { NoteOctave } from '../synth';
-import { melodies, MELODY_LENGTH_MS } from './melodies';
+import { melodies } from './melodies';
 import { delay } from '../../utils/delay';
 import { MonoSynth } from '../synth/mono-synth';
 
@@ -62,10 +62,16 @@ class Sequencer {
     this.stopSequence();
     return new Promise((res) => {
       const sequenceDuration = this.length * this.noteDuration.s;
-      this._sequenceCompleteId = this._transport.schedule(() => {
-        this.stopSequence();
-        res(undefined);
-      }, sequenceDuration);
+
+      this._sequenceCompleteId = this._transport.schedule(
+        () => {
+          this.stopSequence();
+          res(undefined);
+        },
+        // resolve after the sequence duration, but take a little off since
+        // we'll consider the sequence done while the last note is releasing
+        sequenceDuration - this.noteDuration.s / 2,
+      );
       // best to start the transport a little late
       // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
       this._transport.start('+0.1');
@@ -84,10 +90,7 @@ class Sequencer {
   }
 
   async playMelody(melody: keyof typeof melodies) {
-    // this effectively stops the sequencer if playing
-    this._sequence.mute = true;
-    sequenceSynth.mute();
-    // let the last note trail off a bit before playing
+    // let any last note trail off a bit before playing
     await delay(this.noteDuration.ms / 3);
     const melodyNotes = melodies[melody];
     const now = Tone.now();
@@ -98,11 +101,6 @@ class Sequencer {
         time: now + offset,
       });
     }
-    // unmute the sequencer for next playback
-    delay(MELODY_LENGTH_MS, () => {
-      sequenceSynth.unMute();
-      this._sequence.mute = false;
-    });
   }
 }
 
