@@ -13,6 +13,7 @@ function App() {
   const gameMachine = useGameMachine();
   const padController = usePadController({
     onUserPadDown: gameMachine.actions.input,
+    disabled: gameMachine.isComputerTurn,
     resetActivePads: !gameMachine.isPlaying,
   });
   return (
