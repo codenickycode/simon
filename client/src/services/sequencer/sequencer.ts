@@ -61,12 +61,17 @@ class Sequencer {
   async playSequence() {
     this.stopSequence();
     return new Promise((res) => {
-      const sequenceDuration =
-        this.length * this.noteDuration.s - this.noteDuration.s / 2;
-      this._sequenceCompleteId = this._transport.schedule(() => {
-        this.stopSequence();
-        res(undefined);
-      }, sequenceDuration);
+      const sequenceDuration = this.length * this.noteDuration.s;
+
+      this._sequenceCompleteId = this._transport.schedule(
+        () => {
+          this.stopSequence();
+          res(undefined);
+        },
+        // resolve after the sequence duration, but take a little off since
+        // we'll consider the sequence done while the last note is releasing
+        sequenceDuration - this.noteDuration.s / 2,
+      );
       // best to start the transport a little late
       // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
       this._transport.start('+0.1');
