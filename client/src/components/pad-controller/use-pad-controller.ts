@@ -4,7 +4,9 @@ import { useActivePads } from './use-active-pads';
 import { usePadKeyListeners } from './use-pad-key-listeners';
 import type { PadId } from './types';
 import { pads } from './schema';
-import { userSynth } from '../../services/synth';
+import { MonoSynth } from '../../services/synth/mono-synth';
+
+export const userSynth = new MonoSynth();
 
 export const usePadController = ({
   onUserPadDown,

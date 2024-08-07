@@ -3,6 +3,9 @@ import { useGameMachine } from './components/game-machine';
 import { GameOverModal } from './components/game-over/game-over-modal';
 import { Gamepad } from './components/gamepad';
 import { usePadController } from './components/pad-controller';
+import { initAudioContext } from './services/synth';
+
+initAudioContext();
 
 const queryClient = new QueryClient();
 

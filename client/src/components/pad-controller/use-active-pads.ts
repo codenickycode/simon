@@ -3,7 +3,6 @@ import { useSet } from './../../utils/set';
 import { sequencer } from './../../services/sequencer';
 import { noteToPadId } from './../../utils/pads';
 import type { NoteOctave } from '../../services/synth';
-import { sequenceSynth } from '../../services/synth';
 import type { PadId } from './types';
 
 export const useActivePads = (resetActivePads: boolean) => {
@@ -18,7 +17,7 @@ export const useActivePads = (resetActivePads: boolean) => {
   }
 
   useEffect(() => {
-    const unsubscribe = sequenceSynth.subscribe((note: NoteOctave) => {
+    const unsubscribe = sequencer.synth.subscribe((note: NoteOctave) => {
       const item = noteToPadId(note);
       item && computerPadsActive.add(item);
       // after note duration, make it inactive

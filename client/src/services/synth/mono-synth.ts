@@ -7,7 +7,7 @@ export class MonoSynth extends SimpleObservable<NoteOctave> {
   private _synth;
   private _volume;
 
-  constructor(synth: Tone.Synth) {
+  constructor(synth: Tone.Synth<Tone.SynthOptions> = new Tone.Synth()) {
     super();
     this._synth = synth;
     this._volume = this._synth.volume.value;

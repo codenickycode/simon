@@ -1,13 +1,22 @@
 import * as Tone from 'tone';
 import type { NoteOctave } from '../synth';
-import { melodySynth, sequenceSynth } from '../synth';
 import { melodies, MELODY_LENGTH_MS } from './melodies';
 import { delay } from '../../utils/delay';
+import { MonoSynth } from '../synth/mono-synth';
+
+const sequenceSynth = new MonoSynth(new Tone.Synth());
+const melodySynth = new MonoSynth(
+  new Tone.Synth({ oscillator: { type: 'amsquare16' }, volume: -3 }),
+);
 
 const INIT_NOTE_DURATION_S = 0.3;
 
 class Sequencer {
   private _transport = Tone.getTransport();
+
+  public synth = {
+    subscribe: sequenceSynth.subscribe,
+  };
 
   // todo: allow tempo changes
   get noteDuration() {
@@ -32,7 +41,9 @@ class Sequencer {
     }, time);
   }, []);
 
-  length = this._sequence.events.length;
+  get length() {
+    return this._sequence.events.length;
+  }
 
   valueAt(index: number) {
     return this._sequence.events[index];

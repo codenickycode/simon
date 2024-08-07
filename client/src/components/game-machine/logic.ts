@@ -15,9 +15,11 @@ export const NEW_GAME_STATE: GameMachineState = {
 
 export const gameLogic = {
   checkInput: (padId: PadId, currentIndex: number): boolean => {
+    console.log(pads[padId].tone === sequencer.valueAt(currentIndex));
     return pads[padId].tone === sequencer.valueAt(currentIndex);
   },
   isSequenceComplete: (currentIndex: number): boolean => {
+    console.log(currentIndex !== 0 && currentIndex === sequencer.length);
     return currentIndex !== 0 && currentIndex === sequencer.length;
   },
   nextSequence: async () => {
