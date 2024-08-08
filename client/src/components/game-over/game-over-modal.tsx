@@ -4,11 +4,11 @@ import { Modal } from '../ui-elements/modal';
 import { ANIMATION_DURATION } from '../../config';
 import { NewHighScore } from './new-high-score';
 import { CurrentHighScore } from '../shared/current-high-score';
-import { melodyPlayer } from '../../services/melody-player';
 
 export interface GameOverModalProps {
   isGameOver: boolean;
   userScore: number;
+  isNewHighScore: boolean;
   goToNewGameState: () => void;
   padKeyListeners: { pause: () => void; resume: () => void };
 }
@@ -61,19 +61,11 @@ export const GameOverModal = (props: GameOverModalProps) => {
   }
 
   const showNewHighScore =
-    // if the user has a new high score
-    (query.data && props.userScore > query.data.score) ||
+    props.isNewHighScore ||
     // the line above will be falsy if the user's update to high score is
     // successful (and the query re-validates), so to prevent a "game over"
     // flash, check if their update succeeded
     mutation.isSuccess;
-
-  useEffect(() => {
-    if (!isModalOpen) {
-      return;
-    }
-    melodyPlayer.play(showNewHighScore ? 'highScore' : 'gameOver');
-  }, [isModalOpen, showNewHighScore]);
 
   return (
     <Modal

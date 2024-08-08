@@ -4,6 +4,7 @@ import type { Transition } from './types';
 import { gameMachineReducer } from './reducer';
 import { useOnEntry } from './hooks';
 import { NEW_GAME_STATE } from './logic';
+import { useHighScoreApi } from '../../services/api.high-score';
 
 export const useGameMachine = () => {
   const [gameMachine, dispatch] = useReducer(
@@ -25,6 +26,8 @@ export const useGameMachine = () => {
     [],
   );
 
+  const { query } = useHighScoreApi();
+
   // *** Derived values / Aliases ***
   const isNewGame = gameMachine.state === 'newGame';
   const isComputerTurn = gameMachine.state === 'computerTurn';
@@ -33,9 +36,12 @@ export const useGameMachine = () => {
   const isGameOver = gameMachine.state === 'gameOver';
   const userScore = gameMachine.userScore;
   const currentScore = isComputerTurn ? userScore : gameMachine.userSeqIndex;
+  const isNewHighScore = Boolean(
+    isGameOver && query.data && query.data.score < userScore,
+  );
 
   // *** State Hooks ***
-  useOnEntry({ state: gameMachine.state, transition });
+  useOnEntry({ state: gameMachine.state, transition, isNewHighScore });
 
   return {
     isNewGame,
@@ -45,6 +51,7 @@ export const useGameMachine = () => {
     isGameOver,
     userScore,
     currentScore,
+    isNewHighScore,
     actions: {
       startNewGame,
       input,

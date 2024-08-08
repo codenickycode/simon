@@ -9,7 +9,15 @@ initAudioContext();
 
 const queryClient = new QueryClient();
 
-function App() {
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Simon />
+    </QueryClientProvider>
+  );
+}
+
+function Simon() {
   const gameMachine = useGameMachine();
   const padController = usePadController({
     onUserPadDown: gameMachine.actions.input,
@@ -17,21 +25,17 @@ function App() {
     resetActivePads: !gameMachine.isPlaying,
   });
   return (
-    <QueryClientProvider client={queryClient}>
-      <main className="font-sans text-slate-200 overflow-hidden fixed h-dvh w-full touch-none bg-gradient-to-b from-slate-700 to-sky-950 flex items-center justify-center">
-        <Gamepad gameMachine={gameMachine} padController={padController} />
-        <GameOverModal
-          isGameOver={gameMachine.isGameOver}
-          userScore={gameMachine.userScore}
-          // todo use callback
-          goToNewGameState={() =>
-            gameMachine.actions.transition({ to: 'newGame' })
-          }
-          padKeyListeners={padController.padKeyListeners}
-        />
-      </main>
-    </QueryClientProvider>
+    <main className="font-sans text-slate-200 overflow-hidden fixed h-dvh w-full touch-none bg-gradient-to-b from-slate-700 to-sky-950 flex items-center justify-center">
+      <Gamepad gameMachine={gameMachine} padController={padController} />
+      <GameOverModal
+        isGameOver={gameMachine.isGameOver}
+        userScore={gameMachine.userScore}
+        isNewHighScore={gameMachine.isNewHighScore}
+        goToNewGameState={() =>
+          gameMachine.actions.transition({ to: 'newGame' })
+        }
+        padKeyListeners={padController.padKeyListeners}
+      />
+    </main>
   );
 }
-
-export default App;
