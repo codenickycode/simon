@@ -10,13 +10,10 @@ const HIGH_SCORE_QUERY_KEY = 'highScore';
 const DEFAULT_ERROR_REASON =
   'Unable to save high score.\nPlease check your connection and try again.';
 
-export function useHighScoreApi(params?: {
-  onMutationSuccess?: () => void;
-  onMutationError?: (reason: string) => void;
-}) {
-  const queryClient = useQueryClient();
+export type GetHighScoreApi = ReturnType<typeof useGetHighScoreApi>;
 
-  const query = useQuery<HighScoreEntry>({
+export function useGetHighScoreApi() {
+  return useQuery<HighScoreEntry>({
     queryKey: [HIGH_SCORE_QUERY_KEY],
     queryFn: async () => {
       return fetch(highScoreUrl).then((res) => {
@@ -27,8 +24,15 @@ export function useHighScoreApi(params?: {
       });
     },
   });
+}
 
-  const mutation = useMutation({
+export function useUpdateHighScoreApi(params?: {
+  onSuccess?: () => void;
+  onError?: (reason: string) => void;
+}) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
     mutationFn: async (
       updateHighScore: Pick<HighScoreEntry, 'name' | 'score'>,
     ) => {
@@ -44,15 +48,13 @@ export function useHighScoreApi(params?: {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [HIGH_SCORE_QUERY_KEY] });
-      params?.onMutationSuccess?.();
+      params?.onSuccess?.();
     },
     onError: (error) => {
       const reason = getReason(error);
-      params?.onMutationError?.(reason);
+      params?.onError?.(reason);
     },
   });
-
-  return { query, mutation };
 }
 
 const getReason = (error: Error): string => {

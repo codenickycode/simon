@@ -9,6 +9,8 @@ const NOTE_DURATION_S = 0.3;
 
 export const userSynth = new MonoSynth();
 
+export type PadController = ReturnType<typeof usePadController>;
+
 export const usePadController = ({
   onUserPadDown,
   disabled,
