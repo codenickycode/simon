@@ -1,5 +1,3 @@
-export const MELODY_LENGTH_MS = 1000;
-
 export const melodies = {
   gameOver: [
     { note: 'C4', duration: '8n', offset: 0 },
