@@ -4,7 +4,7 @@ import { Modal } from '../ui-elements/modal';
 import { ANIMATION_DURATION } from '../../config';
 import { NewHighScore } from './new-high-score';
 import { CurrentHighScore } from '../shared/current-high-score';
-import { sequencer } from '../../services/sequencer';
+import { melodyPlayer } from '../../services/melody-player';
 
 export interface GameOverModalProps {
   isGameOver: boolean;
@@ -72,7 +72,7 @@ export const GameOverModal = (props: GameOverModalProps) => {
     if (!isModalOpen) {
       return;
     }
-    sequencer.playMelody(showNewHighScore ? 'highScore' : 'gameOver');
+    melodyPlayer.play(showNewHighScore ? 'highScore' : 'gameOver');
   }, [isModalOpen, showNewHighScore]);
 
   return (

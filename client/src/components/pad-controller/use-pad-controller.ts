@@ -1,10 +1,11 @@
 import { useCallback } from 'react';
-import { sequencer } from './../../services/sequencer';
 import { useActivePads } from './use-active-pads';
 import { usePadKeyListeners } from './use-pad-key-listeners';
 import type { PadId } from './types';
 import { pads } from './schema';
 import { MonoSynth } from '../../services/synth/mono-synth';
+
+const NOTE_DURATION_S = 0.3;
 
 export const userSynth = new MonoSynth();
 
@@ -30,7 +31,7 @@ export const usePadController = ({
       setUserPadActive(padId);
       userSynth.playNote({
         note: pads[padId].tone,
-        duration: sequencer.noteDuration.s,
+        duration: NOTE_DURATION_S,
       });
       onUserPadDown(padId);
     },
