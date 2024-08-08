@@ -15,7 +15,7 @@ export const HighScore = () => {
       <Button
         variant="secondary"
         onClick={openModal}
-        disabled={query.isFetching || query.isError}
+        disabled={query.isFetching}
       >
         High Score:<span className="mx-1"></span>
         <Spinner isSpinning={query.isFetching}>

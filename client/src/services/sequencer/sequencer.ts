@@ -1,13 +1,8 @@
 import * as Tone from 'tone';
 import type { NoteOctave } from '../synth';
-import { melodies } from './melodies';
-import { delay } from '../../utils/delay';
 import { MonoSynth } from '../synth/mono-synth';
 
 const sequenceSynth = new MonoSynth(new Tone.Synth());
-const melodySynth = new MonoSynth(
-  new Tone.Synth({ oscillator: { type: 'amsquare16' }, volume: -3 }),
-);
 
 const INIT_NOTE_DURATION_S = 0.3;
 
@@ -58,14 +53,14 @@ class Sequencer {
   private _sequenceCompleteId = 0;
 
   /** plays the sequence and resolves when complete */
-  async playSequence() {
-    this.stopSequence();
+  async play() {
+    this.stop();
     return new Promise((res) => {
       const sequenceDuration = this.length * this.noteDuration.s;
 
       this._sequenceCompleteId = this._transport.schedule(
         () => {
-          this.stopSequence();
+          this.stop();
           res(undefined);
         },
         // resolve after the sequence duration, but take a little off since
@@ -78,29 +73,15 @@ class Sequencer {
     });
   }
 
-  stopSequence() {
+  stop() {
     this._transport.stop(Tone.now());
     this._transport.clear(this._sequenceCompleteId);
     this._transport.position = 0;
   }
 
-  resetSequence() {
+  reset() {
     this._sequence.clear();
     this._sequence.events = [];
-  }
-
-  async playMelody(melody: keyof typeof melodies) {
-    // let any last note trail off a bit before playing
-    await delay(this.noteDuration.ms / 3);
-    const melodyNotes = melodies[melody];
-    const now = Tone.now();
-    for (const { note, duration, offset } of melodyNotes) {
-      melodySynth.playNote({
-        note,
-        duration,
-        time: now + offset,
-      });
-    }
   }
 }
 

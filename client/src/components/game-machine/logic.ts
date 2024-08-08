@@ -23,6 +23,6 @@ export const gameLogic = {
   nextSequence: async () => {
     sequencer.addRandomNote(Object.values(pads).map((p) => p.tone));
     // play sequence after a short delay to ensure all is scheduled
-    return delay(TIMING_BUFFER_MS, () => sequencer.playSequence());
+    return delay(TIMING_BUFFER_MS, () => sequencer.play());
   },
 };
