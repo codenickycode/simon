@@ -2,10 +2,18 @@ import { useCallback, useReducer } from 'react';
 import type { PadId } from '../../components/pad-controller';
 import type { Transition } from './types';
 import { gameMachineReducer } from './reducer';
-import { useOnEntry } from './hooks';
-import { NEW_GAME_STATE } from './logic';
+import { gameLogic, NEW_GAME_STATE } from './logic';
+import type { HighScoreEntry } from '@simon/shared';
+import { melodyPlayer } from '../../services/melody-player';
+import { useOnEntry } from '../../utils/on-entry';
 
-export const useGameMachine = () => {
+export type GameMachine = ReturnType<typeof useGameMachine>;
+
+export const useGameMachine = ({
+  currentHighScore,
+}: {
+  currentHighScore: HighScoreEntry | undefined;
+}) => {
   const [gameMachine, dispatch] = useReducer(
     gameMachineReducer,
     NEW_GAME_STATE,
@@ -33,9 +41,28 @@ export const useGameMachine = () => {
   const isGameOver = gameMachine.state === 'gameOver';
   const userScore = gameMachine.userScore;
   const currentScore = isComputerTurn ? userScore : gameMachine.userSeqIndex;
+  const isNewHighScore = Boolean(
+    isGameOver && currentHighScore && currentHighScore.score < userScore,
+  );
 
   // *** State Hooks ***
-  useOnEntry({ state: gameMachine.state, transition });
+  useOnEntry({
+    target: 'computerTurn',
+    currentState: gameMachine.state,
+    cb: () => {
+      gameLogic.nextSequence().then(() => {
+        transition({ to: 'userTurn', onlyIfState: 'computerTurn' });
+      });
+    },
+  });
+  useOnEntry({
+    target: 'gameOver',
+    currentState: gameMachine.state,
+    cb: () => {
+      const melody = isNewHighScore ? 'highScore' : 'gameOver';
+      melodyPlayer.play(melody);
+    },
+  });
 
   return {
     isNewGame,
@@ -45,6 +72,7 @@ export const useGameMachine = () => {
     isGameOver,
     userScore,
     currentScore,
+    isNewHighScore,
     actions: {
       startNewGame,
       input,

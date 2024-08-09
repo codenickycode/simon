@@ -1,19 +1,27 @@
-import type { useGameMachine } from '../game-machine';
 import { HighScore } from './high-score';
 import { Button } from '../ui-elements/button';
 import { Pads } from './pads';
-import type { usePadController } from '../pad-controller';
+import type { GetHighScoreApi } from '../../services/api.high-score';
+import type { GameMachine } from '../game-machine/use-game-machine';
+import type { PadController } from '../pad-controller/use-pad-controller';
 
 interface GamepadProps {
-  gameMachine: ReturnType<typeof useGameMachine>;
-  padController: ReturnType<typeof usePadController>;
+  gameMachine: GameMachine;
+  padController: PadController;
+  getHighScoreApi: GetHighScoreApi;
 }
 
-export const Gamepad = ({ gameMachine, padController }: GamepadProps) => {
+export const Gamepad = ({
+  gameMachine,
+  padController,
+  getHighScoreApi,
+}: GamepadProps) => {
   return (
     <div className="w-full h-full flex flex-col landscape:flex-row max-w-screen-2xl items-center justify-evenly">
       <div className="h-24 landscape:h-auto w-full flex items-center justify-center">
-        {!gameMachine.isPlaying && <HighScore />}
+        {!gameMachine.isPlaying && (
+          <HighScore getHighScoreApi={getHighScoreApi} />
+        )}
       </div>
       <div>
         <Pads

@@ -4,34 +4,47 @@ import { GameOverModal } from './components/game-over/game-over-modal';
 import { Gamepad } from './components/gamepad';
 import { usePadController } from './components/pad-controller';
 import { initAudioContext } from './services/synth';
+import { useGetHighScoreApi } from './services/api.high-score';
 
 initAudioContext();
 
 const queryClient = new QueryClient();
 
-function App() {
-  const gameMachine = useGameMachine();
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Simon />
+    </QueryClientProvider>
+  );
+}
+
+function Simon() {
+  const getHighScoreApi = useGetHighScoreApi();
+  const gameMachine = useGameMachine({
+    currentHighScore: getHighScoreApi.data,
+  });
   const padController = usePadController({
     onUserPadDown: gameMachine.actions.input,
     disabled: gameMachine.isComputerTurn,
     resetActivePads: !gameMachine.isPlaying,
   });
   return (
-    <QueryClientProvider client={queryClient}>
-      <main className="font-sans text-slate-200 overflow-hidden fixed h-dvh w-full touch-none bg-gradient-to-b from-slate-700 to-sky-950 flex items-center justify-center">
-        <Gamepad gameMachine={gameMachine} padController={padController} />
-        <GameOverModal
-          isGameOver={gameMachine.isGameOver}
-          userScore={gameMachine.userScore}
-          // todo use callback
-          goToNewGameState={() =>
-            gameMachine.actions.transition({ to: 'newGame' })
-          }
-          padKeyListeners={padController.padKeyListeners}
-        />
-      </main>
-    </QueryClientProvider>
+    <main className="font-sans text-slate-200 overflow-hidden fixed h-dvh w-full touch-none bg-gradient-to-b from-slate-700 to-sky-950 flex items-center justify-center">
+      <Gamepad
+        gameMachine={gameMachine}
+        padController={padController}
+        getHighScoreApi={getHighScoreApi}
+      />
+      <GameOverModal
+        isGameOver={gameMachine.isGameOver}
+        userScore={gameMachine.userScore}
+        currentHighScore={getHighScoreApi.data}
+        isNewHighScore={gameMachine.isNewHighScore}
+        goToNewGameState={() =>
+          gameMachine.actions.transition({ to: 'newGame' })
+        }
+        padKeyListeners={padController.padKeyListeners}
+      />
+    </main>
   );
 }
-
-export default App;

@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useHighScoreApi } from '../../services/api.high-score';
 import { Modal } from '../ui-elements/modal';
 import { ANIMATION_DURATION } from '../../config';
 import { NewHighScore } from './new-high-score';
 import { CurrentHighScore } from '../shared/current-high-score';
-import { melodyPlayer } from '../../services/melody-player';
+import type { HighScoreEntry } from '@simon/shared';
+import { useUpdateHighScoreApi } from '../../services/api.high-score';
 
 export interface GameOverModalProps {
   isGameOver: boolean;
   userScore: number;
+  currentHighScore: HighScoreEntry | undefined;
+  isNewHighScore: boolean;
   goToNewGameState: () => void;
   padKeyListeners: { pause: () => void; resume: () => void };
 }
@@ -43,37 +45,29 @@ export const GameOverModal = (props: GameOverModalProps) => {
 
   const [error, setError] = useState('');
 
-  const { query, mutation } = useHighScoreApi({
-    onMutationSuccess: props.goToNewGameState,
-    onMutationError: (reason: string) => setError(reason),
+  const updateHighScoreApi = useUpdateHighScoreApi({
+    onSuccess: props.goToNewGameState,
+    onError: (reason: string) => setError(reason),
   });
 
   const onSubmit = (name: string) => {
     setError('');
-    mutation.mutate({ name, score: props.userScore });
+    updateHighScoreApi.mutate({ name, score: props.userScore });
   };
 
   if (!isModalOpen) {
     // reset everything after the modal closes
     setTimeout(() => {
-      mutation.reset();
+      updateHighScoreApi.reset();
     }, ANIMATION_DURATION);
   }
 
   const showNewHighScore =
-    // if the user has a new high score
-    (query.data && props.userScore > query.data.score) ||
+    props.isNewHighScore ||
     // the line above will be falsy if the user's update to high score is
     // successful (and the query re-validates), so to prevent a "game over"
     // flash, check if their update succeeded
-    mutation.isSuccess;
-
-  useEffect(() => {
-    if (!isModalOpen) {
-      return;
-    }
-    melodyPlayer.play(showNewHighScore ? 'highScore' : 'gameOver');
-  }, [isModalOpen, showNewHighScore]);
+    updateHighScoreApi.isSuccess;
 
   return (
     <Modal
@@ -86,9 +80,11 @@ export const GameOverModal = (props: GameOverModalProps) => {
           error={error}
           onSubmit={onSubmit}
           // Disable the form while mutation is pending
-          disabled={mutation.isPending}
-          // Keep a pending state on success because we are animating away the modal. This will prevent a flash.
-          pending={mutation.isPending || !!mutation.isSuccess}
+          disabled={updateHighScoreApi.isPending}
+          pending={
+            // Keep a pending state on success because we are animating away the modal. This will prevent a flash.
+            updateHighScoreApi.isPending || !!updateHighScoreApi.isSuccess
+          }
         />
       ) : (
         <div>
@@ -97,7 +93,7 @@ export const GameOverModal = (props: GameOverModalProps) => {
             Your score is {props.userScore}. Try again to beat the global high
             score!
           </p>
-          <CurrentHighScore highScore={query.data} />
+          <CurrentHighScore highScore={props.currentHighScore} />
         </div>
       )}
     </Modal>
