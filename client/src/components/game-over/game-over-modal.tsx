@@ -5,62 +5,53 @@ import { NewHighScore } from './new-high-score';
 import { CurrentHighScore } from '../shared/current-high-score';
 import type { HighScoreEntry } from '@simon/shared';
 import { useUpdateHighScoreApi } from '../../services/api.high-score';
+import { delay } from '../../utils/delay';
 
 export interface GameOverModalProps {
-  isGameOver: boolean;
   userScore: number;
   currentHighScore: HighScoreEntry | undefined;
   isNewHighScore: boolean;
-  goToNewGameState: () => void;
+  onModalClose: () => void;
   padKeyListeners: { pause: () => void; resume: () => void };
 }
 
 export const GameOverModal = (props: GameOverModalProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
 
-  const openModal = useCallback(() => {
-    setIsModalOpen(true);
+  // pause pad key listeners on mount
+  useEffect(() => {
     props.padKeyListeners.pause();
   }, [props.padKeyListeners]);
 
-  /** To close the modal, use props.goToNewGameState. closeModal will be called
-   * in useEffect to respond to the change in game state. This is to prevent
-   * complex checks on whether or not to show the modal. */
+  /** set isModalOpen false to animate out modal, then execute cbs */
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
-    props.padKeyListeners.resume();
-  }, [props.padKeyListeners]);
-
-  useEffect(() => {
-    if (props.isGameOver && !isModalOpen) {
-      openModal();
-    }
-  }, [isModalOpen, openModal, props.isGameOver]);
-
-  useEffect(() => {
-    if (isModalOpen && !props.isGameOver) {
-      closeModal();
-    }
-  }, [closeModal, isModalOpen, props.isGameOver]);
-
-  const [error, setError] = useState('');
+    delay(ANIMATION_DURATION, () => {
+      props.padKeyListeners.resume();
+      props.onModalClose();
+    });
+  }, [props]);
 
   const updateHighScoreApi = useUpdateHighScoreApi({
-    onSuccess: props.goToNewGameState,
+    onSuccess: closeModal,
     onError: (reason: string) => setError(reason),
   });
+
+  // reset mutation client state after the modal closes
+  useEffect(() => {
+    return () => {
+      setTimeout(() => {
+        updateHighScoreApi.reset();
+      }, ANIMATION_DURATION);
+    };
+  }, [updateHighScoreApi]);
+
+  const [error, setError] = useState('');
 
   const onSubmit = (name: string) => {
     setError('');
     updateHighScoreApi.mutate({ name, score: props.userScore });
   };
-
-  if (!isModalOpen) {
-    // reset everything after the modal closes
-    setTimeout(() => {
-      updateHighScoreApi.reset();
-    }, ANIMATION_DURATION);
-  }
 
   const showNewHighScore =
     props.isNewHighScore ||
@@ -70,11 +61,7 @@ export const GameOverModal = (props: GameOverModalProps) => {
     updateHighScoreApi.isSuccess;
 
   return (
-    <Modal
-      isOpen={isModalOpen}
-      onClose={props.goToNewGameState}
-      className="max-w-xl"
-    >
+    <Modal isOpen={isModalOpen} onClose={closeModal} className="max-w-xl">
       {showNewHighScore ? (
         <NewHighScore
           error={error}
