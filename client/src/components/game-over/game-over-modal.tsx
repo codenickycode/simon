@@ -37,7 +37,7 @@ export const GameOverModal = (props: GameOverModalProps) => {
     onError: (reason: string) => setError(reason),
   });
 
-  // reset everything after the modal closes
+  // reset mutation client state after the modal closes
   useEffect(() => {
     return () => {
       setTimeout(() => {
