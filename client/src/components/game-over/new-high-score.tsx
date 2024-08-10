@@ -31,7 +31,6 @@ export const NewHighScore = (props: NewHighScoreProps) => {
       </p>
       <form onSubmit={handleSubmit}>
         <Input
-          autoFocus
           name="userName"
           value={userName}
           onChange={(e) => setUserName(e.target.value)}

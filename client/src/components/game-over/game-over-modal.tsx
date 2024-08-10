@@ -5,6 +5,7 @@ import { NewHighScore } from './new-high-score';
 import { CurrentHighScore } from '../shared/current-high-score';
 import type { HighScoreEntry } from '@simon/shared';
 import { useUpdateHighScoreApi } from '../../services/api.high-score';
+import { delay } from '../../utils/delay';
 
 export interface GameOverModalProps {
   userScore: number;
@@ -15,16 +16,21 @@ export interface GameOverModalProps {
 }
 
 export const GameOverModal = (props: GameOverModalProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
   // pause pad key listeners on mount
   useEffect(() => {
     props.padKeyListeners.pause();
   }, [props.padKeyListeners]);
 
+  /** set isModalOpen false to animate out modal, then execute cbs */
   const closeModal = useCallback(() => {
-    props.padKeyListeners.resume();
-    props.onCloseModal();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.padKeyListeners, props.onCloseModal]);
+    setIsModalOpen(false);
+    delay(ANIMATION_DURATION, () => {
+      props.padKeyListeners.resume();
+      props.onCloseModal();
+    });
+  }, [props]);
 
   const updateHighScoreApi = useUpdateHighScoreApi({
     onSuccess: closeModal,
@@ -33,9 +39,11 @@ export const GameOverModal = (props: GameOverModalProps) => {
 
   // reset everything after the modal closes
   useEffect(() => {
-    setTimeout(() => {
-      updateHighScoreApi.reset();
-    }, ANIMATION_DURATION);
+    return () => {
+      setTimeout(() => {
+        updateHighScoreApi.reset();
+      }, ANIMATION_DURATION);
+    };
   }, [updateHighScoreApi]);
 
   const [error, setError] = useState('');
@@ -53,7 +61,7 @@ export const GameOverModal = (props: GameOverModalProps) => {
     updateHighScoreApi.isSuccess;
 
   return (
-    <Modal isOpen={true} onClose={closeModal} className="max-w-xl">
+    <Modal isOpen={isModalOpen} onClose={closeModal} className="max-w-xl">
       {showNewHighScore ? (
         <NewHighScore
           error={error}
