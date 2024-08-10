@@ -35,16 +35,15 @@ function Simon() {
         padController={padController}
         getHighScoreApi={getHighScoreApi}
       />
-      <GameOverModal
-        isGameOver={gameMachine.isGameOver}
-        userScore={gameMachine.userScore}
-        currentHighScore={getHighScoreApi.data}
-        isNewHighScore={gameMachine.isNewHighScore}
-        goToNewGameState={() =>
-          gameMachine.actions.transition({ to: 'newGame' })
-        }
-        padKeyListeners={padController.padKeyListeners}
-      />
+      {gameMachine.isGameOver && (
+        <GameOverModal
+          userScore={gameMachine.userScore}
+          currentHighScore={getHighScoreApi.data}
+          isNewHighScore={gameMachine.isNewHighScore}
+          onCloseModal={() => gameMachine.actions.transition({ to: 'newGame' })}
+          padKeyListeners={padController.padKeyListeners}
+        />
+      )}
     </main>
   );
 }
