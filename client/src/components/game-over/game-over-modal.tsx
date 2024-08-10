@@ -11,7 +11,7 @@ export interface GameOverModalProps {
   userScore: number;
   currentHighScore: HighScoreEntry | undefined;
   isNewHighScore: boolean;
-  onCloseModal: () => void;
+  onModalClose: () => void;
   padKeyListeners: { pause: () => void; resume: () => void };
 }
 
@@ -28,7 +28,7 @@ export const GameOverModal = (props: GameOverModalProps) => {
     setIsModalOpen(false);
     delay(ANIMATION_DURATION, () => {
       props.padKeyListeners.resume();
-      props.onCloseModal();
+      props.onModalClose();
     });
   }, [props]);
 

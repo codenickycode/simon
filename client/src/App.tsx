@@ -40,7 +40,7 @@ function Simon() {
           userScore={gameMachine.userScore}
           currentHighScore={getHighScoreApi.data}
           isNewHighScore={gameMachine.isNewHighScore}
-          onCloseModal={() => gameMachine.actions.transition({ to: 'newGame' })}
+          onModalClose={() => gameMachine.actions.transition({ to: 'newGame' })}
           padKeyListeners={padController.padKeyListeners}
         />
       )}
