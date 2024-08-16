@@ -3,22 +3,25 @@ import { sequencer } from './../../services/sequencer';
 import { noteToPadId } from './../../utils/pads';
 import type { PadId } from './types';
 import type { SequencerNoteEvent } from '../../services/sequencer/sequencer';
-import { immutableSetOp } from '../../utils/set';
 
 export const useActivePads = (resetActivePads: boolean) => {
   const [activePads, setActivePads] = useState(new Set<PadId>());
   const [reset, setReset] = useState(false);
 
   const add = useCallback((padId: PadId) => {
-    setActivePads((prev) =>
-      immutableSetOp({ set: prev, item: padId, op: 'add' }),
-    );
+    setActivePads((prev) => {
+      const newSet = new Set(prev);
+      newSet.add(padId);
+      return newSet;
+    });
   }, []);
 
   const del = useCallback((padId: PadId) => {
-    setActivePads((prev) =>
-      immutableSetOp({ set: prev, item: padId, op: 'delete' }),
-    );
+    setActivePads((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(padId);
+      return newSet;
+    });
   }, []);
 
   if (resetActivePads !== reset) {
