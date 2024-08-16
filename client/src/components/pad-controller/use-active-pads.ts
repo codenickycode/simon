@@ -17,19 +17,18 @@ export const useActivePads = (resetActivePads: boolean) => {
   }
 
   useEffect(() => {
-    const unsubscribe = sequencer.addNoteEventListener(
-      (event: SequencerNoteEvent) => {
-        const note = event.detail.note;
-        const item = noteToPadId(note);
-        item && computerPadsActive.add(item);
-        // after note duration, make it inactive
-        setTimeout(() => {
-          const item = noteToPadId(note);
-          item && computerPadsActive.delete(item);
-        }, sequencer.noteDuration.ms / 2);
-      },
-    );
-    return () => unsubscribe();
+    const listener = (event: Event) => {
+      const note = (event as unknown as SequencerNoteEvent).detail.note;
+      const padId = noteToPadId(note);
+      padId && computerPadsActive.add(padId);
+      // after note duration, make it inactive
+      setTimeout(() => {
+        const padId = noteToPadId(note);
+        padId && computerPadsActive.delete(padId);
+      }, sequencer.noteDuration.ms / 2);
+    };
+    sequencer.addEventListener(sequencer.NOTE_EVENT, listener);
+    return () => sequencer.removeEventListener(sequencer.NOTE_EVENT, listener);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [computerPadsActive.add, computerPadsActive.delete]);
 

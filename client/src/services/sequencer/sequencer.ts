@@ -1,7 +1,6 @@
 import * as Tone from 'tone';
 import type { NoteOctave } from '../synth';
 import { MonoSynth } from '../synth/mono-synth';
-import type { NoOp } from '../../utils/no-op';
 
 export interface SequencerNoteEvent {
   detail: {
@@ -16,12 +15,7 @@ const INIT_NOTE_DURATION_S = 0.3;
 class Sequencer extends EventTarget {
   private _transport = Tone.getTransport();
 
-  private NOTE_EVENT = 'sequencerNoteEvent';
-
-  addNoteEventListener(cb: NoOp) {
-    this.addEventListener(this.NOTE_EVENT, cb);
-    return () => this.removeEventListener(this.NOTE_EVENT, cb);
-  }
+  NOTE_EVENT = 'sequencerNoteEvent';
 
   // todo: allow tempo changes
   get noteDuration() {
