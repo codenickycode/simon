@@ -5,7 +5,9 @@ import { Gamepad } from './components/gamepad';
 import { usePadController } from './components/pad-controller';
 import { initAudioContext } from './services/synth';
 import { useGetHighScoreApi } from './services/api.high-score';
+import { initMonitoring } from './services/monitoring/init-monitor';
 
+initMonitoring();
 initAudioContext();
 
 const queryClient = new QueryClient();

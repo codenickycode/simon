@@ -15,6 +15,7 @@
     "typecheck": "pnpm exec tsc --build"
   },
   "dependencies": {
+    "@sentry/react": "^8.25.0",
     "@simon/shared": "workspace:*",
     "@tanstack/react-query": "^5.50.1",
     "classnames": "^2.5.1",
