@@ -36,10 +36,6 @@ export const useActivePads = (resetActivePads: boolean) => {
       add(padId);
       // after note duration, make it inactive
       setTimeout(() => {
-        const padId = noteToPadId(note);
-        if (!padId) {
-          return;
-        }
         del(padId);
       }, sequencer.noteDuration.ms / 2);
     };
