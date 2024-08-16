@@ -14,16 +14,11 @@ export type PadController = ReturnType<typeof usePadController>;
 export const usePadController = ({
   onUserPadDown,
   disabled,
-  resetActivePads,
 }: {
   onUserPadDown: (padId: PadId) => void;
   disabled: boolean;
-  /** Toggle this boolean to reset all active pads to null. Useful to prevent
-   * "sticky" pads lit up when game state changes. */
-  resetActivePads: boolean;
 }) => {
-  const { activePads, setPadActive, setPadInactive } =
-    useActivePads(resetActivePads);
+  const { activePads, setPadActive, setPadInactive } = useActivePads();
 
   const userPadDown = useCallback(
     (padId: PadId) => {

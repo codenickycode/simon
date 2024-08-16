@@ -4,9 +4,8 @@ import { noteToPadId } from './../../utils/pads';
 import type { PadId } from './types';
 import type { SequencerNoteEvent } from '../../services/sequencer/sequencer';
 
-export const useActivePads = (resetActivePads: boolean) => {
+export const useActivePads = () => {
   const [activePads, setActivePads] = useState(new Set<PadId>());
-  const [reset, setReset] = useState(false);
 
   const add = useCallback((padId: PadId) => {
     setActivePads((prev) => {
@@ -23,11 +22,6 @@ export const useActivePads = (resetActivePads: boolean) => {
       return newSet;
     });
   }, []);
-
-  if (resetActivePads !== reset) {
-    setReset(resetActivePads);
-    setActivePads(new Set());
-  }
 
   useEffect(() => {
     const listener = (event: Event) => {
