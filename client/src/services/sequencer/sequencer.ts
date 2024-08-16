@@ -2,16 +2,20 @@ import * as Tone from 'tone';
 import type { NoteOctave } from '../synth';
 import { MonoSynth } from '../synth/mono-synth';
 
+export interface SequencerNoteEvent {
+  detail: {
+    note: NoteOctave;
+  };
+}
+
 const sequenceSynth = new MonoSynth(new Tone.Synth());
 
 const INIT_NOTE_DURATION_S = 0.3;
 
-class Sequencer {
+class Sequencer extends EventTarget {
   private _transport = Tone.getTransport();
 
-  public synth = {
-    subscribe: sequenceSynth.subscribe,
-  };
+  NOTE_EVENT = 'sequencerNoteEvent';
 
   // todo: allow tempo changes
   get noteDuration() {
@@ -19,6 +23,7 @@ class Sequencer {
   }
 
   constructor() {
+    super();
     this._sequence.loop = false;
     // we start our sequence at 0,
     // and use transport start/stop for playback
@@ -32,7 +37,9 @@ class Sequencer {
       time,
     });
     Tone.getDraw().schedule(() => {
-      sequenceSynth.notify(note);
+      this.dispatchEvent(
+        new CustomEvent(this.NOTE_EVENT, { detail: { note } }),
+      );
     }, time);
   }, []);
 

@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSet } from './../../utils/set';
 import { sequencer } from './../../services/sequencer';
 import { noteToPadId } from './../../utils/pads';
-import type { NoteOctave } from '../../services/synth';
 import type { PadId } from './types';
+import type { SequencerNoteEvent } from '../../services/sequencer/sequencer';
 
 export const useActivePads = (resetActivePads: boolean) => {
   const computerPadsActive = useSet<PadId>();
@@ -17,16 +17,18 @@ export const useActivePads = (resetActivePads: boolean) => {
   }
 
   useEffect(() => {
-    const unsubscribe = sequencer.synth.subscribe((note: NoteOctave) => {
-      const item = noteToPadId(note);
-      item && computerPadsActive.add(item);
+    const listener = (event: Event) => {
+      const note = (event as unknown as SequencerNoteEvent).detail.note;
+      const padId = noteToPadId(note);
+      padId && computerPadsActive.add(padId);
       // after note duration, make it inactive
       setTimeout(() => {
-        const item = noteToPadId(note);
-        item && computerPadsActive.delete(item);
+        const padId = noteToPadId(note);
+        padId && computerPadsActive.delete(padId);
       }, sequencer.noteDuration.ms / 2);
-    });
-    return () => unsubscribe();
+    };
+    sequencer.addEventListener(sequencer.NOTE_EVENT, listener);
+    return () => sequencer.removeEventListener(sequencer.NOTE_EVENT, listener);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [computerPadsActive.add, computerPadsActive.delete]);
 
