@@ -13,15 +13,15 @@ const sequenceSynth = new MonoSynth(new Tone.Synth());
 
 const INIT_NOTE_DURATION_S = 0.3;
 
-class Sequencer {
+class Sequencer extends EventTarget {
   private _transport = Tone.getTransport();
 
   private NOTE_EVENT = 'sequencerNoteEvent';
 
   public synth = {
     addNoteEventListener: (cb: NoOp) => {
-      sequenceSynth.addEventListener(this.NOTE_EVENT, cb);
-      return () => sequenceSynth.removeEventListener(this.NOTE_EVENT, cb);
+      this.addEventListener(this.NOTE_EVENT, cb);
+      return () => this.removeEventListener(this.NOTE_EVENT, cb);
     },
   };
 
@@ -31,6 +31,7 @@ class Sequencer {
   }
 
   constructor() {
+    super();
     this._sequence.loop = false;
     // we start our sequence at 0,
     // and use transport start/stop for playback
@@ -44,7 +45,7 @@ class Sequencer {
       time,
     });
     Tone.getDraw().schedule(() => {
-      sequenceSynth.dispatchEvent(
+      this.dispatchEvent(
         new CustomEvent(this.NOTE_EVENT, { detail: { note } }),
       );
     }, time);
