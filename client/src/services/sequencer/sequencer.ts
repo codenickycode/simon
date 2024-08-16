@@ -18,12 +18,10 @@ class Sequencer extends EventTarget {
 
   private NOTE_EVENT = 'sequencerNoteEvent';
 
-  public synth = {
-    addNoteEventListener: (cb: NoOp) => {
-      this.addEventListener(this.NOTE_EVENT, cb);
-      return () => this.removeEventListener(this.NOTE_EVENT, cb);
-    },
-  };
+  addNoteEventListener(cb: NoOp) {
+    this.addEventListener(this.NOTE_EVENT, cb);
+    return () => this.removeEventListener(this.NOTE_EVENT, cb);
+  }
 
   // todo: allow tempo changes
   get noteDuration() {

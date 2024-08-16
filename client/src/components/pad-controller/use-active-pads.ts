@@ -17,7 +17,7 @@ export const useActivePads = (resetActivePads: boolean) => {
   }
 
   useEffect(() => {
-    const unsubscribe = sequencer.synth.addNoteEventListener(
+    const unsubscribe = sequencer.addNoteEventListener(
       (event: SequencerNoteEvent) => {
         const note = event.detail.note;
         const item = noteToPadId(note);
