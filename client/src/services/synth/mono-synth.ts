@@ -1,9 +1,8 @@
 import * as Tone from 'tone';
 import type { Duration, NoteOctave } from './types';
 import { audioCtxReady } from './audio-context';
-import { SimpleObservable } from '../../utils/observable';
 
-export class MonoSynth extends SimpleObservable<NoteOctave> {
+export class MonoSynth extends EventTarget {
   private _synth;
   private _volume;
 
