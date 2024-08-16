@@ -14,37 +14,32 @@ export type PadController = ReturnType<typeof usePadController>;
 export const usePadController = ({
   onUserPadDown,
   disabled,
-  resetActivePads,
 }: {
   onUserPadDown: (padId: PadId) => void;
   disabled: boolean;
-  /** Toggle this boolean to reset all active pads to null. Useful to prevent
-   * "sticky" pads lit up when game state changes. */
-  resetActivePads: boolean;
 }) => {
-  const { activePads, setUserPadActive, setUserPadInactive } =
-    useActivePads(resetActivePads);
+  const { activePads, setPadActive, setPadInactive } = useActivePads();
 
   const userPadDown = useCallback(
     (padId: PadId) => {
       if (disabled) {
         return;
       }
-      setUserPadActive(padId);
+      setPadActive(padId);
       userSynth.playNote({
         note: pads[padId].tone,
         duration: NOTE_DURATION_S,
       });
       onUserPadDown(padId);
     },
-    [disabled, onUserPadDown, setUserPadActive],
+    [disabled, onUserPadDown, setPadActive],
   );
 
   const userPadUp = useCallback(
     (padId: PadId) => {
-      setUserPadInactive(padId);
+      setPadInactive(padId);
     },
-    [setUserPadInactive],
+    [setPadInactive],
   );
 
   const padKeyListeners = usePadKeyListeners({
