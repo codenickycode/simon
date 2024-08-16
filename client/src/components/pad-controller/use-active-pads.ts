@@ -38,8 +38,7 @@ export const useActivePads = () => {
     };
     sequencer.addEventListener(sequencer.NOTE_EVENT, listener);
     return () => sequencer.removeEventListener(sequencer.NOTE_EVENT, listener);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePads.add, activePads.delete]);
+  }, [add, del]);
 
   return {
     activePads,
