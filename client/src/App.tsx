@@ -28,7 +28,6 @@ function Simon() {
   const padController = usePadController({
     onUserPadDown: gameMachine.actions.input,
     disabled: gameMachine.isComputerTurn,
-    resetActivePads: !gameMachine.isPlaying,
   });
   return (
     <main className="font-sans text-slate-200 overflow-hidden fixed h-dvh w-full touch-none bg-gradient-to-b from-slate-700 to-sky-950 flex items-center justify-center">

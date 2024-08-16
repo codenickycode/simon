@@ -1,45 +1,48 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useSet } from './../../utils/set';
+import { useCallback, useEffect, useState } from 'react';
 import { sequencer } from './../../services/sequencer';
 import { noteToPadId } from './../../utils/pads';
-import type { NoteOctave } from '../../services/synth';
 import type { PadId } from './types';
+import type { SequencerNoteEvent } from '../../services/sequencer/sequencer';
 
-export const useActivePads = (resetActivePads: boolean) => {
-  const computerPadsActive = useSet<PadId>();
-  const userPadsActive = useSet<PadId>();
-  const [reset, setReset] = useState(false);
+export const useActivePads = () => {
+  const [activePads, setActivePads] = useState(new Set<PadId>());
 
-  if (resetActivePads !== reset) {
-    setReset(resetActivePads);
-    computerPadsActive.reset();
-    userPadsActive.reset();
-  }
+  const add = useCallback((padId: PadId) => {
+    setActivePads((prev) => {
+      const newSet = new Set(prev);
+      newSet.add(padId);
+      return newSet;
+    });
+  }, []);
+
+  const del = useCallback((padId: PadId) => {
+    setActivePads((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(padId);
+      return newSet;
+    });
+  }, []);
 
   useEffect(() => {
-    const unsubscribe = sequencer.synth.subscribe((note: NoteOctave) => {
-      const item = noteToPadId(note);
-      item && computerPadsActive.add(item);
+    const listener = (event: Event) => {
+      const note = (event as unknown as SequencerNoteEvent).detail.note;
+      const padId = noteToPadId(note);
+      if (!padId) {
+        return;
+      }
+      add(padId);
       // after note duration, make it inactive
       setTimeout(() => {
-        const item = noteToPadId(note);
-        item && computerPadsActive.delete(item);
+        del(padId);
       }, sequencer.noteDuration.ms / 2);
-    });
-    return () => unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [computerPadsActive.add, computerPadsActive.delete]);
-
-  // pads are active if either the user or computer has them active
-  const activePads = useMemo<Set<PadId>>(
-    () =>
-      new Set<PadId>([...computerPadsActive.items, ...userPadsActive.items]),
-    [computerPadsActive, userPadsActive],
-  );
+    };
+    sequencer.addEventListener(sequencer.NOTE_EVENT, listener);
+    return () => sequencer.removeEventListener(sequencer.NOTE_EVENT, listener);
+  }, [add, del]);
 
   return {
     activePads,
-    setUserPadActive: userPadsActive.add,
-    setUserPadInactive: userPadsActive.delete,
+    setPadActive: add,
+    setPadInactive: del,
   };
 };
