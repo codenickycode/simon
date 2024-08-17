@@ -51,9 +51,6 @@ const actionGuard = (
 ): boolean => {
   switch (action.type) {
     case 'transition':
-      if (action.onlyIfState) {
-        return action.onlyIfState === currentMachineState.state;
-      }
       return true;
     case 'startNewGame':
       return ['newGame', 'gameOver'].includes(currentMachineState.state);
