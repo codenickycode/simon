@@ -21,7 +21,7 @@ export const useGameMachine = ({
 
   // *** Actions ***
   const transition: Transition = useCallback(
-    ({ to, onlyIfState }) => dispatch({ type: 'transition', to, onlyIfState }),
+    ({ to }) => dispatch({ type: 'transition', to }),
     [],
   );
   const startNewGame = useCallback(
@@ -51,7 +51,7 @@ export const useGameMachine = ({
     currentState: gameMachine.state,
     cb: () => {
       gameLogic.nextSequence().then(() => {
-        transition({ to: 'userTurn', onlyIfState: 'computerTurn' });
+        transition({ to: 'userTurn' });
       });
     },
   });
