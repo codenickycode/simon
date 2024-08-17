@@ -4,5 +4,3 @@ node_modules
 repo.txt
 .env
 .DS_Store
-# Sentry Config File
-.env.sentry-build-plugin

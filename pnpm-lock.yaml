@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      '@sentry/vite-plugin':
-        specifier: ^2.22.0
-        version: 2.22.0
     devDependencies:
       '@types/eslint':
         specifier: ^9.6.0
@@ -42,6 +38,9 @@ importers:
       '@sentry/react':
         specifier: ^8.25.0
         version: 8.25.0(react@18.3.1)
+      '@sentry/vite-plugin':
+        specifier: ^2.22.0
+        version: 2.22.0
       '@simon/shared':
         specifier: workspace:*
         version: link:../shared
