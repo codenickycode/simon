@@ -1,6 +1,8 @@
 import type { HighScoreEntry } from '@simon/shared';
 import { getServerUrl, WORKER_PATH_HIGH_SCORE } from '@simon/shared';
+import type { UseQueryResult } from '@tanstack/react-query';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import * as Sentry from '@sentry/react';
 
 const serverUrl = getServerUrl(import.meta.env.DEV);
 const highScoreUrl = `${serverUrl}${WORKER_PATH_HIGH_SCORE}`;
@@ -10,19 +12,25 @@ const HIGH_SCORE_QUERY_KEY = 'highScore';
 const DEFAULT_ERROR_REASON =
   'Unable to save high score.\nPlease check your connection and try again.';
 
-export type GetHighScoreApi = ReturnType<typeof useGetHighScoreApi>;
+export type GetHighScoreApi = UseQueryResult<HighScoreEntry | null, Error>;
 
 export function useGetHighScoreApi() {
   return useQuery<HighScoreEntry>({
     queryKey: [HIGH_SCORE_QUERY_KEY],
     queryFn: async () => {
-      return fetch(highScoreUrl).then((res) => {
-        if (!res.ok) {
-          throw res;
-        }
-        return res.json();
-      });
+      return fetch(highScoreUrl)
+        .then((res) => {
+          if (!res.ok) {
+            throw res;
+          }
+          return res.json();
+        })
+        .catch((e) => {
+          Sentry.captureException(e);
+          return null;
+        });
     },
+    retry: false,
   });
 }
 
@@ -53,6 +61,7 @@ export function useUpdateHighScoreApi(params?: {
     onError: (error) => {
       const reason = getReason(error);
       params?.onError?.(reason);
+      Sentry.captureException(error);
     },
   });
 }
