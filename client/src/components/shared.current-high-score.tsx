@@ -1,6 +1,6 @@
-import { formatDate } from '../../utils/date';
-import { Button } from '../ui-elements/button';
-import type { GetHighScoreApi } from '../../services/api.high-score';
+import { formatDate } from '../utils/date';
+import { Button } from './ui.button';
+import type { GetHighScoreApi } from '../services/api.high-score';
 
 export const CurrentHighScore = (props: {
   getHighScoreApi: GetHighScoreApi;

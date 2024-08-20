@@ -1,4 +1,4 @@
-import type { PadId } from '../../components/pad-controller';
+import { PadId } from '../types';
 
 export type GameState = 'newGame' | 'computerTurn' | 'userTurn' | 'gameOver';
 

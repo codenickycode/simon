@@ -1,5 +1,5 @@
-import { Pad } from './pad';
-import type { usePadController } from '../pad-controller';
+import { Pad } from './pads.pad';
+import type { usePadController } from './use-pad-controller';
 import classNames from 'classnames';
 
 interface PadsProps {
@@ -16,7 +16,10 @@ export const Pads = ({
   padController,
 }: PadsProps) => {
   return (
-    <div className="w-[320px] sm:w-[480px] lg:w-[720px] xl:w-[900px] max-w-[75dvh] aspect-square rounded-full bg-slate-900 border-8 border-slate-950 flex items-center justify-center">
+    <div
+      aria-label="gamepad"
+      className="w-[320px] sm:w-[480px] lg:w-[720px] xl:w-[900px] max-w-[75dvh] aspect-square rounded-full bg-slate-900 border-8 border-slate-950 flex items-center justify-center"
+    >
       <div className="relative w-[95%] grid grid-cols-2 gap-1">
         <Pad
           padId="green"

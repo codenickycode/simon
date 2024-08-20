@@ -1,6 +1,6 @@
 import * as Tone from 'tone';
-import type { Duration, NoteOctave } from './types';
-import { audioCtxReady } from './audio-context';
+import type { Duration, NoteOctave } from './synth.types';
+import { audioCtxReady } from './synth.init';
 
 export class MonoSynth {
   private _synth;

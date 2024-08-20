@@ -1,7 +1,7 @@
 import * as Tone from 'tone';
-import { melodies } from './melodies';
-import { MonoSynth } from '../synth';
-import { delay } from '../../utils/delay';
+import { melodies } from './melody-player.melodies';
+import { delay } from '../utils/delay';
+import { MonoSynth } from './synth.mono-synth';
 
 const TIMING_BUFFER = 100;
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import type { GameState } from '../components/game-machine/types';
 import type { NoOp } from './no-op';
+import type { GameState } from '../components/use-game-machine.types';
 
 export function useOnEntry({
   target,
