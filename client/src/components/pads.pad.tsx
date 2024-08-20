@@ -1,6 +1,6 @@
 import classnames from 'classnames';
-import type { PadId } from '../pad-controller';
-import { pads } from '../pad-controller/schema';
+import { PAD_SCHEMA } from '../config';
+import { PadId } from '../types';
 
 export interface PadProps {
   padId: PadId;
@@ -12,7 +12,7 @@ export interface PadProps {
 }
 
 export const Pad = (props: PadProps) => {
-  const key = pads[props.padId].key;
+  const key = PAD_SCHEMA[props.padId].key;
   return (
     <button
       aria-label={`${props.padId} pad`}

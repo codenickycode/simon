@@ -1,6 +1,9 @@
-import { sequencer } from '../../services/sequencer';
-import { gameLogic, NEW_GAME_STATE } from './logic';
-import type { GameMachineAction, GameMachineState } from './types';
+import { sequencer } from '../services/sequencer';
+import { gameLogic, NEW_GAME_STATE } from './use-game-machine.logic';
+import type {
+  GameMachineAction,
+  GameMachineState,
+} from './use-game-machine.types';
 
 export const gameMachineReducer = (
   currentMachineState: GameMachineState,

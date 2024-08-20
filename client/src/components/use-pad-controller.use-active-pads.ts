@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { sequencer } from './../../services/sequencer';
-import { noteToPadId } from './../../utils/pads';
-import type { PadId } from './types';
-import type { SequencerNoteEvent } from '../../services/sequencer/sequencer';
+import { sequencer, SequencerNoteEvent } from '../services/sequencer';
+import { noteToPadId } from '../utils/pads';
+import { PadId } from '../types';
 
 export const useActivePads = () => {
   const [activePads, setActivePads] = useState(new Set<PadId>());

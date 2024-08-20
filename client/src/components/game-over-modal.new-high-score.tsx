@@ -1,8 +1,8 @@
 import type { FormEvent } from 'react';
 import { useState } from 'react';
-import { Input } from '../ui-elements/input';
-import { Button } from '../ui-elements/button';
-import { Spinner } from '../ui-elements/spinner';
+import { Input } from './ui.input';
+import { Button } from './ui.button';
+import { Spinner } from './ui.spinner';
 
 interface NewHighScoreProps {
   onSubmit: (name: string) => void;

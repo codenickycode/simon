@@ -1,5 +1,5 @@
-import { pads } from '../components/pad-controller/schema';
-import type { PadKey, PadTone } from '../components/pad-controller';
+import { PAD_SCHEMA } from '../config';
+import type { PadKey, PadTone } from '../types';
 import {
   keyToPadId,
   padKeyToPadTone,
@@ -8,7 +8,7 @@ import {
 } from './pads';
 
 describe('keyToPadId', () => {
-  test.each(Object.entries(pads))(
+  test.each(Object.entries(PAD_SCHEMA))(
     'finds the pad id for the %s pad via key',
     (padId, pad) => {
       const result = keyToPadId(pad.key);
@@ -22,7 +22,7 @@ describe('keyToPadId', () => {
 });
 
 describe('padKeyToPadTone', () => {
-  test.each(Object.entries(pads))(
+  test.each(Object.entries(PAD_SCHEMA))(
     'finds the pad tone for the %s pad via key',
     (_, pad) => {
       const result = padKeyToPadTone(pad.key);
@@ -36,7 +36,7 @@ describe('padKeyToPadTone', () => {
 });
 
 describe('noteToPadId', () => {
-  test.each(Object.entries(pads))(
+  test.each(Object.entries(PAD_SCHEMA))(
     'finds the pad id for the %s pad via tone',
     (padId, pad) => {
       const result = noteToPadId(pad.tone);
@@ -50,7 +50,7 @@ describe('noteToPadId', () => {
 });
 
 describe('padToneToPadKey', () => {
-  test.each(Object.entries(pads))(
+  test.each(Object.entries(PAD_SCHEMA))(
     'finds the pad key for the %s pad via tone',
     (_, pad) => {
       const result = padToneToPadKey(pad.tone);

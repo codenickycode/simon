@@ -1,11 +1,11 @@
 import { useCallback, useReducer } from 'react';
-import type { PadId } from '../../components/pad-controller';
-import type { Transition } from './types';
-import { gameMachineReducer } from './reducer';
-import { gameLogic, NEW_GAME_STATE } from './logic';
+import type { Transition } from './use-game-machine.types';
+import { gameMachineReducer } from './use-game-machine.reducer';
+import { gameLogic, NEW_GAME_STATE } from './use-game-machine.logic';
 import type { HighScoreEntry } from '@simon/shared';
-import { melodyPlayer } from '../../services/melody-player';
-import { useOnEntry } from '../../utils/on-entry';
+import { useOnEntry } from '../utils/on-entry';
+import { melodyPlayer } from '../services/melody-player';
+import { PadId } from '../types';
 
 export type GameMachine = ReturnType<typeof useGameMachine>;
 

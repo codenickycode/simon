@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
-import { Spinner } from '../ui-elements/spinner';
-import { Modal } from '../ui-elements/modal';
-import { CurrentHighScore } from '../shared/current-high-score';
-import { Button } from '../ui-elements/button';
-import type { GetHighScoreApi } from '../../services/api.high-score';
+import { Spinner } from './ui.spinner';
+import { Modal } from './ui.modal';
+import { CurrentHighScore } from './shared.current-high-score';
+import { Button } from './ui.button';
+import type { GetHighScoreApi } from '../services/api.high-score';
 
-export const HighScore = ({
+export const HighScoreDisplay = ({
   getHighScoreApi,
 }: {
   getHighScoreApi: GetHighScoreApi;

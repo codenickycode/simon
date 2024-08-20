@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { keyToPadId } from '../../utils/pads';
-import type { PadId } from './types';
+import { keyToPadId } from '../utils/pads';
+import { PadId } from '../types';
 
 /** Listen for keydown events that are a pad input.
  * Can be paused, for instance when the user is typing. */

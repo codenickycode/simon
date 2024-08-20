@@ -1,14 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Modal } from '../ui-elements/modal';
-import { ANIMATION_DURATION } from '../../config';
-import { NewHighScore } from './new-high-score';
-import { CurrentHighScore } from '../shared/current-high-score';
-import type {
-  GetHighScoreApi} from '../../services/api.high-score';
-import {
-  useUpdateHighScoreApi,
-} from '../../services/api.high-score';
-import { delay } from '../../utils/delay';
+import { Modal } from './ui.modal';
+import { ANIMATION_DURATION } from '../config';
+import { NewHighScore } from './game-over-modal.new-high-score';
+import { CurrentHighScore } from './shared.current-high-score';
+import type { GetHighScoreApi } from '../services/api.high-score';
+import { useUpdateHighScoreApi } from '../services/api.high-score';
+import { delay } from '../utils/delay';
 
 export interface GameOverModalProps {
   userScore: number;
