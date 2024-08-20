@@ -1,31 +1,12 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useGameMachine } from './components/use-game-machine';
 import { GameOverModal } from './components/game-over-modal';
 import { usePadController } from './components/use-pad-controller';
 import { useGetHighScoreApi } from './services/api.high-score';
-import { initMonitoring } from './services/monitor.init';
-import * as Sentry from '@sentry/react';
 import { Button } from './components/ui.button';
 import { HighScoreDisplay } from './components/high-score-display';
 import { Pads } from './components/pads';
-import { initAudioContext } from './services/synth.init';
 
-initMonitoring();
-initAudioContext();
-
-const queryClient = new QueryClient();
-
-export default function App() {
-  return (
-    <Sentry.ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <Simon />
-      </QueryClientProvider>
-    </Sentry.ErrorBoundary>
-  );
-}
-
-function Simon() {
+export function Simon() {
   const getHighScoreApi = useGetHighScoreApi();
   const gameMachine = useGameMachine({
     currentHighScore: getHighScoreApi.data,
