@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import type { NoOp } from './no-op';
 import type { GameState } from '../components/use-game-machine.types';
 
+// todo: this should be in the game machine dir
 export function useOnEntry({
   target,
   currentState,

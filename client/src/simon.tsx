@@ -45,7 +45,7 @@ export function Simon() {
           getHighScoreApi={getHighScoreApi}
           isNewHighScore={gameMachine.isNewHighScore}
           onModalClose={() => gameMachine.actions.transition({ to: 'newGame' })}
-          padKeyListeners={padController.padKeyListeners}
+          pausePadKeyListeners={padController.padKeyListeners.pause}
         />
       )}
     </main>

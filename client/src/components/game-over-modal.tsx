@@ -1,19 +1,17 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Modal } from './ui.modal';
 import { ANIMATION_DURATION } from '../config';
 import { NewHighScore } from './game-over-modal.new-high-score';
 import { CurrentHighScore } from './shared.current-high-score';
 import type { GetHighScoreApi } from '../services/api.high-score';
-import { useUpdateHighScoreApi } from '../services/api.high-score';
 import { delay } from '../utils/delay';
-import type { PadKeyListeners } from './use-pad-controller.use-pad-key-listeners';
 
 export interface GameOverModalProps {
   userScore: number;
   getHighScoreApi: GetHighScoreApi;
   isNewHighScore: boolean;
   onModalClose: () => void;
-  padKeyListeners: PadKeyListeners;
+  pausePadKeyListeners: () => () => void;
 }
 
 export const GameOverModal = (props: GameOverModalProps) => {
@@ -27,47 +25,13 @@ export const GameOverModal = (props: GameOverModalProps) => {
     });
   }, [props]);
 
-  const updateHighScoreApi = useUpdateHighScoreApi({
-    onSuccess: closeModal,
-    onError: (reason: string) => setError(reason),
-  });
-
-  // reset mutation client state after the modal closes
-  useEffect(() => {
-    return () => {
-      setTimeout(() => {
-        updateHighScoreApi.reset();
-      }, ANIMATION_DURATION);
-    };
-  }, [updateHighScoreApi]);
-
-  const [error, setError] = useState('');
-
-  const onSubmit = (name: string) => {
-    setError('');
-    updateHighScoreApi.mutate({ name, score: props.userScore });
-  };
-
-  const showNewHighScore =
-    props.isNewHighScore ||
-    // the line above will be falsy if the user's update to high score is
-    // successful (and the query re-validates), so to prevent a "game over"
-    // flash, check if their update succeeded
-    updateHighScoreApi.isSuccess;
-
   return (
     <Modal isOpen={isModalOpen} onClose={closeModal} className="max-w-xl">
-      {showNewHighScore ? (
+      {props.isNewHighScore ? (
         <NewHighScore
-          error={error}
-          onSubmit={onSubmit}
-          // Disable the form while mutation is pending
-          disabled={updateHighScoreApi.isPending}
-          pending={
-            // Keep a pending state on success because we are animating away the modal. This will prevent a flash.
-            updateHighScoreApi.isPending || !!updateHighScoreApi.isSuccess
-          }
-          padKeyListeners={props.padKeyListeners}
+          newHighScore={props.userScore}
+          onUpdateSuccess={closeModal}
+          onMount={props.pausePadKeyListeners}
         />
       ) : (
         <div>

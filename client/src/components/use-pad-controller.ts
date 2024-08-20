@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useActivePads } from './use-pad-controller.use-active-pads';
 import { usePadKeyListeners } from './use-pad-controller.use-pad-key-listeners';
 import { MonoSynth } from '../services/synth.mono-synth';
-import { PadId } from '../types';
+import type { PadId } from '../types';
 import { PAD_SCHEMA } from '../config';
 
 const NOTE_DURATION_S = 0.3;
@@ -48,5 +48,10 @@ export const usePadController = ({
     disabled,
   });
 
-  return { activePads, userPadDown, userPadUp, padKeyListeners };
+  return {
+    activePads,
+    userPadDown,
+    userPadUp,
+    padKeyListeners,
+  };
 };
