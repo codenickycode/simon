@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { keyToPadId } from '../utils/pads';
-import { PadId } from '../types';
+import type { PadId } from '../types';
+
+export interface PadKeyListeners {
+  pause: () => void;
+  resume: () => void;
+}
 
 /** Listen for keydown events that are a pad input.
  * Can be paused, for instance when the user is typing. */

@@ -6,28 +6,23 @@ import { CurrentHighScore } from './shared.current-high-score';
 import type { GetHighScoreApi } from '../services/api.high-score';
 import { useUpdateHighScoreApi } from '../services/api.high-score';
 import { delay } from '../utils/delay';
+import type { PadKeyListeners } from './use-pad-controller.use-pad-key-listeners';
 
 export interface GameOverModalProps {
   userScore: number;
   getHighScoreApi: GetHighScoreApi;
   isNewHighScore: boolean;
   onModalClose: () => void;
-  padKeyListeners: { pause: () => void; resume: () => void };
+  padKeyListeners: PadKeyListeners;
 }
 
 export const GameOverModal = (props: GameOverModalProps) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
 
-  // pause pad key listeners on mount
-  useEffect(() => {
-    props.padKeyListeners.pause();
-  }, [props.padKeyListeners]);
-
   /** set isModalOpen false to animate out modal, then execute cbs */
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
     delay(ANIMATION_DURATION, () => {
-      props.padKeyListeners.resume();
       props.onModalClose();
     });
   }, [props]);
@@ -72,6 +67,7 @@ export const GameOverModal = (props: GameOverModalProps) => {
             // Keep a pending state on success because we are animating away the modal. This will prevent a flash.
             updateHighScoreApi.isPending || !!updateHighScoreApi.isSuccess
           }
+          padKeyListeners={props.padKeyListeners}
         />
       ) : (
         <div>

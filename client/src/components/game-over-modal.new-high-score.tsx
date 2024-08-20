@@ -1,17 +1,26 @@
 import type { FormEvent } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from './ui.input';
 import { Button } from './ui.button';
 import { Spinner } from './ui.spinner';
+import type { PadKeyListeners } from './use-pad-controller.use-pad-key-listeners';
 
 interface NewHighScoreProps {
   onSubmit: (name: string) => void;
   disabled: boolean;
   pending: boolean;
   error: string;
+  padKeyListeners: PadKeyListeners;
 }
 
 export const NewHighScore = (props: NewHighScoreProps) => {
+  // pause pad key listeners on mount
+  // so the user doesn't play tones while typing their name
+  useEffect(() => {
+    props.padKeyListeners.pause();
+    return () => props.padKeyListeners.resume();
+  }, [props.padKeyListeners]);
+
   const [userName, setUserName] = useState('');
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
