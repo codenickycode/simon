@@ -12,7 +12,7 @@ async function handleRequest(request: Request, env: Env) {
   const headers = new Headers({
     'Access-Control-Allow-Origin': '*', // Replace * with your domain in production
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, baggage, sentry-trace',
     'Content-Type': 'application/json',
   });
   if (request.method === 'OPTIONS') {

@@ -6,6 +6,7 @@ import { usePadController } from './components/pad-controller';
 import { initAudioContext } from './services/synth';
 import { useGetHighScoreApi } from './services/api.high-score';
 import { initMonitoring } from './services/monitoring/init-monitor';
+import * as Sentry from '@sentry/react';
 
 initMonitoring();
 initAudioContext();
@@ -14,9 +15,11 @@ const queryClient = new QueryClient();
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Simon />
-    </QueryClientProvider>
+    <Sentry.ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <Simon />
+      </QueryClientProvider>
+    </Sentry.ErrorBoundary>
   );
 }
 
@@ -39,7 +42,7 @@ function Simon() {
       {gameMachine.isGameOver && (
         <GameOverModal
           userScore={gameMachine.userScore}
-          currentHighScore={getHighScoreApi.data}
+          getHighScoreApi={getHighScoreApi}
           isNewHighScore={gameMachine.isNewHighScore}
           onModalClose={() => gameMachine.actions.transition({ to: 'newGame' })}
           padKeyListeners={padController.padKeyListeners}

@@ -29,7 +29,7 @@ export const HighScore = ({
         <h2 className="text-xl mb-8">
           🏆 <span className="px-2">High Score</span> 🏆
         </h2>
-        <CurrentHighScore highScore={getHighScoreApi.data} />
+        <CurrentHighScore getHighScoreApi={getHighScoreApi} />
       </Modal>
     </div>
   );

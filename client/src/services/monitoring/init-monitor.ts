@@ -13,7 +13,7 @@ export const initMonitoring = () => {
     tracesSampleRate: 1.0,
     tracePropagationTargets: ['localhost', getServerUrl(isDev)],
     // limit sampling on production
-    replaysSessionSampleRate: isDev ? 1 : 0.25,
+    replaysSessionSampleRate: isDev ? 1 : 0.1,
     replaysOnErrorSampleRate: 1.0,
   });
 };

@@ -3,13 +3,16 @@ import { Modal } from '../ui-elements/modal';
 import { ANIMATION_DURATION } from '../../config';
 import { NewHighScore } from './new-high-score';
 import { CurrentHighScore } from '../shared/current-high-score';
-import type { HighScoreEntry } from '@simon/shared';
-import { useUpdateHighScoreApi } from '../../services/api.high-score';
+import type {
+  GetHighScoreApi} from '../../services/api.high-score';
+import {
+  useUpdateHighScoreApi,
+} from '../../services/api.high-score';
 import { delay } from '../../utils/delay';
 
 export interface GameOverModalProps {
   userScore: number;
-  currentHighScore: HighScoreEntry | undefined;
+  getHighScoreApi: GetHighScoreApi;
   isNewHighScore: boolean;
   onModalClose: () => void;
   padKeyListeners: { pause: () => void; resume: () => void };
@@ -80,7 +83,7 @@ export const GameOverModal = (props: GameOverModalProps) => {
             Your score is {props.userScore}. Try again to beat the global high
             score!
           </p>
-          <CurrentHighScore highScore={props.currentHighScore} />
+          <CurrentHighScore getHighScoreApi={props.getHighScoreApi} />
         </div>
       )}
     </Modal>
