@@ -22,7 +22,6 @@ export const Pad = (props: PadProps) => {
       className={classnames(
         'w-full aspect-square cursor-pointer',
         props.active ? 'brightness-100' : 'brightness-75',
-        // todo: twMerge
         props.className,
       )}
     >
