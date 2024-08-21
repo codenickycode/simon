@@ -5,7 +5,8 @@ const isDev = import.meta.env.DEV;
 
 export const initMonitoring = () => {
   Sentry.init({
-    dsn: 'https://a485f37a0cffb47b727372c209581f1e@o4507753746071552.ingest.us.sentry.io/4507753753018368',
+    dsn: import.meta.env.VITE_SENTRY_DSN,
+    environment: isDev ? 'development' : 'production',
     integrations: [
       Sentry.browserTracingIntegration(),
       Sentry.replayIntegration(),
