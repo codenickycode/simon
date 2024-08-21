@@ -1,6 +1,6 @@
 import { PAD_SCHEMA } from '../config';
 import { sequencer } from '../services/sequencer';
-import { PadId } from '../types';
+import type { PadId } from '../types';
 import { delay } from '../utils/delay';
 import type { GameMachineState } from './use-game-machine.types';
 

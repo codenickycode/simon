@@ -1,4 +1,4 @@
-import { PadId } from '../types';
+import type { PadId } from '../types';
 
 export type GameState = 'newGame' | 'computerTurn' | 'userTurn' | 'gameOver';
 

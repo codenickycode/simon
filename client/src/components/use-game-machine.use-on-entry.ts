@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
-import type { NoOp } from './no-op';
-import type { GameState } from '../components/use-game-machine.types';
+import type { NoOp } from '../utils/no-op';
+import type { GameState } from './use-game-machine.types';
 
-// todo: this should be in the game machine dir
+/** Executes a callback each time the current state changes to the target */
 export function useOnEntry({
   target,
   currentState,

@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import { PAD_SCHEMA } from '../config';
-import { PadId } from '../types';
+import type { PadId } from '../types';
 
 export interface PadProps {
   padId: PadId;

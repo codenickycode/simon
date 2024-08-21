@@ -1,5 +1,5 @@
 import * as Tone from 'tone';
-import { NoteOctave } from './synth.types';
+import type { NoteOctave } from './synth.types';
 import { MonoSynth } from './synth.mono-synth';
 
 export interface SequencerNoteEvent {
