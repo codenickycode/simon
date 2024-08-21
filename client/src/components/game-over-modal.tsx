@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { Modal } from './ui.modal';
 import { ANIMATION_DURATION } from '../config';
 import { NewHighScore } from './game-over-modal.new-high-score';
@@ -18,12 +18,12 @@ export const GameOverModal = (props: GameOverModalProps) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
 
   /** set isModalOpen false to animate out modal, then execute cbs */
-  const closeModal = useCallback(() => {
+  const closeModal = () => {
     setIsModalOpen(false);
     delay(ANIMATION_DURATION, () => {
       props.onModalClose();
     });
-  }, [props]);
+  };
 
   return (
     <Modal isOpen={isModalOpen} onClose={closeModal} className="max-w-xl">

@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -39,11 +39,11 @@ export const Modal = ({
     }
   }, [isOpen]);
 
-  const handleAnimationEnd = useCallback(() => {
+  const handleAnimationEnd = () => {
     if (!isOpen) {
       setIsAnimating(false);
     }
-  }, [isOpen]);
+  };
 
   if (!isOpen && !isAnimating) {
     return null;

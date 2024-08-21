@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { Spinner } from './ui.spinner';
 import { Modal } from './ui.modal';
 import { CurrentHighScore } from './shared.current-high-score';
@@ -11,8 +11,8 @@ export const HighScoreDisplay = ({
   getHighScoreApi: GetHighScoreApi;
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const openModal = useCallback(() => setModalOpen(true), []);
-  const closeModal = useCallback(() => setModalOpen(false), []);
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
   return (
     <div className="flex items-center">
       <Button
