@@ -1,22 +1,38 @@
 import type { FormEvent } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from './ui.input';
 import { Button } from './ui.button';
 import { Spinner } from './ui.spinner';
+import { useUpdateHighScoreApi } from '../services/api.high-score';
 
 interface NewHighScoreProps {
-  onSubmit: (name: string) => void;
-  disabled: boolean;
-  pending: boolean;
-  error: string;
+  newHighScore: number;
+  onUpdateSuccess: () => void;
+  onMount: () => () => void;
 }
 
-export const NewHighScore = (props: NewHighScoreProps) => {
+export const NewHighScore = ({
+  newHighScore,
+  onUpdateSuccess,
+  onMount,
+}: NewHighScoreProps) => {
+  useEffect(() => {
+    const onUnMount = onMount();
+    return onUnMount;
+  }, [onMount]);
+
   const [userName, setUserName] = useState('');
+  const [error, setError] = useState('');
+
+  const updateHighScoreApi = useUpdateHighScoreApi({
+    onSuccess: onUpdateSuccess,
+    onError: (reason: string) => setError(reason),
+  });
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    props.onSubmit(userName);
+    setError('');
+    updateHighScoreApi.mutate({ name: userName, score: newHighScore });
   };
 
   return (
@@ -35,18 +51,18 @@ export const NewHighScore = (props: NewHighScoreProps) => {
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
           placeholder="Enter your name"
-          disabled={props.disabled}
+          disabled={updateHighScoreApi.isPending}
           className="mr-2"
           maxLength={48}
         />
-        <Button type="submit" disabled={props.disabled}>
-          <Spinner isSpinning={props.pending}>
+        <Button type="submit" disabled={updateHighScoreApi.isPending}>
+          <Spinner isSpinning={updateHighScoreApi.isPending}>
             <span className="font-bold">save</span>
           </Spinner>
         </Button>
-        {props.error ? (
+        {error ? (
           <pre className="mt-3 text-red-500 text-sm text-balance whitespace-pre-wrap">
-            {props.error}
+            {error}
           </pre>
         ) : null}
       </form>
