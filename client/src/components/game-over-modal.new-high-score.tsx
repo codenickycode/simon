@@ -3,18 +3,23 @@ import { useEffect, useState } from 'react';
 import { Input } from './ui.input';
 import { Button } from './ui.button';
 import { Spinner } from './ui.spinner';
-import { useUpdateHighScoreApi } from '../services/api.high-score';
+import {
+  getUpdateErrorReason,
+  type UpdateHighScoreApi,
+} from '../services/api.high-score';
 
 interface NewHighScoreProps {
   newHighScore: number;
-  onUpdateSuccess: () => void;
   onMount: () => () => void;
+  updateHighScoreApi: UpdateHighScoreApi;
+  closeModal: () => void;
 }
 
 export const NewHighScore = ({
   newHighScore,
-  onUpdateSuccess,
   onMount,
+  updateHighScoreApi,
+  closeModal,
 }: NewHighScoreProps) => {
   useEffect(() => {
     const onUnMount = onMount();
@@ -24,15 +29,16 @@ export const NewHighScore = ({
   const [userName, setUserName] = useState('');
   const [error, setError] = useState('');
 
-  const updateHighScoreApi = useUpdateHighScoreApi({
-    onSuccess: onUpdateSuccess,
-    onError: (reason: string) => setError(reason),
-  });
-
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
-    updateHighScoreApi.mutate({ name: userName, score: newHighScore });
+    updateHighScoreApi.mutate(
+      { name: userName, score: newHighScore },
+      {
+        onSuccess: closeModal,
+        onError: (error) => setError(getUpdateErrorReason(error)),
+      },
+    );
   };
 
   return (

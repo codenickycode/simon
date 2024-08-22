@@ -3,15 +3,19 @@ import { Modal } from './ui.modal';
 import { ANIMATION_DURATION } from '../config';
 import { NewHighScore } from './game-over-modal.new-high-score';
 import { CurrentHighScore } from './shared.current-high-score';
-import type { GetHighScoreApi } from '../services/api.high-score';
+import type {
+  GetHighScoreApi,
+  UpdateHighScoreApi,
+} from '../services/api.high-score';
 import { delay } from '../utils/delay';
 
 export interface GameOverModalProps {
   userScore: number;
-  getHighScoreApi: GetHighScoreApi;
   isNewHighScore: boolean;
   onModalClose: () => void;
   pausePadKeyListeners: () => () => void;
+  getHighScoreApi: GetHighScoreApi;
+  updateHighScoreApi: UpdateHighScoreApi;
 }
 
 export const GameOverModal = (props: GameOverModalProps) => {
@@ -22,16 +26,27 @@ export const GameOverModal = (props: GameOverModalProps) => {
     setIsModalOpen(false);
     delay(ANIMATION_DURATION, () => {
       props.onModalClose();
+      props.updateHighScoreApi.reset();
     });
   };
 
+  const showNewHighScore =
+    props.isNewHighScore ||
+    // if the user updates the high score isNewHighScore will turn into false
+    // after the query re-validates. This means while the modal is animating
+    // away it will turn into the Game Over screen again. This is a janky flash,
+    // so we will prevent it by keeping the same New High Score screen showing
+    // on a mutation success.
+    props.updateHighScoreApi.isSuccess;
+
   return (
     <Modal isOpen={isModalOpen} onClose={closeModal} className="max-w-xl">
-      {props.isNewHighScore ? (
+      {showNewHighScore ? (
         <NewHighScore
           newHighScore={props.userScore}
-          onUpdateSuccess={closeModal}
           onMount={props.pausePadKeyListeners}
+          updateHighScoreApi={props.updateHighScoreApi}
+          closeModal={closeModal}
         />
       ) : (
         <div>

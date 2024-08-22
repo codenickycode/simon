@@ -1,6 +1,6 @@
-import type { HighScoreEntry } from '@simon/shared';
+import type { HighScoreEntry, UpdateHighScoreResponse } from '@simon/shared';
 import { getServerUrl, WORKER_PATH_HIGH_SCORE } from '@simon/shared';
-import type { UseQueryResult } from '@tanstack/react-query';
+import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as Sentry from '@sentry/react';
 
@@ -34,16 +34,18 @@ export function useGetHighScoreApi() {
   });
 }
 
-export function useUpdateHighScoreApi(params?: {
-  onSuccess?: () => void;
-  onError?: (reason: string) => void;
-}) {
+export type UpdateHighScoreApi = UseMutationResult<
+  UpdateHighScoreResponse,
+  Error,
+  Pick<HighScoreEntry, 'name' | 'score'>,
+  unknown
+>;
+
+export function useUpdateHighScoreApi(): UpdateHighScoreApi {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (
-      updateHighScore: Pick<HighScoreEntry, 'name' | 'score'>,
-    ) => {
+    mutationFn: async (updateHighScore) => {
       return fetch(highScoreUrl, {
         method: 'POST',
         body: JSON.stringify(updateHighScore),
@@ -56,17 +58,14 @@ export function useUpdateHighScoreApi(params?: {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [HIGH_SCORE_QUERY_KEY] });
-      params?.onSuccess?.();
     },
     onError: (error) => {
-      const reason = getReason(error);
-      params?.onError?.(reason);
       Sentry.captureException(error);
     },
   });
 }
 
-const getReason = (error: Error): string => {
+export const getUpdateErrorReason = (error: Error): string => {
   if (error.message.match('Failed to fetch')) {
     return DEFAULT_ERROR_REASON;
   }
