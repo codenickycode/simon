@@ -25,26 +25,26 @@ export function Simon() {
   return (
     <main className="font-sans text-slate-200 overflow-hidden fixed h-dvh w-full touch-none bg-gradient-to-b from-slate-700 to-sky-950 flex items-center justify-center">
       <div className="w-full h-full flex flex-col landscape:flex-row max-w-screen-2xl items-center justify-evenly">
-        <div className="h-24 landscape:h-auto w-full flex items-center justify-center">
+        <section className="h-24 landscape:h-auto w-full flex items-center justify-center">
           {!gameMachine.isPlaying && (
             <HighScoreDisplay getHighScoreApi={getHighScoreApi} />
           )}
-        </div>
-        <div>
+        </section>
+        <section aria-label="gamepad">
           <Pads
             isPlaying={gameMachine.isPlaying}
             isUserTurn={gameMachine.isUserTurn}
             currentScore={gameMachine.currentScore}
             padController={padController}
           />
-        </div>
-        <div className="h-24 landscape:h-auto w-full flex items-center justify-center">
+        </section>
+        <section className="h-24 landscape:h-auto w-full flex items-center justify-center">
           {!gameMachine.isPlaying && (
             <Button onClick={gameMachine.actions.startNewGame}>
               <span className="text-xl md:text-2xl font-bold">start</span>
             </Button>
           )}
-        </div>
+        </section>
       </div>
       {gameMachine.isGameOver && (
         <GameOverModal
