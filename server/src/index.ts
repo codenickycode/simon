@@ -9,13 +9,10 @@ export default {
 };
 
 async function handleRequest(request: Request, env: Env) {
-  const headers = new Headers({
-    'Access-Control-Allow-Origin':
-      env.environment === 'prod' ? 'https://simon.codenickycode.com' : '*',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, baggage, sentry-trace',
-    'Content-Type': 'application/json',
-  });
+  const headers = handleCORS(request, env);
+  if (!headers) {
+    return new Response('Forbidden', { status: 403 });
+  }
   if (request.method === 'OPTIONS') {
     return new Response(null, { headers });
   }
@@ -26,4 +23,21 @@ async function handleRequest(request: Request, env: Env) {
     default:
       return new Response('Not Found', { status: 404, headers });
   }
+}
+
+function handleCORS(request: Request, env: Env) {
+  const ALLOWED_ORIGIN =
+    env.environment === 'prod' ? 'https://simon.codenickycode.com' : '*';
+  const origin = request.headers.get('Origin');
+  if (origin === ALLOWED_ORIGIN) {
+    const headers = new Headers({
+      'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, baggage, sentry-trace',
+      'Content-Type': 'application/json',
+    });
+    return headers;
+  }
+  // no CORS headers
+  return null;
 }
