@@ -7,10 +7,10 @@
     "prebuild": "rm -rf dist",
     "build": "pnpm run prebuild && vite build",
     "deploy": "pnpm wrangler deploy",
-    "dev": "pnpm run build && wrangler dev",
+    "dev": "pnpm run build && wrangler dev --live-reload --env local",
     "lint": "eslint .",
     "test": "pnpm run build && vitest run",
-    "start": "wrangler dev",
+    "start": "wrangler dev --env local",
     "typecheck": "pnpm exec tsc --build"
   },
   "dependencies": {
