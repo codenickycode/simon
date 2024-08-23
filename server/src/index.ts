@@ -26,12 +26,13 @@ async function handleRequest(request: Request, env: Env) {
 }
 
 function handleCORS(request: Request, env: Env) {
-  const allowedReferer =
+  const allowedOrigin =
     env.environment === 'prod' ? 'https://simon.codenickycode.com' : '*';
-  const referer = request.headers.get('Referer');
-  if (allowedReferer === '*' || referer === allowedReferer) {
+  const origin = request.headers.get('origin');
+  console.log({ origin, allowedOrigin });
+  if (allowedOrigin === '*' || origin === allowedOrigin) {
     const headers = new Headers({
-      'Access-Control-Allow-Origin': allowedReferer,
+      'Access-Control-Allow-Origin': allowedOrigin,
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, baggage, sentry-trace',
       'Content-Type': 'application/json',
