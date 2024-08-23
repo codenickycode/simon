@@ -1,8 +1,21 @@
 name = "simon"
 main = "dist/index.js"
+
 compatibility_date = "2024-07-07"
 compatibility_flags = [ "nodejs_compat" ]
+
 workers_dev = true
-[[kv_namespaces]]
+
+[env.local.vars]
+environment = "local"
+
+[[env.local.kv_namespaces]]
+binding = "db"
+id = "420d2dc5d82e4ce197d82de18946be4b"
+
+[env.prod.vars]
+environment = "prod"
+
+[[env.prod.kv_namespaces]]
 binding = "db"
 id = "420d2dc5d82e4ce197d82de18946be4b"
