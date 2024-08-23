@@ -11,7 +11,7 @@ export default {
 async function handleRequest(request: Request, env: Env) {
   const headers = new Headers({
     'Access-Control-Allow-Origin':
-      env.environment === 'prod' ? 'https://simon.codenickycode.com/' : '*',
+      env.environment === 'prod' ? 'https://simon.codenickycode.com' : '*',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, baggage, sentry-trace',
     'Content-Type': 'application/json',
