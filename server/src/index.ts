@@ -26,9 +26,8 @@ async function handleRequest(request: Request, env: Env) {
 }
 
 function handleCORS(request: Request, env: Env) {
-  const allowedOrigin =
-    env.environment === 'prod' ? 'https://simon.codenickycode.com' : '*';
   const origin = request.headers.get('origin');
+  const allowedOrigin = import.meta.env.DEV ? '*' : env.ALLOWED_ORIGIN;
   console.log({ origin, allowedOrigin });
   if (allowedOrigin === '*' || origin === allowedOrigin) {
     const headers = new Headers({
@@ -39,6 +38,6 @@ function handleCORS(request: Request, env: Env) {
     });
     return headers;
   }
-  // no CORS headers
+  // no CORS headers, fail the request
   return null;
 }

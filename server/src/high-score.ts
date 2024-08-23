@@ -40,7 +40,7 @@ async function updateHighScore(request: Request, env: Env, headers: Headers) {
         name: name.trim() || 'Anonymous',
         timestamp: Date.now(),
       };
-      await env.db.put('highScore', JSON.stringify(newHighScore));
+      await env.DB.put('highScore', JSON.stringify(newHighScore));
       return new Response(JSON.stringify({ newHighScore }), { headers });
     } else {
       return new Response(
@@ -61,7 +61,7 @@ async function updateHighScore(request: Request, env: Env, headers: Headers) {
 }
 
 async function getCurrentHighScore(env: Env): Promise<HighScoreEntry> {
-  const currentHighScore = await env.db.get<HighScoreEntry>(
+  const currentHighScore = await env.DB.get<HighScoreEntry>(
     'highScore',
     'json',
   );

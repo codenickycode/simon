@@ -1,4 +1,4 @@
 export interface Env {
-  db: KVNamespace;
-  environment: 'local' | 'prod';
+  DB: KVNamespace;
+  ALLOWED_ORIGIN: string;
 }
