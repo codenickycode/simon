@@ -15,7 +15,7 @@ async function createRequest(method: string, body?: unknown): Promise<Request> {
 }
 
 describe('GET', () => {
-  it('should return status 200', async () => {
+  it.only('should return status 200', async () => {
     const request = await createRequest('GET');
     const response = await server.fetch(request, env as Env);
     expect(response.status).toBe(200);

@@ -27,16 +27,17 @@ async function handleRequest(request: Request, env: Env) {
 
 function handleCORS(request: Request, env: Env) {
   const origin = request.headers.get('origin');
-  console.log({ origin, allowed: env.ALLOWED_ORIGIN });
-  if (env.ALLOWED_ORIGIN === '*' || origin === env.ALLOWED_ORIGIN) {
+  const allowedOrigin = import.meta.env.DEV ? '*' : env.ALLOWED_ORIGIN;
+  console.log({ origin, allowedOrigin });
+  if (allowedOrigin === '*' || origin === allowedOrigin) {
     const headers = new Headers({
-      'Access-Control-Allow-Origin': env.ALLOWED_ORIGIN,
+      'Access-Control-Allow-Origin': allowedOrigin,
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, baggage, sentry-trace',
       'Content-Type': 'application/json',
     });
     return headers;
   }
-  // no CORS headers
+  // no CORS headers, fail the request
   return null;
 }
