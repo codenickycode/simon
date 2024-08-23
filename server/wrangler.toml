@@ -6,16 +6,9 @@ compatibility_flags = [ "nodejs_compat" ]
 
 workers_dev = true
 
-[env.local.vars]
-environment = "local"
+[vars]
+ALLOWED_ORIGIN = 'https://simon.codenickycode.com'
 
-[[env.local.kv_namespaces]]
-binding = "db"
-id = "420d2dc5d82e4ce197d82de18946be4b"
-
-[env.prod.vars]
-environment = "prod"
-
-[[env.prod.kv_namespaces]]
-binding = "db"
+[[kv_namespaces]]
+binding = "DB"
 id = "420d2dc5d82e4ce197d82de18946be4b"
