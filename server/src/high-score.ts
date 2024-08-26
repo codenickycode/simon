@@ -14,15 +14,15 @@ highScoreHandler.get('/', async (c) => {
 highScoreHandler.post(
   '/',
   zValidator(
-    'json',
+    'form',
     z.object({
-      score: z.number(),
+      score: z.coerce.number(),
       name: z.string(),
     }),
   ),
   async (c) => {
     try {
-      const { score, name } = c.req.valid('json');
+      const { score, name } = c.req.valid('form');
       const currentHighScore = await getCurrentHighScore(c.env);
       if (score > currentHighScore.score) {
         const newHighScore = {

@@ -7,7 +7,6 @@ import { cors } from 'hono/cors';
 const app = new Hono<{ Bindings: Env }>();
 
 app.use('*', async (c, next) => {
-  console.log(await c.req.formData());
   const origin = c.req.header('origin');
   const allowedOrigin = import.meta.env.DEV ? '*' : c.env.ALLOWED_ORIGIN;
 
