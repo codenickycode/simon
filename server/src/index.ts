@@ -9,7 +9,6 @@ const app = new Hono<{ Bindings: Env }>();
 app.use('*', async (c, next) => {
   const origin = c.req.header('origin');
   const allowedOrigin = import.meta.env.DEV ? '*' : c.env.ALLOWED_ORIGIN;
-
   if (allowedOrigin === '*' || origin === allowedOrigin) {
     return cors({
       origin: allowedOrigin,
