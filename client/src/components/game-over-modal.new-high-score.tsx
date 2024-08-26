@@ -58,7 +58,7 @@ export const NewHighScore = ({
           onChange={(e) => setUserName(e.target.value)}
           placeholder="Enter your name"
           disabled={updateHighScoreApi.isPending}
-          className="mr-2"
+          className="mr-2 mb-2"
           maxLength={48}
         />
         <Button type="submit" disabled={updateHighScoreApi.isPending}>
