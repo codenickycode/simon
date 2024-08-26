@@ -7,13 +7,15 @@
     "deploy": "pnpm wrangler deploy --minify src/index.ts",
     "dev": "pnpm wrangler dev --live-reload src/index.ts",
     "lint": "eslint .",
-    "test": "pnpm run build && vitest run",
+    "test": "vitest run",
     "start": "wrangler dev",
     "typecheck": "pnpm exec tsc --build"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.2.2",
     "@simon/shared": "workspace:*",
-    "hono": "^4.5.8"
+    "hono": "^4.5.8",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.4.16",

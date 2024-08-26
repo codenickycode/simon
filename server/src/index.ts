@@ -1,43 +1,35 @@
 import { WORKER_PATH_HIGH_SCORE } from '@simon/shared';
-import highScoreHandler from './high-score';
+import { highScoreHandler } from './high-score';
 import type { Env } from './types';
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 
-export default {
-  async fetch(request: Request, env: Env) {
-    return await handleRequest(request, env);
-  },
-};
+const app = new Hono<{ Bindings: Env }>();
 
-async function handleRequest(request: Request, env: Env) {
-  const headers = handleCORS(request, env);
-  if (!headers) {
-    return new Response('Forbidden', { status: 403 });
-  }
-  if (request.method === 'OPTIONS') {
-    return new Response(null, { headers });
-  }
-  const pathname = new URL(request.url).pathname;
-  switch (pathname) {
-    case WORKER_PATH_HIGH_SCORE:
-      return highScoreHandler(request, env, headers);
-    default:
-      return new Response('Not Found', { status: 404, headers });
-  }
-}
+app.use('*', async (c, next) => {
+  console.log(await c.req.formData());
+  const origin = c.req.header('origin');
+  const allowedOrigin = import.meta.env.DEV ? '*' : c.env.ALLOWED_ORIGIN;
 
-function handleCORS(request: Request, env: Env) {
-  const origin = request.headers.get('origin');
-  const allowedOrigin = import.meta.env.DEV ? '*' : env.ALLOWED_ORIGIN;
-  console.log({ origin, allowedOrigin });
   if (allowedOrigin === '*' || origin === allowedOrigin) {
-    const headers = new Headers({
-      'Access-Control-Allow-Origin': allowedOrigin,
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, baggage, sentry-trace',
-      'Content-Type': 'application/json',
-    });
-    return headers;
+    return cors({
+      origin: allowedOrigin,
+      allowMethods: ['GET', 'POST', 'OPTIONS'],
+      allowHeaders: ['Content-Type', 'baggage', 'sentry-trace'],
+      exposeHeaders: ['Content-Type'],
+    })(c, next);
   }
-  // no CORS headers, fail the request
-  return null;
-}
+
+  // If origin is not allowed, fail the request
+  return c.text('Forbidden', 403);
+});
+
+app.route(WORKER_PATH_HIGH_SCORE, highScoreHandler);
+
+app.get('/', async (c) => {
+  return c.text('ok', 200);
+});
+
+app.notFound((c) => c.json({ message: 'Not Found' }, 404));
+
+export default app;

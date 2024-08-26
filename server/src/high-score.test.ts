@@ -1,47 +1,58 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Env } from './types';
 import { env } from 'cloudflare:test';
-import server from './index';
+import app from './index';
 import { WORKER_PATH_HIGH_SCORE } from '@simon/shared';
 
-const url = 'http://server.com' + WORKER_PATH_HIGH_SCORE;
+const HIGH_SCORE_URL = 'http://server.com' + WORKER_PATH_HIGH_SCORE;
 
-async function createRequest(method: string, body?: unknown): Promise<Request> {
-  const init: RequestInit = { method };
-  if (body) {
-    init.body = JSON.stringify(body);
-  }
-  return new Request(url, init);
-}
+// unless seeded, this will be the Anonymous:0 default
+const DEFAULT_ENTRY = {
+  score: 0,
+  name: 'Anonymous',
+  timestamp: 0,
+};
+
+const mockEnv = {
+  DB: {
+    get: vi.fn().mockResolvedValue(DEFAULT_ENTRY),
+    put: vi.fn().mockResolvedValue(DEFAULT_ENTRY),
+  },
+  ALLOWED_ORIGIN: '*',
+};
 
 describe('GET', () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
   it('should return status 200', async () => {
-    const request = await createRequest('GET');
-    const response = await server.fetch(request, env as Env);
+    const response = await app.request(HIGH_SCORE_URL, {}, mockEnv);
     expect(response.status).toBe(200);
   });
   it('should return current entry', async () => {
-    const request = await createRequest('GET');
-    const response = await server.fetch(request, env as Env);
-    // unless seeded, this will be the Anonymous:0 default
-    expect(await response.json()).toEqual({
-      score: 0,
-      name: 'Anonymous',
-      timestamp: 0,
-    });
+    const response = await app.request(HIGH_SCORE_URL, {}, mockEnv);
+    const result = await response.json();
+    expect(result).toEqual({ highScore: DEFAULT_ENTRY });
   });
 });
 
 describe('POST', () => {
   describe('when submitted score is greater than existing score', () => {
-    let request: Request;
-    let response: Response;
     beforeEach(async () => {
       vi.spyOn(Date, 'now').mockReturnValue(1234);
     });
-    it('should return a 200 status', async () => {
-      request = await createRequest('POST', { score: 1, name: 'New' });
-      response = await server.fetch(request, env as Env);
+    it.only('should return a 200 status', async () => {
+      const formData = new FormData();
+      formData.append('score', '1');
+      formData.append('name', 'New');
+      const response = await app.request(
+        HIGH_SCORE_URL,
+        {
+          method: 'POST',
+          body: formData,
+        },
+        mockEnv,
+      );
       expect(response.status).toBe(200);
     });
     it('should return the new entry', async () => {
