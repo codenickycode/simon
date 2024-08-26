@@ -4,17 +4,16 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "prebuild": "rm -rf dist",
-    "build": "pnpm run prebuild && vite build",
-    "deploy": "pnpm wrangler deploy",
-    "dev": "pnpm run build && wrangler dev --live-reload",
+    "deploy": "pnpm wrangler deploy --minify src/index.ts",
+    "dev": "pnpm wrangler dev --live-reload src/index.ts",
     "lint": "eslint .",
     "test": "pnpm run build && vitest run",
     "start": "wrangler dev",
     "typecheck": "pnpm exec tsc --build"
   },
   "dependencies": {
-    "@simon/shared": "workspace:*"
+    "@simon/shared": "workspace:*",
+    "hono": "^4.5.8"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.4.16",

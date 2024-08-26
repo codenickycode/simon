@@ -105,6 +105,9 @@ importers:
       '@simon/shared':
         specifier: workspace:*
         version: link:../shared
+      hono:
+        specifier: ^4.5.8
+        version: 4.5.8
     devDependencies:
       '@cloudflare/vitest-pool-workers':
         specifier: ^0.4.16
@@ -1555,6 +1558,10 @@ packages:
 
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
+
+  hono@4.5.8:
+    resolution: {integrity: sha512-pqpSlcdqGkpTTRpLYU1PnCz52gVr0zVR9H5GzMyJWuKQLLEBQxh96q45QizJ2PPX8NATtz2mu31/PKW/Jt+90Q==}
+    engines: {node: '>=16.0.0'}
 
   html-encoding-sniffer@4.0.0:
     resolution: {integrity: sha512-Y22oTqIU4uuPgEemfz7NDJz6OeKf12Lsu+QC+s3BVpda64lTiMYCyGwg5ki4vFxkMwQdeZDl2adZoqUgdFuTgQ==}
@@ -3992,6 +3999,8 @@ snapshots:
   hoist-non-react-statics@3.3.2:
     dependencies:
       react-is: 16.13.1
+
+  hono@4.5.8: {}
 
   html-encoding-sniffer@4.0.0:
     dependencies:
