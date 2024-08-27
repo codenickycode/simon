@@ -1,8 +1,8 @@
 import type { HighScoreEntry } from '@simon/shared';
 import type { Env } from './types';
-import { z } from 'zod';
 import { Hono } from 'hono';
-import { zValidator } from '@hono/zod-validator';
+import { z } from 'zod';
+import { zJsonMiddleware } from './middleware.zod';
 
 export const highScoreHandler = new Hono<{ Bindings: Env }>();
 
@@ -13,16 +13,10 @@ highScoreHandler.get('/', async (c) => {
 
 highScoreHandler.post(
   '/',
-  zValidator(
-    'form',
-    z.object({
-      score: z.coerce.number(),
-      name: z.string(),
-    }),
-  ),
+  zJsonMiddleware(z.object({ score: z.coerce.number(), name: z.string() })),
   async (c) => {
     try {
-      const { score, name } = c.req.valid('form');
+      const { score, name } = await c.req.json();
       const currentHighScore = await getCurrentHighScore(c.env);
       if (score > currentHighScore.score) {
         const newHighScore = {

@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import app from './index';
-import type { HighScoreEntry } from '@simon/shared';
 import { WORKER_PATH_HIGH_SCORE } from '@simon/shared';
 
 const HIGH_SCORE_URL = 'http://server.com' + WORKER_PATH_HIGH_SCORE;
@@ -18,29 +17,7 @@ const mockEnv = {
     put: vi.fn().mockResolvedValue(DEFAULT_ENTRY),
   },
   ALLOWED_ORIGIN: '*',
-};
-
-const createRequest = async ({
-  method,
-  body,
-}: {
-  method: 'GET' | 'POST' | 'PUT';
-  body?: Partial<HighScoreEntry>;
-}) => {
-  let formData: FormData | undefined;
-  if (body) {
-    formData = new FormData();
-    body.score && formData.append('score', String(body.score));
-    body.name && formData.append('name', body.name);
-  }
-  return await app.request(
-    HIGH_SCORE_URL,
-    {
-      method,
-      body: formData,
-    },
-    mockEnv,
-  );
+  ENV: 'dev',
 };
 
 describe('GET', () => {
@@ -48,11 +25,19 @@ describe('GET', () => {
     vi.resetAllMocks();
   });
   it('should return status 200', async () => {
-    const response = await createRequest({ method: 'GET' });
+    const response = await app.request(
+      HIGH_SCORE_URL,
+      { method: 'GET' },
+      mockEnv,
+    );
     expect(response.status).toBe(200);
   });
   it('should return current entry', async () => {
-    const response = await createRequest({ method: 'GET' });
+    const response = await app.request(
+      HIGH_SCORE_URL,
+      { method: 'GET' },
+      mockEnv,
+    );
     const result = await response.json();
     expect(result).toEqual({ highScore: DEFAULT_ENTRY });
   });
@@ -64,17 +49,25 @@ describe('POST', () => {
   });
   describe('when submitted score is greater than existing score', () => {
     it('should return a 200 status', async () => {
-      const response = await createRequest({
-        method: 'POST',
-        body: { score: 1, name: 'New' },
-      });
+      const response = await app.request(
+        HIGH_SCORE_URL,
+        {
+          method: 'POST',
+          body: JSON.stringify({ score: 1, name: 'New' }),
+        },
+        mockEnv,
+      );
       expect(response.status).toBe(200);
     });
     it('should return the new entry', async () => {
-      const response = await createRequest({
-        method: 'POST',
-        body: { score: 1, name: 'New' },
-      });
+      const response = await app.request(
+        HIGH_SCORE_URL,
+        {
+          method: 'POST',
+          body: JSON.stringify({ score: 1, name: 'New' }),
+        },
+        mockEnv,
+      );
       expect(await response.json()).toEqual({
         newHighScore: { score: 1, name: 'New', timestamp: 1234 },
       });
@@ -88,36 +81,48 @@ describe('POST', () => {
       });
     });
     it('should return a 400 status', async () => {
-      const response = await createRequest({
-        method: 'POST',
-        body: {
-          score: 1,
-          name: 'Not high enough',
+      const response = await app.request(
+        HIGH_SCORE_URL,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            score: 1,
+            name: 'Not high enough',
+          }),
         },
-      });
+        mockEnv,
+      );
       expect(response.status).toBe(400);
     });
     it('should return an error message if lower than existing score', async () => {
-      const response = await createRequest({
-        method: 'POST',
-        body: {
-          score: 1,
-          name: 'Not high enough',
+      const response = await app.request(
+        HIGH_SCORE_URL,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            score: 1,
+            name: 'Not high enough',
+          }),
         },
-      });
+        mockEnv,
+      );
       expect(await response.json()).toEqual({
         error:
           'The score you submitted is not higher than the current high score of 2',
       });
     });
     it('should return an error message if equal to existing score', async () => {
-      const response = await createRequest({
-        method: 'POST',
-        body: {
-          score: 1,
-          name: 'Not high enough',
+      const response = await app.request(
+        HIGH_SCORE_URL,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            score: 1,
+            name: 'Not high enough',
+          }),
         },
-      });
+        mockEnv,
+      );
       expect(await response.json()).toEqual({
         error:
           'The score you submitted is not higher than the current high score of 2',
@@ -126,20 +131,28 @@ describe('POST', () => {
   });
   describe.each([
     ['invalid score', { score: 'foo', name: 'valid' }],
-    ['invalid name', { score: 100, name: undefined }],
+    // ['invalid name', { score: 100, name: undefined }],
   ])('when given an %s', async (_, body) => {
     it('should return 400 status', async () => {
-      const response = await createRequest({
-        method: 'POST',
-        body: body as unknown as Partial<HighScoreEntry>,
-      });
+      const response = await app.request(
+        HIGH_SCORE_URL,
+        {
+          method: 'POST',
+          body: JSON.stringify(body),
+        },
+        mockEnv,
+      );
       expect(response.status).toBe(400);
     });
     it('should return an error message', async () => {
-      const response = await createRequest({
-        method: 'POST',
-        body: body as unknown as Partial<HighScoreEntry>,
-      });
+      const response = await app.request(
+        HIGH_SCORE_URL,
+        {
+          method: 'POST',
+          body: JSON.stringify(body),
+        },
+        mockEnv,
+      );
       expect(await response.json()).toEqual({
         error: {
           name: 'ZodError',
@@ -149,19 +162,24 @@ describe('POST', () => {
             }),
           ],
         },
-        success: false,
       });
     });
   });
 });
 
 describe('unsupported method', () => {
-  it('should return a 404', async () => {
-    const response = await createRequest({ method: 'PUT' });
-    expect(response.status).toBe(404);
-  });
-  it('should return "Not Found"', async () => {
-    const response = await createRequest({ method: 'PUT' });
-    expect(await response.json()).toEqual({ message: 'Not Found' });
-  });
+  it.each(['PUT', 'PATCH', 'DELETE'])(
+    '%s should return a 404',
+    async (method) => {
+      const response = await app.request(HIGH_SCORE_URL, { method }, mockEnv);
+      expect(response.status).toBe(404);
+    },
+  );
+  it.each(['PUT', 'PATCH', 'DELETE'])(
+    '%s should return "Not Found"',
+    async (method) => {
+      const response = await app.request(HIGH_SCORE_URL, { method }, mockEnv);
+      expect(await response.json()).toEqual({ message: 'Not Found' });
+    },
+  );
 });

@@ -1,8 +1,9 @@
 import type { Context as HonoContext } from 'hono';
 
 export interface Env {
-  DB: KVNamespace;
   ALLOWED_ORIGIN: string;
+  DB: KVNamespace;
+  ENV: 'dev' | 'prod';
 }
 
 export type Context = HonoContext<{
