@@ -4,6 +4,10 @@ export interface HighScoreEntry {
   timestamp: number;
 }
 
+export interface GetHighScoreResponse {
+  highScore: HighScoreEntry;
+}
+
 export type UpdateHighScoreResponse =
   | { newHighScore: HighScoreEntry }
   | { error: string };

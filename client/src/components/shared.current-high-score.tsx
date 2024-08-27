@@ -5,7 +5,7 @@ import type { GetHighScoreApi } from '../services/api.high-score';
 export const CurrentHighScore = (props: {
   getHighScoreApi: GetHighScoreApi;
 }) => {
-  const highScore = props.getHighScoreApi.data;
+  const highScore = props.getHighScoreApi.data?.highScore;
   return (
     <div className="mt-3 rounded-lg overflow-hidden space-y-4">
       <div className="flex flex-row space-x-6">

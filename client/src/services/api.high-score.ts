@@ -1,4 +1,8 @@
-import type { HighScoreEntry, UpdateHighScoreResponse } from '@simon/shared';
+import type {
+  GetHighScoreResponse,
+  HighScoreEntry,
+  UpdateHighScoreResponse,
+} from '@simon/shared';
 import { getServerUrl, WORKER_PATH_HIGH_SCORE } from '@simon/shared';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -12,10 +16,13 @@ const HIGH_SCORE_QUERY_KEY = 'highScore';
 const DEFAULT_ERROR_REASON =
   'Unable to save high score.\nPlease check your connection and try again.';
 
-export type GetHighScoreApi = UseQueryResult<HighScoreEntry | null, Error>;
+export type GetHighScoreApi = UseQueryResult<
+  GetHighScoreResponse | null,
+  Error
+>;
 
-export function useGetHighScoreApi() {
-  return useQuery<HighScoreEntry>({
+export function useGetHighScoreApi(): GetHighScoreApi {
+  return useQuery({
     queryKey: [HIGH_SCORE_QUERY_KEY],
     queryFn: async () => {
       return fetch(highScoreUrl)

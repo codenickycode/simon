@@ -22,7 +22,7 @@ export const HighScoreDisplay = ({
       >
         High Score:<span className="mx-1"></span>
         <Spinner isSpinning={getHighScoreApi.isFetching}>
-          {getHighScoreApi.data?.score ?? '?'}
+          {getHighScoreApi.data?.highScore.score ?? '?'}
         </Spinner>
       </Button>
       <Modal isOpen={modalOpen} onClose={closeModal} className="max-w-xl">
