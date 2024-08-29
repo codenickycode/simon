@@ -53,6 +53,7 @@ describe('POST', () => {
         HIGH_SCORE_URL,
         {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ score: 1, name: 'New' }),
         },
         mockEnv,
@@ -64,6 +65,7 @@ describe('POST', () => {
         HIGH_SCORE_URL,
         {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ score: 1, name: 'New' }),
         },
         mockEnv,
@@ -85,6 +87,7 @@ describe('POST', () => {
         HIGH_SCORE_URL,
         {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             score: 1,
             name: 'Not high enough',
@@ -99,6 +102,7 @@ describe('POST', () => {
         HIGH_SCORE_URL,
         {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             score: 1,
             name: 'Not high enough',
@@ -116,6 +120,7 @@ describe('POST', () => {
         HIGH_SCORE_URL,
         {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             score: 1,
             name: 'Not high enough',
@@ -131,13 +136,14 @@ describe('POST', () => {
   });
   describe.each([
     ['invalid score', { score: 'foo', name: 'valid' }],
-    // ['invalid name', { score: 100, name: undefined }],
+    ['invalid name', { score: 100, name: undefined }],
   ])('when given an %s', async (_, body) => {
     it('should return 400 status', async () => {
       const response = await app.request(
         HIGH_SCORE_URL,
         {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body),
         },
         mockEnv,
@@ -149,11 +155,13 @@ describe('POST', () => {
         HIGH_SCORE_URL,
         {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body),
         },
         mockEnv,
       );
       expect(await response.json()).toEqual({
+        success: false,
         error: {
           name: 'ZodError',
           issues: [

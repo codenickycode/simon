@@ -55,6 +55,7 @@ export function useUpdateHighScoreApi(): UpdateHighScoreApi {
     mutationFn: async (updateHighScore) => {
       return fetch(highScoreUrl, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updateHighScore),
       }).then((res) => {
         if (!res.ok) {
