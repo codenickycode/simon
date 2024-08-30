@@ -8,6 +8,7 @@
     "dev": "pnpm wrangler dev --live-reload src/index.ts",
     "lint": "eslint .",
     "test": "vitest run",
+    "test:watch": "vitest",
     "start": "wrangler dev",
     "typecheck": "pnpm exec tsc --build"
   },
