@@ -1,43 +1,34 @@
-import { WORKER_PATH_HIGH_SCORE } from '@simon/shared';
-import highScoreHandler from './high-score';
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { HTTPException } from 'hono/http-exception';
+import { highScoreRoute } from './high-score';
 import type { Env } from './types';
 
-export default {
-  async fetch(request: Request, env: Env) {
-    return await handleRequest(request, env);
-  },
-};
+const app = new Hono<{ Bindings: Env }>()
+  .use('*', async (c, next) => {
+    const referer = c.req.header('referer');
+    const allowedOrigin = c.env.ENV === 'dev' ? '*' : c.env.ALLOWED_ORIGIN;
+    if (allowedOrigin === '*' || referer === allowedOrigin) {
+      return cors({
+        origin: allowedOrigin,
+        allowMethods: ['GET', 'POST', 'OPTIONS'],
+        allowHeaders: ['Content-Type', 'baggage', 'sentry-trace'],
+        exposeHeaders: ['Content-Type'],
+      })(c, next);
+    }
+    // If referer is not allowed, fail the request
+    throw new HTTPException(403, { message: 'Forbidden' });
+  })
+  .get('/', async (c) => c.text('ok', 200))
+  .notFound(() => {
+    throw new HTTPException(404, { message: 'Not Found' });
+  })
+  .onError((err, c) => {
+    if (err instanceof HTTPException) {
+      return c.json({ message: err.message }, err.status);
+    }
+    return c.json({ message: 'Unknown server error', cause: err }, 500);
+  })
+  .route('/high-score', highScoreRoute);
 
-async function handleRequest(request: Request, env: Env) {
-  const headers = handleCORS(request, env);
-  if (!headers) {
-    return new Response('Forbidden', { status: 403 });
-  }
-  if (request.method === 'OPTIONS') {
-    return new Response(null, { headers });
-  }
-  const pathname = new URL(request.url).pathname;
-  switch (pathname) {
-    case WORKER_PATH_HIGH_SCORE:
-      return highScoreHandler(request, env, headers);
-    default:
-      return new Response('Not Found', { status: 404, headers });
-  }
-}
-
-function handleCORS(request: Request, env: Env) {
-  const origin = request.headers.get('origin');
-  const allowedOrigin = import.meta.env.DEV ? '*' : env.ALLOWED_ORIGIN;
-  console.log({ origin, allowedOrigin });
-  if (allowedOrigin === '*' || origin === allowedOrigin) {
-    const headers = new Headers({
-      'Access-Control-Allow-Origin': allowedOrigin,
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, baggage, sentry-trace',
-      'Content-Type': 'application/json',
-    });
-    return headers;
-  }
-  // no CORS headers, fail the request
-  return null;
-}
+export default app;

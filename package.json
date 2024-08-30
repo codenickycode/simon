@@ -9,10 +9,9 @@
     "preinstall": "npx only-allow pnpm",
     "client": "pnpm --filter client",
     "server": "pnpm --filter server",
-    "shared": "pnpm --filter shared",
     "build": "pnpm -r build",
     "ci": "pnpm lint && pnpm typecheck && pnpm test",
-    "clean": "rm -rf node_modules pnpm-lock && pnpm -r exec rm -rf node_modules && pnpm i",
+    "clean": "rm -rf node_modules && pnpm -r exec rm -rf node_modules && pnpm i",
     "format": "pnpm exec prettier --write **/*.{js,ts,tsx,json,css,md}",
     "lint": "pnpm -r lint",
     "lint:fix": "pnpm exec eslint --fix",
@@ -23,6 +22,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "hono": "^4.5.8"
+  },
   "devDependencies": {
     "@types/eslint": "^9.6.0",
     "@types/node": "^20.14.12",
@@ -31,7 +33,7 @@
     "eslint": "^8.57.0",
     "prettier": "^3.3.3",
     "typescript": "^5.5.3",
-    "wrangler": "^3.67.1"
+    "wrangler": "^3.73.0"
   },
   "engines": {
     "node": ">=20.10.0",

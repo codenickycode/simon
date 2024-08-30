@@ -14,7 +14,7 @@ export function Simon() {
   const updateHighScoreApi = useUpdateHighScoreApi();
 
   const gameMachine = useGameMachine({
-    currentHighScore: getHighScoreApi.data,
+    currentHighScore: getHighScoreApi.data?.highScore,
   });
 
   const padController = usePadController({

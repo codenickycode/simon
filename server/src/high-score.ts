@@ -1,64 +1,44 @@
-import type { HighScoreEntry } from '@simon/shared';
+import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
+import { zValidator } from '@hono/zod-validator';
 import type { Env } from './types';
+import type { HighScoreEntry } from './types';
+import { z } from 'zod';
 
-export default async function highScoreHandler(
-  request: Request,
-  env: Env,
-  headers: Headers,
-) {
-  switch (request.method) {
-    case 'GET':
-      return await getHighScore(env, headers);
-    case 'POST':
-      return await updateHighScore(request, env, headers);
-    default:
-      return new Response('Not Found', { status: 404, headers });
-  }
-}
-
-async function getHighScore(env: Env, headers: Headers) {
-  const highScore = await getCurrentHighScore(env);
-  return new Response(JSON.stringify(highScore), { headers });
-}
-
-async function updateHighScore(request: Request, env: Env, headers: Headers) {
-  try {
-    const { score, name } = await request.json<{
-      score: unknown;
-      name: unknown;
-    }>();
-    if (typeof score !== 'number' || typeof name !== 'string') {
-      return new Response(JSON.stringify({ error: 'Invalid entry' }), {
-        status: 400,
-        headers,
-      });
-    }
-    const currentHighScore = await getCurrentHighScore(env);
-    if (score > currentHighScore.score) {
+export const highScoreRoute = new Hono<{ Bindings: Env }>()
+  .get('/', async (c) => {
+    const highScore = await getCurrentHighScore(c.env);
+    return c.json({ highScore }, 200);
+  })
+  .post(
+    '/',
+    zValidator(
+      'json',
+      z.object({
+        name: z.string(),
+        score: z.coerce.number(),
+      }),
+    ),
+    async (c) => {
+      const { score, name } = c.req.valid('json');
+      const currentHighScore = await getCurrentHighScore(c.env);
+      if (score <= currentHighScore.score) {
+        throw new HTTPException(400, {
+          message: `The score you submitted is not higher than the current high score of ${currentHighScore.score}`,
+        });
+      }
       const newHighScore = {
         score,
         name: name.trim() || 'Anonymous',
         timestamp: Date.now(),
       };
-      await env.DB.put('highScore', JSON.stringify(newHighScore));
-      return new Response(JSON.stringify({ newHighScore }), { headers });
-    } else {
-      return new Response(
-        JSON.stringify({
-          error: `The score you submitted is not higher than the current high score of ${currentHighScore.score}`,
-        }),
-        { status: 400, headers },
-      );
-    }
-  } catch (error) {
-    return new Response(
-      JSON.stringify({
-        error: (error as Error)?.message || 'Failed to update high score',
-      }),
-      { status: 400, headers },
-    );
-  }
-}
+      await c.env.DB.put('highScore', JSON.stringify(newHighScore));
+      return c.json({ newHighScore }, 200);
+    },
+  )
+  .notFound(() => {
+    throw new HTTPException(404, { message: 'Not Found' });
+  });
 
 async function getCurrentHighScore(env: Env): Promise<HighScoreEntry> {
   const currentHighScore = await env.DB.get<HighScoreEntry>(

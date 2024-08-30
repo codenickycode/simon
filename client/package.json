@@ -17,7 +17,6 @@
   "dependencies": {
     "@sentry/react": "^8.25.0",
     "@sentry/vite-plugin": "^2.22.0",
-    "@simon/shared": "workspace:*",
     "@tanstack/react-query": "^5.50.1",
     "classnames": "^2.5.1",
     "react": "^18.3.1",
@@ -25,6 +24,7 @@
     "tone": "^15.0.4"
   },
   "devDependencies": {
+    "@simon/server": "workspace:*",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@types/react": "^18.3.3",
