@@ -3,17 +3,12 @@ import type { Env } from './types';
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 
-export const highScoreHandler = new Hono<{ Bindings: Env }>();
-
-highScoreHandler.get('/', async (c) => {
-  const highScore = await getCurrentHighScore(c.env);
-  return c.json({ highScore }, 200);
-});
-
-highScoreHandler.post(
-  '/',
-  zValidator('json', PostHighScoreBodyZ),
-  async (c) => {
+export const highScoreHandler = new Hono<{ Bindings: Env }>()
+  .get('/', async (c) => {
+    const highScore = await getCurrentHighScore(c.env);
+    return c.json({ highScore }, 200);
+  })
+  .post('/', zValidator('json', PostHighScoreBodyZ), async (c) => {
     try {
       const { score, name } = await c.req.json();
       const currentHighScore = await getCurrentHighScore(c.env);
@@ -41,10 +36,8 @@ highScoreHandler.post(
         400,
       );
     }
-  },
-);
-
-highScoreHandler.notFound((c) => c.json({ message: 'Not Found' }, 404));
+  })
+  .notFound((c) => c.json({ message: 'Not Found' }, 404));
 
 async function getCurrentHighScore(env: Env): Promise<HighScoreEntry> {
   const currentHighScore = await env.DB.get<HighScoreEntry>(
