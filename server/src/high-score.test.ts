@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { testClient } from 'hono/testing';
 import app from './index';
 
 const HIGH_SCORE_URL = 'http://server.com/high-score';
@@ -24,19 +25,11 @@ describe('GET', () => {
     vi.resetAllMocks();
   });
   it('should return status 200', async () => {
-    const response = await app.request(
-      HIGH_SCORE_URL,
-      { method: 'GET' },
-      mockEnv,
-    );
+    const response = await testClient(app, mockEnv)['high-score'].$get();
     expect(response.status).toBe(200);
   });
   it('should return current entry', async () => {
-    const response = await app.request(
-      HIGH_SCORE_URL,
-      { method: 'GET' },
-      mockEnv,
-    );
+    const response = await testClient(app, mockEnv)['high-score'].$get();
     const result = await response.json();
     expect(result).toEqual({ highScore: DEFAULT_ENTRY });
   });
@@ -48,27 +41,15 @@ describe('POST', () => {
   });
   describe('when submitted score is greater than existing score', () => {
     it('should return a 200 status', async () => {
-      const response = await app.request(
-        HIGH_SCORE_URL,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ score: 1, name: 'New' }),
-        },
-        mockEnv,
-      );
+      const response = await testClient(app, mockEnv)['high-score'].$post({
+        json: { score: 1, name: 'New' },
+      });
       expect(response.status).toBe(200);
     });
     it('should return the new entry', async () => {
-      const response = await app.request(
-        HIGH_SCORE_URL,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ score: 1, name: 'New' }),
-        },
-        mockEnv,
-      );
+      const response = await testClient(app, mockEnv)['high-score'].$post({
+        json: { score: 1, name: 'New' },
+      });
       expect(await response.json()).toEqual({
         newHighScore: { score: 1, name: 'New', timestamp: 1234 },
       });
@@ -82,50 +63,23 @@ describe('POST', () => {
       });
     });
     it('should return a 400 status', async () => {
-      const response = await app.request(
-        HIGH_SCORE_URL,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            score: 1,
-            name: 'Not high enough',
-          }),
-        },
-        mockEnv,
-      );
+      const response = await testClient(app, mockEnv)['high-score'].$post({
+        json: { score: 1, name: 'Not high enough' },
+      });
       expect(response.status).toBe(400);
     });
     it('should return an error message if lower than existing score', async () => {
-      const response = await app.request(
-        HIGH_SCORE_URL,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            score: 1,
-            name: 'Not high enough',
-          }),
-        },
-        mockEnv,
-      );
+      const response = await testClient(app, mockEnv)['high-score'].$post({
+        json: { score: 1, name: 'Not high enough' },
+      });
       expect(await response.text()).toEqual(
         'The score you submitted is not higher than the current high score of 2',
       );
     });
     it('should return an error message if equal to existing score', async () => {
-      const response = await app.request(
-        HIGH_SCORE_URL,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            score: 1,
-            name: 'Not high enough',
-          }),
-        },
-        mockEnv,
-      );
+      const response = await testClient(app, mockEnv)['high-score'].$post({
+        json: { score: 2, name: 'Not high enough' },
+      });
       expect(await response.text()).toEqual(
         'The score you submitted is not higher than the current high score of 2',
       );
