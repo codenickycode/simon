@@ -1,10 +1,11 @@
+import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
+import { zValidator } from '@hono/zod-validator';
 import type { Env } from './types';
 import type { HighScoreEntry } from './types';
-import { Hono } from 'hono';
-import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 
-export const highScoreHandler = new Hono<{ Bindings: Env }>()
+export const highScoreRoute = new Hono<{ Bindings: Env }>()
   .get('/', async (c) => {
     const highScore = await getCurrentHighScore(c.env);
     return c.json({ highScore }, 200);
@@ -19,32 +20,20 @@ export const highScoreHandler = new Hono<{ Bindings: Env }>()
       }),
     ),
     async (c) => {
-      try {
-        const { score, name } = c.req.valid('json');
-        const currentHighScore = await getCurrentHighScore(c.env);
-        if (score > currentHighScore.score) {
-          const newHighScore = {
-            score,
-            name: name.trim() || 'Anonymous',
-            timestamp: Date.now(),
-          };
-          await c.env.DB.put('highScore', JSON.stringify(newHighScore));
-          return c.json({ newHighScore }, 200);
-        } else {
-          return c.json(
-            {
-              error: `The score you submitted is not higher than the current high score of ${currentHighScore.score}`,
-            },
-            400,
-          );
-        }
-      } catch (error) {
-        return c.json(
-          {
-            error: (error as Error)?.message || 'Failed to update high score',
-          },
-          400,
-        );
+      const { score, name } = c.req.valid('json');
+      const currentHighScore = await getCurrentHighScore(c.env);
+      if (score > currentHighScore.score) {
+        const newHighScore = {
+          score,
+          name: name.trim() || 'Anonymous',
+          timestamp: Date.now(),
+        };
+        await c.env.DB.put('highScore', JSON.stringify(newHighScore));
+        return c.json({ newHighScore }, 200);
+      } else {
+        throw new HTTPException(400, {
+          message: `The score you submitted is not higher than the current high score of ${currentHighScore.score}`,
+        });
       }
     },
   )

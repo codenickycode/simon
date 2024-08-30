@@ -24,7 +24,8 @@ describe('Not Found', () => {
   });
   it('should return "Not Found" message', async () => {
     const response = await app.request('/foo', { method: 'GET' }, mockEnv);
-    expect(await response.json()).toEqual({ message: 'Not Found' });
+    const body = await response.text();
+    expect(body).toEqual('Not Found');
   });
 });
 
@@ -62,7 +63,7 @@ describe('unsupported method', () => {
     '%s should return "Not Found"',
     async (method) => {
       const response = await app.request('/', { method }, mockEnv);
-      expect(await response.json()).toEqual({ message: 'Not Found' });
+      expect(await response.text()).toEqual('Not Found');
     },
   );
 });
