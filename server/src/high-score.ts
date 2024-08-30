@@ -22,19 +22,18 @@ export const highScoreRoute = new Hono<{ Bindings: Env }>()
     async (c) => {
       const { score, name } = c.req.valid('json');
       const currentHighScore = await getCurrentHighScore(c.env);
-      if (score > currentHighScore.score) {
-        const newHighScore = {
-          score,
-          name: name.trim() || 'Anonymous',
-          timestamp: Date.now(),
-        };
-        await c.env.DB.put('highScore', JSON.stringify(newHighScore));
-        return c.json({ newHighScore }, 200);
-      } else {
+      if (score <= currentHighScore.score) {
         throw new HTTPException(400, {
           message: `The score you submitted is not higher than the current high score of ${currentHighScore.score}`,
         });
       }
+      const newHighScore = {
+        score,
+        name: name.trim() || 'Anonymous',
+        timestamp: Date.now(),
+      };
+      await c.env.DB.put('highScore', JSON.stringify(newHighScore));
+      return c.json({ newHighScore }, 200);
     },
   )
   .notFound((c) => c.json({ message: 'Not Found' }, 404));
