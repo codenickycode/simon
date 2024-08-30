@@ -1,5 +1,4 @@
 packages:
   - 'client'
   - 'server'
-  - 'shared'
 shared-workspace-lockfile: true

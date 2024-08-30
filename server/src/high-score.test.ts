@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import app from './index';
-import { WORKER_PATH_HIGH_SCORE } from '@simon/shared';
 
-const HIGH_SCORE_URL = 'http://server.com' + WORKER_PATH_HIGH_SCORE;
+const HIGH_SCORE_URL = 'http://server.com/high-score';
 
 // unless seeded, this will be the Anonymous:0 default
 const DEFAULT_ENTRY = {

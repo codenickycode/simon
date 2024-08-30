@@ -10,7 +10,11 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "jsx": "react-jsx",
-    "types": ["vitest/globals"]
+    "types": [
+      "vitest/globals",
+      "@cloudflare/workers-types",
+      "@cloudflare/workers-types/experimental"
+    ]
   },
   "include": ["src"]
 }

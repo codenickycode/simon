@@ -8,10 +8,13 @@ importers:
 
   .:
     dependencies:
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+      hono:
+        specifier: ^4.5.8
+        version: 4.5.8
     devDependencies:
+      '@cloudflare/workers-types':
+        specifier: ^4.20240718.0
+        version: 4.20240725.0
       '@types/eslint':
         specifier: ^9.6.0
         version: 9.6.0
@@ -45,9 +48,6 @@ importers:
       '@sentry/vite-plugin':
         specifier: ^2.22.0
         version: 2.22.0
-      '@simon/shared':
-        specifier: workspace:*
-        version: link:../shared
       '@tanstack/react-query':
         specifier: ^5.50.1
         version: 5.51.15(react@18.3.1)
@@ -64,6 +64,9 @@ importers:
         specifier: ^15.0.4
         version: 15.0.4
     devDependencies:
+      '@simon/server':
+        specifier: workspace:*
+        version: link:../server
       '@testing-library/jest-dom':
         specifier: ^6.4.6
         version: 6.4.8
@@ -109,24 +112,16 @@ importers:
       '@hono/zod-validator':
         specifier: ^0.2.2
         version: 0.2.2(hono@4.5.8)(zod@3.23.8)
-      '@simon/shared':
-        specifier: workspace:*
-        version: link:../shared
-      hono:
-        specifier: ^4.5.8
-        version: 4.5.8
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@cloudflare/vitest-pool-workers':
         specifier: ^0.4.16
         version: 0.4.16(@cloudflare/workers-types@4.20240725.0)(@vitest/runner@2.0.4)(@vitest/snapshot@2.0.4)(vitest@1.5.0(@types/node@20.14.13)(jsdom@24.1.1))
-      '@cloudflare/workers-types':
-        specifier: ^4.20240718.0
-        version: 4.20240725.0
       vitest:
         specifier: 1.5.0
         version: 1.5.0(@types/node@20.14.13)(jsdom@24.1.1)
-
-  shared: {}
 
 packages:
 

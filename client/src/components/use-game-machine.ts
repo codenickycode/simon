@@ -2,10 +2,10 @@ import { useCallback, useReducer } from 'react';
 import type { Transition } from './use-game-machine.types';
 import { gameMachineReducer } from './use-game-machine.reducer';
 import { gameLogic, NEW_GAME_STATE } from './use-game-machine.logic';
-import type { HighScoreEntry } from '@simon/shared';
 import { useOnEntry } from './use-game-machine.use-on-entry';
 import { melodyPlayer } from '../services/melody-player';
 import type { PadId } from '../types';
+import type { HighScoreEntry } from '@simon/server/src/types';
 
 export type GameMachine = ReturnType<typeof useGameMachine>;
 

@@ -1,31 +1,23 @@
-import type {
-  GetHighScoreResponse,
-  UpdateHighScoreBody,
-  UpdateHighScoreResponse,
-} from '@simon/shared';
-import { getServerUrl, WORKER_PATH_HIGH_SCORE } from '@simon/shared';
-import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
+import type { ServerApi } from '@simon/server';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as Sentry from '@sentry/react';
+import type { InferRequestType, InferResponseType } from 'hono/client';
+import { hc } from 'hono/client';
+import { getServerUrl } from '../utils/url';
 
-const serverUrl = getServerUrl(import.meta.env.DEV);
-const highScoreUrl = `${serverUrl}${WORKER_PATH_HIGH_SCORE}`;
+const serverUrl = getServerUrl();
+
+const { $get, $post } = hc<ServerApi>(serverUrl)['high-score'];
 
 const HIGH_SCORE_QUERY_KEY = 'highScore';
 
-const DEFAULT_ERROR_REASON =
-  'Unable to save high score.\nPlease check your connection and try again.';
+export type GetHighScoreApi = ReturnType<typeof useGetHighScoreApi>;
 
-export type GetHighScoreApi = UseQueryResult<
-  GetHighScoreResponse | null,
-  Error
->;
-
-export function useGetHighScoreApi(): GetHighScoreApi {
+export function useGetHighScoreApi() {
   return useQuery({
     queryKey: [HIGH_SCORE_QUERY_KEY],
     queryFn: async () => {
-      return fetch(highScoreUrl)
+      return $get()
         .then((res) => {
           if (!res.ok) {
             throw res;
@@ -41,23 +33,18 @@ export function useGetHighScoreApi(): GetHighScoreApi {
   });
 }
 
-export type UpdateHighScoreApi = UseMutationResult<
-  UpdateHighScoreResponse,
-  Error,
-  UpdateHighScoreBody,
-  unknown
->;
+export type UpdateHighScoreApi = ReturnType<typeof useUpdateHighScoreApi>;
 
-export function useUpdateHighScoreApi(): UpdateHighScoreApi {
+export function useUpdateHighScoreApi() {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<
+    InferResponseType<typeof $post>,
+    Error,
+    InferRequestType<typeof $post>['json']
+  >({
     mutationFn: async (updateHighScore) => {
-      return fetch(highScoreUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updateHighScore),
-      }).then((res) => {
+      return $post({ json: updateHighScore }).then((res) => {
         if (!res.ok) {
           throw res;
         }
@@ -75,7 +62,7 @@ export function useUpdateHighScoreApi(): UpdateHighScoreApi {
 
 export const getUpdateErrorReason = (error: Error): string => {
   if (error.message.match('Failed to fetch')) {
-    return DEFAULT_ERROR_REASON;
+    return 'Unable to save high score.\nPlease check your connection and try again.';
   }
   return error.message;
 };

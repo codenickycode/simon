@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react';
-import { getServerUrl } from '@simon/shared';
+import { getServerUrl } from '../utils/url';
 
 const isDev = import.meta.env.DEV;
 
@@ -12,7 +12,7 @@ export const initMonitoring = () => {
       Sentry.replayIntegration(),
     ],
     tracesSampleRate: 1.0,
-    tracePropagationTargets: ['localhost', getServerUrl(isDev)],
+    tracePropagationTargets: ['localhost', getServerUrl()],
     // limit sampling on production
     replaysSessionSampleRate: isDev ? 1 : 0.1,
     replaysOnErrorSampleRate: 1.0,

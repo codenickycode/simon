@@ -9,7 +9,6 @@
     "preinstall": "npx only-allow pnpm",
     "client": "pnpm --filter client",
     "server": "pnpm --filter server",
-    "shared": "pnpm --filter shared",
     "build": "pnpm -r build",
     "ci": "pnpm lint && pnpm typecheck && pnpm test",
     "clean": "rm -rf node_modules && pnpm -r exec rm -rf node_modules && pnpm i",
@@ -24,9 +23,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "zod": "^3.23.8"
+    "hono": "^4.5.8"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240718.0",
     "@types/eslint": "^9.6.0",
     "@types/node": "^20.14.12",
     "@typescript-eslint/eslint-plugin": "^7.14.1",
