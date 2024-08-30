@@ -18,9 +18,13 @@ export function useGetHighScoreApi() {
     queryKey: [HIGH_SCORE_QUERY_KEY],
     queryFn: async () => {
       return $get()
-        .then((res) => {
+        .then(async (res) => {
           if (!res.ok) {
-            throw res;
+            const error = await getError(
+              res,
+              'Unable to retrieve current high score. Please check your network connection.',
+            );
+            throw error;
           }
           return res.json();
         })
@@ -45,11 +49,11 @@ export function useUpdateHighScoreApi() {
     mutationFn: async (updateHighScore) => {
       return $post({ json: updateHighScore }).then(async (res) => {
         if (!res.ok) {
-          const response = (await res.json()) as unknown as { message: string };
-          throw new Error(
-            response?.message ||
-              'Unable to save high score.\nPlease check your connection and try again.',
+          const error = await getError(
+            res,
+            'Unable to save high score.\nPlease check your connection and try again.',
           );
+          throw error;
         }
         return res.json();
       });
@@ -62,3 +66,11 @@ export function useUpdateHighScoreApi() {
     },
   });
 }
+
+const getError = async (
+  res: Response,
+  defaultMessage: string,
+): Promise<Error> => {
+  const response = (await res.json()) as unknown as { message: string };
+  return new Error(response?.message || defaultMessage);
+};

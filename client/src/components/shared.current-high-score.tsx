@@ -6,6 +6,7 @@ export const CurrentHighScore = (props: {
   getHighScoreApi: GetHighScoreApi;
 }) => {
   const highScore = props.getHighScoreApi.data?.highScore;
+  const error = props.getHighScoreApi.error?.message;
   return (
     <div className="mt-3 rounded-lg overflow-hidden space-y-4">
       <div className="flex flex-row space-x-6">
@@ -31,8 +32,8 @@ export const CurrentHighScore = (props: {
         ) : (
           <div>
             <pre className="text-red-500 text-sm text-balance whitespace-pre-wrap mt-1 md:text-lg font-semibold mb-4">
-              Unable to retrieve current high score. Please check your network
-              connection.
+              {error ||
+                'Unable to retrieve current high score.\nPlease check your network connection.'}
             </pre>
             <Button
               variant="secondary"
