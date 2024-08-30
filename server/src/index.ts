@@ -25,7 +25,7 @@ const app = new Hono<{ Bindings: Env }>()
   })
   .onError((err, c) => {
     if (err instanceof HTTPException) {
-      return err.getResponse();
+      return c.json({ message: err.message }, err.status);
     }
     return c.json({ message: 'Unknown server error', cause: err }, 500);
   })

@@ -29,7 +29,6 @@ export function useGetHighScoreApi() {
           return null;
         });
     },
-    retry: false,
   });
 }
 
@@ -44,9 +43,13 @@ export function useUpdateHighScoreApi() {
     InferRequestType<typeof $post>['json']
   >({
     mutationFn: async (updateHighScore) => {
-      return $post({ json: updateHighScore }).then((res) => {
+      return $post({ json: updateHighScore }).then(async (res) => {
         if (!res.ok) {
-          throw res;
+          const response = (await res.json()) as unknown as { message: string };
+          throw new Error(
+            response?.message ||
+              'Unable to save high score.\nPlease check your connection and try again.',
+          );
         }
         return res.json();
       });
@@ -54,15 +57,8 @@ export function useUpdateHighScoreApi() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [HIGH_SCORE_QUERY_KEY] });
     },
-    onError: (error) => {
-      Sentry.captureException(error);
+    onError: async (err: Error) => {
+      Sentry.captureException(err);
     },
   });
 }
-
-export const getUpdateErrorReason = (error: Error): string => {
-  if (error.message.match('Failed to fetch')) {
-    return 'Unable to save high score.\nPlease check your connection and try again.';
-  }
-  return error.message;
-};

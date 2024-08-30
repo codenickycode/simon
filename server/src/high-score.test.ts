@@ -72,17 +72,19 @@ describe('POST', () => {
       const response = await testClient(app, mockEnv)['high-score'].$post({
         json: { score: 1, name: 'Not high enough' },
       });
-      expect(await response.text()).toEqual(
-        'The score you submitted is not higher than the current high score of 2',
-      );
+      expect(await response.json()).toEqual({
+        message:
+          'The score you submitted is not higher than the current high score of 2',
+      });
     });
     it('should return an error message if equal to existing score', async () => {
       const response = await testClient(app, mockEnv)['high-score'].$post({
         json: { score: 2, name: 'Not high enough' },
       });
-      expect(await response.text()).toEqual(
-        'The score you submitted is not higher than the current high score of 2',
-      );
+      expect(await response.json()).toEqual({
+        message:
+          'The score you submitted is not higher than the current high score of 2',
+      });
     });
   });
   describe.each([
@@ -138,7 +140,7 @@ describe('unsupported method', () => {
     '%s should return "Not Found"',
     async (method) => {
       const response = await app.request(HIGH_SCORE_URL, { method }, mockEnv);
-      expect(await response.text()).toEqual('Not Found');
+      expect(await response.json()).toEqual({ message: 'Not Found' });
     },
   );
 });
