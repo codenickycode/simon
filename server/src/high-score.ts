@@ -36,7 +36,9 @@ export const highScoreRoute = new Hono<{ Bindings: Env }>()
       return c.json({ newHighScore }, 200);
     },
   )
-  .notFound((c) => c.json({ message: 'Not Found' }, 404));
+  .notFound(() => {
+    throw new HTTPException(404, { message: 'Not Found' });
+  });
 
 async function getCurrentHighScore(env: Env): Promise<HighScoreEntry> {
   const currentHighScore = await env.DB.get<HighScoreEntry>(
