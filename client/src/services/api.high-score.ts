@@ -1,6 +1,6 @@
 import type {
   GetHighScoreResponse,
-  HighScoreEntry,
+  UpdateHighScoreBody,
   UpdateHighScoreResponse,
 } from '@simon/shared';
 import { getServerUrl, WORKER_PATH_HIGH_SCORE } from '@simon/shared';
@@ -44,7 +44,7 @@ export function useGetHighScoreApi(): GetHighScoreApi {
 export type UpdateHighScoreApi = UseMutationResult<
   UpdateHighScoreResponse,
   Error,
-  Pick<HighScoreEntry, 'name' | 'score'>,
+  UpdateHighScoreBody,
   unknown
 >;
 
