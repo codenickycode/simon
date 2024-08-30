@@ -1,4 +1,4 @@
-import type { ServerApi } from '@simon/server';
+import type { ServerApi } from '@simon/server/src/types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as Sentry from '@sentry/react';
 import type { InferRequestType, InferResponseType } from 'hono/client';

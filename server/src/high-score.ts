@@ -1,4 +1,4 @@
-import type { Env } from './types.cf';
+import type { Env } from './types';
 import type { HighScoreEntry } from './types';
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
@@ -20,7 +20,7 @@ export const highScoreHandler = new Hono<{ Bindings: Env }>()
     ),
     async (c) => {
       try {
-        const { score, name } = await c.req.json();
+        const { score, name } = c.req.valid('json');
         const currentHighScore = await getCurrentHighScore(c.env);
         if (score > currentHighScore.score) {
           const newHighScore = {

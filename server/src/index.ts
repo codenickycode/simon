@@ -1,5 +1,5 @@
 import { highScoreHandler } from './high-score';
-import type { Env } from './types.cf';
+import type { Env } from './types';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 
