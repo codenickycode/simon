@@ -1,15 +1,22 @@
-name = "simon"
 main = "dist/index.js"
 
 compatibility_date = "2024-08-26"
 compatibility_flags = [ "nodejs_compat" ]
 
+[env.dev]
+name = "simon-dev"
 workers_dev = true
+vars = { ALLOWED_ORIGIN = "https://dev.simon-evn.pages.dev", ENV = "dev" }
+[[env.dev.kv_namespaces]]
+binding = "DB"
+id = "73d1493b972c4fd2a28f53c55feae408"
 
-[vars]
-ALLOWED_ORIGIN = 'https://simon.codenickycode.com'
-ENV = 'prod'
-
-[[kv_namespaces]]
+[env.prod]
+name = "simon"
+workers_dev = true
+vars = { ALLOWED_ORIGIN = "https://simon.codenickycode.com", ENV = "prod" }
+[[env.prod.kv_namespaces]]
 binding = "DB"
 id = "420d2dc5d82e4ce197d82de18946be4b"
+
+
