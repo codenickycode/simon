@@ -9,7 +9,7 @@ export const melodies = {
     { note: 'C4', duration: '16n' },
     { note: 'E4', duration: '16n' },
     { note: 'G4', duration: '16n' },
-    { note: 'C5', duration: '8n' },
+    { note: 'C5', duration: '16n' },
     { note: 'G4', duration: '8n' },
     { note: 'C5', duration: '4n' },
   ],
