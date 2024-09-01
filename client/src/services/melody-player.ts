@@ -14,13 +14,14 @@ export const melodyPlayer = {
     // let any last note trail off a bit before playing
     await delay(TIMING_BUFFER);
     const melodyNotes = melodies[melody];
-    const now = Tone.now();
-    for (const { note, duration, offset } of melodyNotes) {
+    let time = Tone.now();
+    for (const { note, duration } of melodyNotes) {
       melodySynth.playNote({
         note,
         duration,
-        time: now + offset,
+        time,
       });
+      time += Tone.Time(duration).toSeconds();
     }
   },
 };
