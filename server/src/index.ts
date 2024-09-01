@@ -24,6 +24,7 @@ const app = new Hono<{ Bindings: Env }>()
     throw new HTTPException(404, { message: 'Not Found' });
   })
   .onError((err, c) => {
+    console.error(err);
     if (err instanceof HTTPException) {
       return c.json({ message: err.message }, err.status);
     }
