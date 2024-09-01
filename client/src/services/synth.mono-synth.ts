@@ -1,18 +1,13 @@
 import * as Tone from 'tone';
 import type { Duration, NoteOctave } from './synth.types';
-import { audioCtxReady } from './synth.init';
 
 export class MonoSynth {
   private _synth;
-  private _volume;
 
   constructor(synth: Tone.Synth<Tone.SynthOptions> = new Tone.Synth()) {
     this._synth = synth;
-    this._volume = this._synth.volume.value;
     this._synth.toDestination();
   }
-
-  private previousTime = 0;
 
   async playNote({
     note,
@@ -23,12 +18,6 @@ export class MonoSynth {
     duration: Duration;
     time?: number;
   }) {
-    await audioCtxReady;
-    if (time === this.previousTime) {
-      // prevent error of unknown origin where events get scheduled in the same tick
-      return;
-    }
-    this.previousTime = time;
     try {
       // schedule a little in advance to prevent pops
       // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
@@ -37,14 +26,5 @@ export class MonoSynth {
     } catch (e) {
       console.error(e);
     }
-  }
-
-  mute() {
-    this._volume = this._synth.volume.value;
-    this._synth.volume.rampTo(-Infinity, 0.004);
-  }
-
-  unMute() {
-    this._synth.volume.rampTo(this._volume, 0.004);
   }
 }
