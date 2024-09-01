@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "deploy": "pnpm wrangler deploy --minify src/index.ts",
+    "deploy:dev": "pnpm wrangler deploy --minify src/index.ts --env dev",
+    "deploy:prod": "pnpm wrangler deploy --minify src/index.ts --env prod",
     "dev": "pnpm wrangler dev --live-reload src/index.ts",
     "lint": "eslint .",
     "test": "vitest run",

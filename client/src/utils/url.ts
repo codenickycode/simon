@@ -1,5 +1,10 @@
 export const getServerUrl = () => {
-  return import.meta.env.DEV
-    ? 'http://localhost:8787'
-    : 'https://simon.codenickycode.workers.dev';
+  if (import.meta.env.DEV) {
+    return 'http://localhost:8787';
+  }
+  let subdomain = 'simon';
+  if (window.location.hostname.includes('.pages.dev')) {
+    subdomain += '-dev';
+  }
+  return `https://${subdomain}.codenickycode.workers.dev`;
 };

@@ -159,4 +159,11 @@ jobs:
         run: pnpm build
 
       - name: 🚀 Publish server
-        run: pnpm run server run deploy
+        run: |
+          if [[ "$GITHUB_REF_NAME" == "main" ]]; then
+            pnpm run server deploy:prod
+          elif [[ "$GITHUB_REF_NAME" == "dev" ]]; then
+            pnpm run server deploy:dev
+          else
+            echo "Not publishing server: this branch is not main or dev."
+          fi
