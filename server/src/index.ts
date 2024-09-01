@@ -8,7 +8,7 @@ const app = new Hono<{ Bindings: Env }>()
   .use('*', async (c, next) => {
     const referer = c.req.header('referer');
     const allowedOrigin = c.env.ENV === 'dev' ? '*' : c.env.ALLOWED_ORIGIN;
-    if (allowedOrigin === '*' || referer === allowedOrigin) {
+    if (allowedOrigin === '*' || referer?.startsWith(allowedOrigin)) {
       return cors({
         origin: allowedOrigin,
         allowMethods: ['GET', 'POST', 'OPTIONS'],
