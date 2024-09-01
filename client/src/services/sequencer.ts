@@ -10,16 +10,18 @@ export interface SequencerNoteEvent {
 
 const sequenceSynth = new MonoSynth(new Tone.Synth());
 
-const INIT_NOTE_DURATION_S = 0.3;
+const SEQ_NOTE_LENGTH = '8n';
 
 class Sequencer extends EventTarget {
   private _transport = Tone.getTransport();
 
   NOTE_EVENT = 'sequencerNoteEvent';
 
-  // todo: allow tempo changes
   get noteDuration() {
-    return { s: INIT_NOTE_DURATION_S, ms: INIT_NOTE_DURATION_S * 1000 };
+    return {
+      s: Tone.Time(SEQ_NOTE_LENGTH).toSeconds(),
+      ms: Tone.Time(SEQ_NOTE_LENGTH).toMilliseconds(),
+    };
   }
 
   constructor() {
@@ -33,7 +35,7 @@ class Sequencer extends EventTarget {
   private _sequence = new Tone.Sequence((time, note) => {
     sequenceSynth.playNote({
       note,
-      duration: this.noteDuration.s,
+      duration: SEQ_NOTE_LENGTH,
       time,
     });
     Tone.getDraw().schedule(() => {
