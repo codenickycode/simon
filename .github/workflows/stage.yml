@@ -17,7 +17,7 @@ on:
   # To get around this we add `push:` to the workflow file, and push once to
   # get it to run. After it's run once, the GitHub CLI will be list it under
   # workflows, and we can run it manually. Once it shows up, remove `push:`
-  push:
+  # push:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
