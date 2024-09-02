@@ -15,6 +15,10 @@ export default defineConfig(({ mode }) => {
         authToken: env.SENTRY_AUTH_TOKEN,
       }),
     ],
+    define: {
+      'import.meta.env.GIT_BRANCH': JSON.stringify(process.env.GITHUB_REF_NAME),
+      'import.meta.env.GIT_SHA': JSON.stringify(process.env.GITHUB_SHA),
+    },
     build: {
       sourcemap: true,
     },

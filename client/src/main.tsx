@@ -19,3 +19,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </MonitorProvider>
   </React.StrictMode>,
 );
+
+console.log(`branch: ${import.meta.env.GIT_BRANCH}`);
+console.log(`commit: ${import.meta.env.GIT_SHA}`);
