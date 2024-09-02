@@ -6,7 +6,8 @@ import { initAudioContext } from './services/synth.init';
 import { Simon } from './simon';
 import { MonitorProvider } from './services/monitor';
 
-console.log(import.meta.env.VITE_GIT_BRANCH);
+// @ts-expect-error defined in vite config
+console.log(__GIT_BRANCH__);
 
 initAudioContext();
 

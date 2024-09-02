@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
       }),
     ],
     define: {
-      'import.meta.env.VITE_GIT_BRANCH': process.env.GITHUB_REF_NAME,
+      __GIT_BRANCH__: JSON.stringify(process.env.GITHUB_REF_NAME),
     },
     build: {
       sourcemap: true,
