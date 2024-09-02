@@ -22,8 +22,8 @@ const app = new Hono<{ Bindings: Env }>()
   })
   .use('*', async (c, next) => {
     await next();
-    c.res.headers.set('X-Git-Branch', c.env.GITHUB_REF_NAME);
-    c.res.headers.set('X-Git-Commit', c.env.GITHUB_SHA);
+    c.res.headers.set('X-Git-Branch', process.env.GITHUB_REF_NAME || '');
+    c.res.headers.set('X-Git-Commit', process.env.GITHUB_SHA || '');
   })
   .get('/', async (c) => c.text('ok', 200))
   .notFound(() => {

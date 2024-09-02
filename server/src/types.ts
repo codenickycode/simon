@@ -6,8 +6,6 @@ export interface Env {
   ALLOWED_HOST: string;
   DB: KVNamespace;
   ENV: 'dev' | 'prod' | 'stage';
-  GITHUB_REF_NAME: string;
-  GITHUB_SHA: string;
 }
 
 export type Context = HonoContext<{
