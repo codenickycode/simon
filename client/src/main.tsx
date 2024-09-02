@@ -6,6 +6,8 @@ import { initAudioContext } from './services/synth.init';
 import { Simon } from './simon';
 import { MonitorProvider } from './services/monitor';
 
+console.log(import.meta.env.VITE_GIT_BRANCH);
+
 initAudioContext();
 
 const queryClient = new QueryClient();
