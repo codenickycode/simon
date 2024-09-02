@@ -30,7 +30,7 @@ export function Simon() {
             <HighScoreDisplay getHighScoreApi={getHighScoreApi} />
           )}
           {/* @ts-expect-error asdf */}
-          <button onClick={() => foo()}>Error</button>
+          <button onClick={() => ZOOP()}>Error</button>
         </section>
         <section aria-label="gamepad">
           <Pads
