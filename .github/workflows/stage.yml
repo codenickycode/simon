@@ -16,10 +16,10 @@ on:
   # branches. Alas, GitHub will only allow workflow_dispatch on default branch.
   # To get around this we add `push:` to the workflow file, and push once to get
   # it to run. After it's run once, the GitHub CLI will list it under workflows,
-  # and we can run it manually. Once it shows up, remove `push:`. Note: Any
-  # changes you make to the above requires you to cycle through a push again.
+  # and we can run it manually. Note: Any changes you make to the above requires
+  # you to push again.
   # https://stackoverflow.com/questions/63362126/github-actions-how-can-i-run-a-workflow-created-on-a-non-master-branch-from-t/71057825#71057825
-  push: # <-- add, push to register, then remove
+  push:
   #
   # To run:
   # gh workflow run stage --ref <branch-name> -f target=<client|server|both>
@@ -35,7 +35,7 @@ permissions:
 jobs:
   deploy-client:
     name: 🚀 Deploy client to stage
-    if: ${{ github.event.inputs.target == 'client' || github.event.inputs.target == 'both' }}
+    if: ${{ github.event_name == 'workflow_dispatch' &&  (github.event.inputs.target == 'client' || github.event.inputs.target == 'both') }}
     runs-on: ubuntu-latest
     env:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -68,7 +68,7 @@ jobs:
 
   deploy-server:
     name: 🚀 Deploy server to stage
-    if: ${{ github.event.inputs.target == 'server' || github.event.inputs.target == 'both' }}
+    if: ${{ github.event_name == 'workflow_dispatch' &&  (github.event.inputs.target == 'server' || github.event.inputs.target == 'both') }}
     runs-on: ubuntu-latest
     env:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
