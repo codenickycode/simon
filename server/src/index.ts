@@ -20,6 +20,11 @@ const app = new Hono<{ Bindings: Env }>()
     // If referer is not allowed, fail the request
     throw new HTTPException(403, { message: 'Forbidden' });
   })
+  .use('*', async (c, next) => {
+    await next();
+    c.res.headers.set('X-Git-Branch', c.env.GITHUB_REF_NAME);
+    c.res.headers.set('X-Git-Commit', c.env.GITHUB_SHA);
+  })
   .get('/', async (c) => c.text('ok', 200))
   .notFound(() => {
     throw new HTTPException(404, { message: 'Not Found' });
