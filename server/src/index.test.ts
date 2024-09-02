@@ -4,7 +4,7 @@ import app from './index';
 
 const mockEnv = {
   ALLOWED_HOST: '*',
-  ENV: 'local',
+  ENV: 'dev',
 };
 
 describe('GET /', () => {
@@ -29,7 +29,7 @@ describe('Not Found', () => {
   });
 });
 
-describe.each(['dev', 'prod'])('when in %s', (ENV) => {
+describe.each(['stage', 'prod'])('when in %s', (ENV) => {
   it('should allow specified host, ignoring subdomains (since our preview branches have hash subdomains)', async () => {
     const response = await testClient(app, {
       ...mockEnv,

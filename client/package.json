@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc -b && vite build",
-    "deploy:dev": "pnpm wrangler pages deploy ./dist --project-name simon --branch \"dev\" --commit-hash \"$GITHUB_SHA\" --commit-message \"dev deployment\"",
+    "deploy:stage": "pnpm wrangler pages deploy ./dist --project-name simon --branch \"stage\" --commit-hash \"$GITHUB_SHA\" --commit-message \"stage deployment\"",
     "deploy:prod": "pnpm wrangler pages deploy ./dist --project-name simon",
     "dev": "vite --host 0.0.0.0",
     "lint": "eslint .",
