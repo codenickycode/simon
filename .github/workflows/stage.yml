@@ -35,7 +35,7 @@ permissions:
 jobs:
   deploy-client:
     name: 🚀 Deploy client to stage
-    if: ${{ github.event.inputs.deployment_target == 'client' || github.event.inputs.deployment_target == 'both' }}
+    if: ${{ github.event.inputs.target == 'client' || github.event.inputs.target == 'both' }}
     runs-on: ubuntu-latest
     env:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -68,7 +68,7 @@ jobs:
 
   deploy-server:
     name: 🚀 Deploy server to stage
-    if: ${{ github.event.inputs.deployment_target == 'server' || github.event.inputs.deployment_target == 'both' }}
+    if: ${{ github.event.inputs.target == 'server' || github.event.inputs.target == 'both' }}
     runs-on: ubuntu-latest
     env:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
