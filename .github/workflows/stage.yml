@@ -14,10 +14,10 @@ on:
           - both
   # Weird hack alert! We want to trigger stage deploys manually from feature
   # branches. Alas, GitHub will only allow workflow_dispatch on default branch.
-  # To get around this we add `push:` to the workflow file, and push once to
-  # get it to run. After it's run once, the GitHub CLI will be list it under
-  # workflows, and we can run it manually. Once it shows up, remove `push:`
-  # push:
+  # To get around this we add `push:` to the workflow file, and push once to get
+  # it to run. After it's run once, the GitHub CLI will list it under workflows,
+  # and we can run it manually. Once it shows up, remove `push:`
+  # push: # <-- add, push to register, then remove
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
