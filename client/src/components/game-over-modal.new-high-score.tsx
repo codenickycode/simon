@@ -3,7 +3,10 @@ import { useEffect, useState } from 'react';
 import { Input } from './ui.input';
 import { Button } from './ui.button';
 import { Spinner } from './ui.spinner';
-import { type UpdateHighScoreApi } from '../services/api.high-score';
+import {
+  getHighScoreError,
+  type UpdateHighScoreApi,
+} from '../services/api.high-score';
 
 interface NewHighScoreProps {
   newHighScore: number;
@@ -33,7 +36,8 @@ export const NewHighScore = ({
       { name: userName, score: newHighScore },
       {
         onSuccess: closeModal,
-        onError: (err) => setError(err.message),
+        onError: (err) =>
+          getHighScoreError(err).then((error) => setError(error.message)),
       },
     );
   };
