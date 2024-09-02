@@ -3,7 +3,7 @@ name: stage
 on:
   workflow_dispatch:
     inputs:
-      deployment_target:
+      target:
         description: 'Deploy target (client, server, or both)'
         required: true
         default: 'both'
@@ -16,12 +16,13 @@ on:
   # branches. Alas, GitHub will only allow workflow_dispatch on default branch.
   # To get around this we add `push:` to the workflow file, and push once to get
   # it to run. After it's run once, the GitHub CLI will list it under workflows,
-  # and we can run it manually. Once it shows up, remove `push:`
+  # and we can run it manually. Once it shows up, remove `push:`. Note: Any
+  # changes you make to the above requires you to cycle through a push again.
   # https://stackoverflow.com/questions/63362126/github-actions-how-can-i-run-a-workflow-created-on-a-non-master-branch-from-t/71057825#71057825
   push: # <-- add, push to register, then remove
   #
   # To run:
-  # gh workflow run stage --ref <branch-name> -f input=<client|server|both>
+  # gh workflow run stage --ref <branch-name> -f target=<client|server|both>
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
