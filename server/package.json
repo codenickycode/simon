@@ -6,11 +6,11 @@
   "scripts": {
     "deploy:dev": "pnpm wrangler deploy --minify src/index.ts --env dev",
     "deploy:prod": "pnpm wrangler deploy --minify src/index.ts --env prod",
-    "dev": "pnpm wrangler dev --live-reload src/index.ts --env dev",
+    "dev": "pnpm wrangler dev --live-reload src/index.ts --env local",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "start": "wrangler dev --env dev",
+    "start": "wrangler dev --env local",
     "typecheck": "pnpm exec tsc --build"
   },
   "dependencies": {

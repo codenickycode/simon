@@ -3,8 +3,8 @@ import { testClient } from 'hono/testing';
 import app from './index';
 
 const mockEnv = {
-  ALLOWED_ORIGIN: '*',
-  ENV: 'dev',
+  ALLOWED_HOST: '*',
+  ENV: 'local',
 };
 
 describe('GET /', () => {
@@ -29,24 +29,34 @@ describe('Not Found', () => {
   });
 });
 
-describe('when not in DEV', () => {
-  it('should allow any referer when env.ALLOWED_ORIGIN is "*"', async () => {
+describe.each(['dev', 'prod'])('when in %s', (ENV) => {
+  it('should allow specified host, ignoring subdomains (since our preview branches have hash subdomains)', async () => {
     const response = await testClient(app, {
       ...mockEnv,
-      ENV: 'prod',
-      ALLOWED_ORIGIN: '*',
+      ENV,
+      ALLOWED_HOST: 'foo.com',
     }).index.$get(undefined, {
-      headers: { referer: 'foo.com' },
+      headers: { referer: 'https://lj98w4f.foo.com' },
     });
     expect(response.status).toBe(200);
   });
-  it('should not allow any referer when env.ALLOWED_ORIGIN is set', async () => {
+  it('should allow any referer when env.ALLOWED_HOST is "*"', async () => {
     const response = await testClient(app, {
       ...mockEnv,
-      ENV: 'prod',
-      ALLOWED_ORIGIN: 'bar.com',
+      ENV,
+      ALLOWED_HOST: '*',
     }).index.$get(undefined, {
-      headers: { referer: 'foo.com' },
+      headers: { referer: 'https://foo.com' },
+    });
+    expect(response.status).toBe(200);
+  });
+  it('should not allow any referer when env.ALLOWED_HOST is set', async () => {
+    const response = await testClient(app, {
+      ...mockEnv,
+      ENV,
+      ALLOWED_HOST: 'bar.com',
+    }).index.$get(undefined, {
+      headers: { referer: 'https://foo.com' },
     });
     expect(response.status).toBe(403);
   });

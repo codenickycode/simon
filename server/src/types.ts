@@ -3,9 +3,9 @@ import type { Context as HonoContext } from 'hono';
 import type app from './index';
 
 export interface Env {
-  ALLOWED_ORIGIN: string;
+  ALLOWED_HOST: string;
   DB: KVNamespace;
-  ENV: 'dev' | 'prod';
+  ENV: 'dev' | 'local' | 'prod';
 }
 
 export type Context = HonoContext<{

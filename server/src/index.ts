@@ -6,11 +6,12 @@ import type { Env } from './types';
 
 const app = new Hono<{ Bindings: Env }>()
   .use('*', async (c, next) => {
-    const referer = c.req.header('referer');
-    const allowedOrigin = c.env.ENV === 'dev' ? '*' : c.env.ALLOWED_ORIGIN;
-    if (allowedOrigin === '*' || referer?.startsWith(allowedOrigin)) {
+    const allowedHost = c.env.ALLOWED_HOST;
+    const origin =
+      allowedHost === '*' ? '*' : new URL(c.req.header('referer') || '').origin;
+    if (origin.endsWith(allowedHost)) {
       return cors({
-        origin: allowedOrigin,
+        origin,
         allowMethods: ['GET', 'POST', 'OPTIONS'],
         allowHeaders: ['Content-Type', 'baggage', 'sentry-trace'],
         exposeHeaders: ['Content-Type'],
