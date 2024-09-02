@@ -21,7 +21,7 @@ export function useGetHighScoreApi() {
       return $get()
         .then(async (res) => {
           if (!res.ok) {
-            const error = await getHighScoreError(res);
+            const error = await getError(res);
             throw error;
           }
           return res.json();
@@ -45,13 +45,18 @@ export function useUpdateHighScoreApi() {
     InferRequestType<typeof $post>['json']
   >({
     mutationFn: async (updateHighScore) => {
-      return $post({ json: updateHighScore }).then(async (res) => {
-        if (!res.ok) {
-          const error = await getHighScoreError(res);
+      return $post({ json: updateHighScore })
+        .then(async (res) => {
+          if (!res.ok) {
+            const error = await getError(res);
+            throw error;
+          }
+          return res.json();
+        })
+        .catch(async (e) => {
+          const error = await getError(e);
           throw error;
-        }
-        return res.json();
-      });
+        });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [HIGH_SCORE_QUERY_KEY] });
@@ -65,7 +70,7 @@ export function useUpdateHighScoreApi() {
 const DEFAULT_MESSAGE =
   'Request to high score failed.\nPlease check your connection and try again.';
 
-export const getHighScoreError = async (err: unknown): Promise<Error> => {
+const getError = async (err: unknown): Promise<Error> => {
   if (err instanceof Error) {
     if (err.message === 'Failed to fetch') {
       err.message = DEFAULT_MESSAGE;
