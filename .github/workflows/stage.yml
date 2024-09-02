@@ -1,4 +1,4 @@
-name: Stage Deployment
+name: stage
 
 on:
   workflow_dispatch:
@@ -17,7 +17,11 @@ on:
   # To get around this we add `push:` to the workflow file, and push once to get
   # it to run. After it's run once, the GitHub CLI will list it under workflows,
   # and we can run it manually. Once it shows up, remove `push:`
-  # push: # <-- add, push to register, then remove
+  # https://stackoverflow.com/questions/63362126/github-actions-how-can-i-run-a-workflow-created-on-a-non-master-branch-from-t/71057825#71057825
+  push: # <-- add, push to register, then remove
+  #
+  # To run:
+  # gh workflow run stage --ref <branch-name> -f input=<client|server|both>
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
