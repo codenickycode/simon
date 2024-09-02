@@ -22,7 +22,7 @@ on:
   push:
   #
   # To run:
-  # gh workflow run stage --ref <branch-name> -f target=<client|server|both>
+  # gh workflow run stage --r <branch-name> [-f target=<client|server|both>]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
