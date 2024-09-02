@@ -20,6 +20,10 @@ module.exports = {
       {
         paths: [
           {
+            name: '@sentry/react',
+            message: '@sentry/react should only be lazy imported',
+          },
+          {
             name: 'tone',
             message:
               'tone should only be imported from modules within the "services" directory',
