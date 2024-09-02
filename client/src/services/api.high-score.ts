@@ -26,8 +26,8 @@ export function useGetHighScoreApi() {
           }
           return res.json();
         })
-        .catch(async (err) => {
-          captureException(err);
+        .catch((e) => {
+          captureException(e);
           return null;
         });
     },
