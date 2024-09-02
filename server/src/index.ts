@@ -3,9 +3,13 @@ import { cors } from 'hono/cors';
 import { HTTPException } from 'hono/http-exception';
 import { highScoreRoute } from './high-score';
 import type { Env } from './types';
-import { env as nodeEnv } from 'node:process';
 
 const app = new Hono<{ Bindings: Env }>()
+  .use('*', async (c, next) => {
+    await next();
+    c.res.headers.set('X-Git-Branch', c.env.GITHUB_REF_NAME || '');
+    c.res.headers.set('X-Git-Commit', c.env.GITHUB_SHA || '');
+  })
   .use('*', async (c, next) => {
     const allowedHost = c.env.ALLOWED_HOST;
     const origin =
@@ -20,11 +24,6 @@ const app = new Hono<{ Bindings: Env }>()
     }
     // If referer is not allowed, fail the request
     throw new HTTPException(403, { message: 'Forbidden' });
-  })
-  .use('*', async (c, next) => {
-    await next();
-    c.res.headers.set('X-Git-Branch', nodeEnv.GITHUB_REF_NAME || '');
-    c.res.headers.set('X-Git-Commit', nodeEnv.GITHUB_SHA || '');
   })
   .get('/', async (c) => c.text('ok', 200))
   .notFound(() => {
