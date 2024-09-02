@@ -1,9 +1,9 @@
 import type { ServerApi } from '@simon/server/src/types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import * as Sentry from '@sentry/react';
 import type { InferRequestType, InferResponseType } from 'hono/client';
 import { hc } from 'hono/client';
 import { getServerUrl } from '../utils/url';
+import { useSentry } from './monitor.use-sentry';
 
 const serverUrl = getServerUrl();
 
@@ -14,6 +14,7 @@ const HIGH_SCORE_QUERY_KEY = 'highScore';
 export type GetHighScoreApi = ReturnType<typeof useGetHighScoreApi>;
 
 export function useGetHighScoreApi() {
+  const { captureException } = useSentry();
   return useQuery({
     queryKey: [HIGH_SCORE_QUERY_KEY],
     queryFn: async () => {
@@ -29,7 +30,7 @@ export function useGetHighScoreApi() {
           return res.json();
         })
         .catch((e) => {
-          Sentry.captureException(e);
+          captureException(e);
           return null;
         });
     },
@@ -40,7 +41,7 @@ export type UpdateHighScoreApi = ReturnType<typeof useUpdateHighScoreApi>;
 
 export function useUpdateHighScoreApi() {
   const queryClient = useQueryClient();
-
+  const { captureException } = useSentry();
   return useMutation<
     InferResponseType<typeof $post>,
     Error,
@@ -62,7 +63,7 @@ export function useUpdateHighScoreApi() {
       queryClient.invalidateQueries({ queryKey: [HIGH_SCORE_QUERY_KEY] });
     },
     onError: async (err: Error) => {
-      Sentry.captureException(err);
+      captureException(err);
     },
   });
 }
