@@ -12,17 +12,8 @@ on:
           - client
           - server
           - both
-  # Weird hack alert! We want to trigger stage deploys manually from feature
-  # branches. Alas, GitHub will only allow workflow_dispatch on default branch.
-  # To get around this we add `push:` to the workflow file, and push once to get
-  # it to run. After it's run once, the GitHub CLI will list it under workflows,
-  # and we can run it manually. Note: Any changes you make to the above requires
-  # you to push again.
-  # https://stackoverflow.com/questions/63362126/github-actions-how-can-i-run-a-workflow-created-on-a-non-master-branch-from-t/71057825#71057825
+  # note: push is required to register this workflow
   push:
-  #
-  # To run:
-  # gh workflow run stage --r <branch-name> [-f target=<client|server|both>]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
