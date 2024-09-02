@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
       }),
     ],
     define: {
-      __GIT_BRANCH__: JSON.stringify(process.env.GITHUB_REF_NAME),
+      'import.meta.env.GIT_BRANCH': JSON.stringify(process.env.GITHUB_REF_NAME),
     },
     build: {
       sourcemap: true,

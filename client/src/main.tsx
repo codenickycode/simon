@@ -6,9 +6,6 @@ import { initAudioContext } from './services/synth.init';
 import { Simon } from './simon';
 import { MonitorProvider } from './services/monitor';
 
-// @ts-expect-error defined in vite config
-console.log(__GIT_BRANCH__);
-
 initAudioContext();
 
 const queryClient = new QueryClient();
@@ -22,3 +19,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </MonitorProvider>
   </React.StrictMode>,
 );
+
+console.log('Deployed from: ', import.meta.env.GIT_BRANCH);
