@@ -1,10 +1,13 @@
+import { ENV } from './env';
+
 export const getServerUrl = () => {
-  if (import.meta.env.DEV) {
-    return 'http://localhost:8787';
+  switch (ENV) {
+    case 'dev':
+      return 'https://simon-dev.codenickycode.workers.dev';
+    case 'prod':
+      return 'https://simon.codenickycode.workers.dev';
+    case 'local':
+    default:
+      return 'http://localhost:8787';
   }
-  let subdomain = 'simon';
-  if (window.location.hostname.includes('.pages.dev')) {
-    subdomain += '-dev';
-  }
-  return `https://${subdomain}.codenickycode.workers.dev`;
 };
