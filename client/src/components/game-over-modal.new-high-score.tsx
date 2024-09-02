@@ -24,17 +24,12 @@ export const NewHighScore = ({
   }, [onMount]);
 
   const [userName, setUserName] = useState('');
-  const [error, setError] = useState('');
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError('');
     updateHighScoreApi.mutate(
       { name: userName, score: newHighScore },
-      {
-        onSuccess: closeModal,
-        onError: (err) => setError(err.message),
-      },
+      { onSuccess: closeModal },
     );
   };
 
@@ -63,12 +58,19 @@ export const NewHighScore = ({
             <span className="font-bold">save</span>
           </Spinner>
         </Button>
-        {error ? (
+        {updateHighScoreApi.error ? (
           <pre className="mt-3 text-red-500 text-sm text-balance whitespace-pre-wrap">
-            {error}
+            {formatUpdateError(updateHighScoreApi.error.message)}
           </pre>
         ) : null}
       </form>
     </div>
   );
 };
+
+function formatUpdateError(message: string): string {
+  if (message === 'Failed to fetch') {
+    return 'Unable to update high score.\nPlease check your connection and try again.';
+  }
+  return message;
+}

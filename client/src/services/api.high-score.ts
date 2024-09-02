@@ -21,13 +21,13 @@ export function useGetHighScoreApi() {
       return $get()
         .then(async (res) => {
           if (!res.ok) {
-            const error = await getError(res);
+            const error = await parseError(res);
             throw error;
           }
           return res.json();
         })
-        .catch((e) => {
-          captureException(e);
+        .catch((error) => {
+          captureException(error);
           return null;
         });
     },
@@ -45,23 +45,18 @@ export function useUpdateHighScoreApi() {
     InferRequestType<typeof $post>['json']
   >({
     mutationFn: async (updateHighScore) => {
-      return $post({ json: updateHighScore })
-        .then(async (res) => {
-          if (!res.ok) {
-            const error = await getError(res);
-            throw error;
-          }
-          return res.json();
-        })
-        .catch(async (e) => {
-          const error = await getError(e);
+      return $post({ json: updateHighScore }).then(async (res) => {
+        if (!res.ok) {
+          const error = await parseError(res);
           throw error;
-        });
+        }
+        return res.json();
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [HIGH_SCORE_QUERY_KEY] });
     },
-    onError: async (error) => {
+    onError: (error) => {
       captureException(error);
     },
   });
@@ -70,17 +65,11 @@ export function useUpdateHighScoreApi() {
 const DEFAULT_MESSAGE =
   'Request to high score failed.\nPlease check your connection and try again.';
 
-const getError = async (err: unknown): Promise<Error> => {
-  if (err instanceof Error) {
-    if (err.message === 'Failed to fetch') {
-      err.message = DEFAULT_MESSAGE;
-    }
-    return err;
-  }
+const parseError = async (err: Response | Error): Promise<Error> => {
   if (err instanceof Response) {
     const json = await err.json();
     const message = json?.message || DEFAULT_MESSAGE;
     return new Error(message, { cause: err });
   }
-  return new Error(DEFAULT_MESSAGE, { cause: err });
+  return err;
 };
