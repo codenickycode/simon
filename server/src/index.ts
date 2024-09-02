@@ -3,6 +3,7 @@ import { cors } from 'hono/cors';
 import { HTTPException } from 'hono/http-exception';
 import { highScoreRoute } from './high-score';
 import type { Env } from './types';
+import { env as nodeEnv } from 'node:process';
 
 const app = new Hono<{ Bindings: Env }>()
   .use('*', async (c, next) => {
@@ -22,8 +23,8 @@ const app = new Hono<{ Bindings: Env }>()
   })
   .use('*', async (c, next) => {
     await next();
-    c.res.headers.set('X-Git-Branch', process.env.GITHUB_REF_NAME || '');
-    c.res.headers.set('X-Git-Commit', process.env.GITHUB_SHA || '');
+    c.res.headers.set('X-Git-Branch', nodeEnv.GITHUB_REF_NAME || '');
+    c.res.headers.set('X-Git-Commit', nodeEnv.GITHUB_SHA || '');
   })
   .get('/', async (c) => c.text('ok', 200))
   .notFound(() => {
