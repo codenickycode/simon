@@ -18,9 +18,9 @@ const SentryLazy = lazy(() =>
       ],
       tracesSampleRate: 1.0,
       tracePropagationTargets: ['localhost', getServerUrl()],
-      // limit sampling on production
-      replaysSessionSampleRate: ENV !== 'prod' ? 1 : 0.1,
-      replaysOnErrorSampleRate: 1.0,
+      // limit replay sampling
+      replaysSessionSampleRate: ENV === 'prod' ? 0.1 : 0,
+      replaysOnErrorSampleRate: ENV === 'prod' ? 1.0 : 0,
     });
     console.log('monitor initialized');
     const SentryProvider = ({ children }: { children: ReactNode }) => {
