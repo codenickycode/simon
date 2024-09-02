@@ -65,11 +65,14 @@ export function useUpdateHighScoreApi() {
 const DEFAULT_MESSAGE =
   'Request to high score failed.\nPlease check your connection and try again.';
 
-const parseError = async (err: Response | Error): Promise<Error> => {
+const parseError = async (err: unknown): Promise<Error> => {
   if (err instanceof Response) {
     const json = await err.json();
     const message = json?.message || DEFAULT_MESSAGE;
     return new Error(message, { cause: err });
   }
-  return err;
+  if (err instanceof Error) {
+    return err;
+  }
+  return new Error(DEFAULT_MESSAGE, { cause: err });
 };
