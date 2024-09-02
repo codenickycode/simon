@@ -29,6 +29,8 @@ export function Simon() {
           {!gameMachine.isPlaying && (
             <HighScoreDisplay getHighScoreApi={getHighScoreApi} />
           )}
+          {/* @ts-expect-error asdf */}
+          <button onClick={() => foo()}>Error</button>
         </section>
         <section aria-label="gamepad">
           <Pads

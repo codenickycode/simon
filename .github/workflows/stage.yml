@@ -1,0 +1,100 @@
+name: stage
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Deploy target (client, server, or both)'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+          - client
+          - server
+          - both
+  # Weird hack alert! We want to trigger stage deploys manually from feature
+  # branches. Alas, GitHub will only allow workflow_dispatch on default branch.
+  # To get around this we add `push:` to the workflow file, and push once to get
+  # it to run. After it's run once, the GitHub CLI will list it under workflows,
+  # and we can run it manually. Note: Any changes you make to the above requires
+  # you to push again.
+  # https://stackoverflow.com/questions/63362126/github-actions-how-can-i-run-a-workflow-created-on-a-non-master-branch-from-t/71057825#71057825
+  push:
+  #
+  # To run:
+  # gh workflow run stage --r <branch-name> [-f target=<client|server|both>]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  deploy-client:
+    name: 🚀 Deploy client to stage
+    if: ${{ github.event_name == 'workflow_dispatch' &&  (github.event.inputs.target == 'client' || github.event.inputs.target == 'both') }}
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      GITHUB_REF_NAME: ${{ github.ref_name }}
+      GITHUB_SHA: ${{ github.sha }}
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 9
+          run_install: false
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.10.0
+
+      - name: 📥 Install deps
+        run: pnpm install
+
+      - name: ⚙️ Build
+        run: pnpm build
+
+      - name: 🚀 Deploy client to stage
+        run: pnpm run client deploy:stage
+
+  deploy-server:
+    name: 🚀 Deploy server to stage
+    if: ${{ github.event_name == 'workflow_dispatch' &&  (github.event.inputs.target == 'server' || github.event.inputs.target == 'both') }}
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      GITHUB_REF_NAME: ${{ github.ref_name }}
+      GITHUB_SHA: ${{ github.sha }}
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 9
+          run_install: false
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.10.0
+
+      - name: 📥 Install deps
+        run: pnpm install
+
+      - name: ⚙️ Build
+        run: pnpm build
+
+      - name: 🚀 Deploy server to stage
+        run: pnpm run server deploy:stage

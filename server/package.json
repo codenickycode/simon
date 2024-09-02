@@ -4,13 +4,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "deploy:dev": "pnpm wrangler deploy --minify src/index.ts --env dev",
+    "deploy:stage": "pnpm wrangler deploy --minify src/index.ts --env stage",
     "deploy:prod": "pnpm wrangler deploy --minify src/index.ts --env prod",
-    "dev": "pnpm wrangler dev --live-reload src/index.ts --env local",
+    "dev": "pnpm wrangler dev --live-reload src/index.ts --env dev",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "start": "wrangler dev --env local",
+    "start": "wrangler dev --env dev",
     "typecheck": "pnpm exec tsc --build"
   },
   "dependencies": {

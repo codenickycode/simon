@@ -5,7 +5,7 @@ import type app from './index';
 export interface Env {
   ALLOWED_HOST: string;
   DB: KVNamespace;
-  ENV: 'dev' | 'local' | 'prod';
+  ENV: 'dev' | 'prod' | 'stage';
 }
 
 export type Context = HonoContext<{
