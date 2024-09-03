@@ -2,8 +2,8 @@ import type { ServerApi } from '@simon/server/src/types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { InferRequestType, InferResponseType } from 'hono/client';
 import { hc } from 'hono/client';
-import { getServerUrl } from '../utils/url';
 import { useMonitor } from './monitor.use-monitor';
+import { getServerUrl } from '../config';
 
 const serverUrl = getServerUrl();
 

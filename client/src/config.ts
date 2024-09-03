@@ -1,5 +1,24 @@
 import type { DeepReadonly, PadConfig, PadId } from './types';
 
+export const ENV =
+  window.location.hostname === 'simon.codenickycode.com'
+    ? 'prod'
+    : window.location.hostname.includes('.pages.dev')
+      ? 'stage'
+      : 'dev';
+
+export const getServerUrl = () => {
+  switch (ENV) {
+    case 'stage':
+      return 'https://simon-stage.codenickycode.workers.dev';
+    case 'prod':
+      return 'https://simon.codenickycode.workers.dev';
+    case 'dev':
+    default:
+      return 'http://localhost:8787';
+  }
+};
+
 export const ANIMATION_DURATION = 300;
 
 export const PAD_SCHEMA: DeepReadonly<{ [key in PadId]: PadConfig }> = {
