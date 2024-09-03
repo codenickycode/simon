@@ -1,13 +1,14 @@
 import { useCallback } from 'react';
 import { useActivePads } from './use-pad-controller.use-active-pads';
 import { usePadKeyListeners } from './use-pad-controller.use-pad-key-listeners';
-import { MonoSynth } from '../services/synth.mono-synth';
 import type { PadId } from '../types';
 import { PAD_SCHEMA } from '../config';
+import * as Tone from 'tone';
 
 const NOTE_DURATION_S = 0.3;
+const NOW_BUFFER_S = 0.032;
 
-export const userSynth = new MonoSynth();
+export const userSynth = new Tone.Synth().toDestination();
 
 export type PadController = ReturnType<typeof usePadController>;
 
@@ -26,10 +27,13 @@ export const usePadController = ({
         return;
       }
       setPadActive(padId);
-      userSynth.playNote({
-        note: PAD_SCHEMA[padId].tone,
-        duration: NOTE_DURATION_S,
-      });
+      userSynth.triggerAttackRelease(
+        PAD_SCHEMA[padId].tone,
+        NOTE_DURATION_S,
+        // schedule a little in advance to prevent pops
+        // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
+        Tone.getContext().currentTime + NOW_BUFFER_S,
+      );
       onUserPadDown(padId);
     },
     [disabled, onUserPadDown, setPadActive],

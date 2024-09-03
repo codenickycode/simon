@@ -1,13 +1,13 @@
 import * as Tone from 'tone';
 import { melodies } from './melody-player.melodies';
 import { delay } from '../utils/delay';
-import { MonoSynth } from './synth.mono-synth';
 
 const TIMING_BUFFER = 100;
 
-const melodySynth = new MonoSynth(
-  new Tone.Synth({ oscillator: { type: 'amsquare16' }, volume: -3 }),
-);
+const melodySynth = new Tone.Synth({
+  oscillator: { type: 'amsquare16' },
+  volume: -3,
+}).toDestination();
 
 export const melodyPlayer = {
   play: async (melody: keyof typeof melodies) => {
@@ -16,11 +16,7 @@ export const melodyPlayer = {
     const melodyNotes = melodies[melody];
     let time = Tone.now();
     for (const { note, duration } of melodyNotes) {
-      melodySynth.playNote({
-        note,
-        duration,
-        time,
-      });
+      melodySynth.triggerAttackRelease(note, duration, time);
       time += Tone.Time(duration).toSeconds();
     }
   },
