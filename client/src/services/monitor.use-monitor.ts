@@ -1,8 +1,7 @@
-import type { captureException } from '@sentry/react';
 import { createContext, useContext } from 'react';
 
 export const MonitorContext = createContext<{
-  captureException: typeof captureException;
+  captureException: (exception: unknown) => string;
 } | null>(null);
 
 export const useMonitor = () => {
@@ -14,7 +13,7 @@ export const useMonitor = () => {
           'tried to capture exception before monitor was initialized',
         );
       },
-    } as unknown as { captureException: typeof captureException };
+    };
   }
   return ctx;
 };

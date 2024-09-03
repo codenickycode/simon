@@ -1,9 +1,8 @@
 import * as Tone from 'tone';
-import type { NoteOctave } from './synth.types';
 
 export interface SequencerNoteEvent {
   detail: {
-    note: NoteOctave;
+    note: Tone.Unit.Frequency;
   };
 }
 
@@ -48,7 +47,7 @@ class Sequencer extends EventTarget {
     return this._sequence.events[index];
   }
 
-  addRandomNote(notes: NoteOctave[]) {
+  addRandomNote(notes: Tone.Unit.Frequency[]) {
     const index = Math.floor(Math.random() * notes.length);
     const note = notes[index];
     this._sequence.events.push(note);
