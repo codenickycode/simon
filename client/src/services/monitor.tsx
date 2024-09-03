@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react';
 import { lazy, Suspense } from 'react';
-import { ENV } from '../utils/env';
-import { getServerUrl } from '../utils/url';
 import { MonitorContext } from './monitor.use-monitor';
+import { ENV, getServerUrl } from '../config';
 
 const SENTRY_DSN =
   'https://a485f37a0cffb47b727372c209581f1e@o4507753746071552.ingest.us.sentry.io/4507753753018368';
