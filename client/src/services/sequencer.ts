@@ -1,14 +1,12 @@
 import * as Tone from 'tone';
-import type { NoteOctave } from './synth.types';
-import { MonoSynth } from './synth.mono-synth';
 
 export interface SequencerNoteEvent {
   detail: {
-    note: NoteOctave;
+    note: Tone.Unit.Frequency;
   };
 }
 
-const sequenceSynth = new MonoSynth(new Tone.Synth());
+const sequenceSynth = new Tone.Synth().toDestination();
 
 const SEQ_NOTE_LENGTH = '8n';
 
@@ -33,11 +31,7 @@ class Sequencer extends EventTarget {
   }
 
   private _sequence = new Tone.Sequence((time, note) => {
-    sequenceSynth.playNote({
-      note,
-      duration: SEQ_NOTE_LENGTH,
-      time,
-    });
+    sequenceSynth.triggerAttackRelease(note, SEQ_NOTE_LENGTH, time);
     Tone.getDraw().schedule(() => {
       this.dispatchEvent(
         new CustomEvent(this.NOTE_EVENT, { detail: { note } }),
@@ -53,7 +47,7 @@ class Sequencer extends EventTarget {
     return this._sequence.events[index];
   }
 
-  addRandomNote(notes: NoteOctave[]) {
+  addRandomNote(notes: Tone.Unit.Frequency[]) {
     const index = Math.floor(Math.random() * notes.length);
     const note = notes[index];
     this._sequence.events.push(note);

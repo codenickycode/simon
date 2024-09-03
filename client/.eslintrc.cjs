@@ -23,22 +23,8 @@ module.exports = {
             name: '@sentry/react',
             message: '@sentry/react should only be lazy imported',
           },
-          {
-            name: 'tone',
-            message:
-              'tone should only be imported from modules within the "services" directory',
-          },
         ],
       },
     ],
   },
-  overrides: [
-    // allow tone only within "services" directory
-    {
-      files: ['**/services/**'],
-      rules: {
-        'no-restricted-imports': ['off', { paths: [{ name: 'tone' }] }],
-      },
-    },
-  ],
 };
