@@ -10,7 +10,6 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "start": "wrangler dev --env dev",
     "typecheck": "pnpm exec tsc --build"
   },
   "dependencies": {
