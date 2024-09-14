@@ -7,10 +7,10 @@
     "deploy:stage": "pnpm wrangler deploy --minify src/index.ts --env stage --var GITHUB_REF_NAME:$GITHUB_REF_NAME --var GITHUB_SHA:$GITHUB_SHA",
     "deploy:prod": "pnpm wrangler deploy --minify src/index.ts --env prod --var GITHUB_REF_NAME:$GITHUB_REF_NAME --var GITHUB_SHA:$GITHUB_SHA",
     "dev": "pnpm wrangler dev --live-reload src/index.ts --env dev",
+    "dev:test": "pnpm wrangler dev --live-reload src/index.ts --env test --port 8788",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "start": "wrangler dev --env dev",
     "typecheck": "pnpm exec tsc --build"
   },
   "dependencies": {

@@ -1,13 +1,14 @@
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import { zValidator } from '@hono/zod-validator';
-import type { Env } from './types';
+import type { Context, Env } from './types';
 import type { HighScoreEntry } from './types';
 import { z } from 'zod';
+import { getDb } from './utils';
 
 export const highScoreRoute = new Hono<{ Bindings: Env }>()
   .get('/', async (c) => {
-    const highScore = await getCurrentHighScore(c.env);
+    const highScore = await getCurrentHighScore(c);
     return c.json({ highScore }, 200);
   })
   .post(
@@ -21,7 +22,7 @@ export const highScoreRoute = new Hono<{ Bindings: Env }>()
     ),
     async (c) => {
       const { score, name } = c.req.valid('json');
-      const currentHighScore = await getCurrentHighScore(c.env);
+      const currentHighScore = await getCurrentHighScore(c);
       if (score <= currentHighScore.score) {
         throw new HTTPException(400, {
           message: `The score you submitted is not higher than the current high score of ${currentHighScore.score}`,
@@ -32,7 +33,8 @@ export const highScoreRoute = new Hono<{ Bindings: Env }>()
         name: name.trim() || 'Anonymous',
         timestamp: Date.now(),
       };
-      await c.env.DB.put('highScore', JSON.stringify(newHighScore));
+      const db = getDb(c);
+      await db.put('highScore', JSON.stringify(newHighScore));
       return c.json({ newHighScore }, 200);
     },
   )
@@ -40,8 +42,8 @@ export const highScoreRoute = new Hono<{ Bindings: Env }>()
     throw new HTTPException(404, { message: 'Not Found' });
   });
 
-async function getCurrentHighScore(env: Env): Promise<HighScoreEntry> {
-  const currentHighScore = await env.DB.get<HighScoreEntry>(
+async function getCurrentHighScore(c: Context): Promise<HighScoreEntry> {
+  const currentHighScore = await getDb(c).get<HighScoreEntry>(
     'highScore',
     'json',
   );

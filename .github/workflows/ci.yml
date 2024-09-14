@@ -84,10 +84,37 @@ jobs:
       - name: ⚡ Run vitest
         run: pnpm run test
 
+  e2e:
+    name: 🎭 E2E
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 9
+          run_install: false
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.10.0
+
+      - name: 📥 Install deps
+        run: pnpm install
+
+      - name: 🌐 Install browsers
+        run: pnpm playwright install chromium
+
+      - name: 🎭 Run e2e tests
+        run: pnpm run e2e
+
   publish-client:
     name: 🚀 Publish client
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
-    needs: [lint, typecheck, test]
+    needs: [lint, typecheck, test, e2e]
     runs-on: ubuntu-latest
     env:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -121,7 +148,7 @@ jobs:
   publish-server:
     name: 🚀 Publish server
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
-    needs: [lint, typecheck, test]
+    needs: [lint, typecheck, test, e2e]
     runs-on: ubuntu-latest
     env:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

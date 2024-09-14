@@ -5,7 +5,9 @@ export const ENV =
     ? 'prod'
     : window.location.hostname.includes('.pages.dev')
       ? 'stage'
-      : 'dev';
+      : window.location.port === '4173'
+        ? 'test'
+        : 'dev';
 
 export const getServerUrl = () => {
   switch (ENV) {
@@ -13,6 +15,8 @@ export const getServerUrl = () => {
       return 'https://simon-stage.codenickycode.workers.dev';
     case 'prod':
       return 'https://simon.codenickycode.workers.dev';
+    case 'test':
+      return 'http://localhost:8788';
     case 'dev':
     default:
       return 'http://localhost:8787';

@@ -72,7 +72,10 @@ export const Pads = ({
           )}
         />
         <div className="absolute inset-0 m-auto rounded-full w-1/3 aspect-square bg-slate-950 border-8 border-slate-900 flex items-center">
-          <span className="w-full flex items-center justify-center sm:text-xl md:text-2xl lg:text-3xl">
+          <span
+            aria-label="user score"
+            className="w-full flex items-center justify-center sm:text-xl md:text-2xl lg:text-3xl"
+          >
             {isPlaying ? currentScore : ''}
           </span>
         </div>
