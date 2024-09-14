@@ -12,7 +12,7 @@ const DEFAULT_ENTRY = {
 };
 
 const mockEnv = {
-  DB: {
+  TEST_DB: {
     get: vi.fn().mockResolvedValue(DEFAULT_ENTRY),
     put: vi.fn().mockResolvedValue(DEFAULT_ENTRY),
   },
@@ -57,7 +57,7 @@ describe('POST', () => {
   });
   describe('when submitted score is not greater than existing score', () => {
     beforeEach(async () => {
-      mockEnv.DB.get.mockResolvedValueOnce({
+      mockEnv.TEST_DB.get.mockResolvedValueOnce({
         score: 2,
         name: 'User1',
       });
