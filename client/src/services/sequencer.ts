@@ -1,4 +1,5 @@
 import * as Tone from 'tone';
+import { randomIndex } from '../utils/array';
 
 export interface SequencerNoteEvent {
   detail: {
@@ -48,7 +49,7 @@ class Sequencer extends EventTarget {
   }
 
   addRandomNote(notes: Tone.Unit.Frequency[]) {
-    const index = Math.floor(Math.random() * notes.length);
+    const index = randomIndex(notes);
     const note = notes[index];
     this._sequence.events.push(note);
   }

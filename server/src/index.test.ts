@@ -4,7 +4,7 @@ import app from './index';
 
 const mockEnv = {
   ALLOWED_HOST: '*',
-  ENV: 'dev',
+  ENV: 'test',
 };
 
 describe('GET /', () => {

@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { HTTPException } from 'hono/http-exception';
+import { testRoute } from './test';
 import { highScoreRoute } from './high-score';
 import type { Env } from './types';
 
@@ -36,6 +37,7 @@ const app = new Hono<{ Bindings: Env }>()
     }
     return c.json({ message: 'Unknown server error', cause: err }, 500);
   })
+  .route('/test', testRoute)
   .route('/high-score', highScoreRoute);
 
 export default app;

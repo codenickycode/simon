@@ -6,6 +6,8 @@ import react from '@vitejs/plugin-react-swc';
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
+  console.log(env.E2E);
+  console.log(process.env.E2E);
   return {
     plugins: [
       react() as PluginOption[],
@@ -18,6 +20,7 @@ export default defineConfig(({ mode }) => {
     define: {
       'import.meta.env.GIT_BRANCH': JSON.stringify(process.env.GITHUB_REF_NAME),
       'import.meta.env.GIT_SHA': JSON.stringify(process.env.GITHUB_SHA),
+      'import.meta.env.E2E': JSON.stringify(process.env.E2E),
     },
     build: {
       sourcemap: true,

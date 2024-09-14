@@ -12,17 +12,17 @@ export const CurrentHighScore = (props: {
       <div className="flex flex-row space-x-6">
         {highScore ? (
           <>
-            <div className="w-8">
+            <div aria-label="global high score" className="w-8">
               <h3 className="text-sm text-slate-400">Score</h3>
               <p className="mt-1 md:text-lg font-semibold text-center">
                 {highScore.score}
               </p>
             </div>
-            <div>
+            <div aria-label="global high score user">
               <h3 className="text-sm text-slate-400">Name</h3>
               <p className="mt-1 md:text-lg  break-words">{highScore.name}</p>
             </div>
-            <div className="w-32">
+            <div aria-label="global high score date" className="w-32">
               <h3 className="text-sm text-slate-400">Date</h3>
               <p className="mt-1 md:text-lg ">
                 {formatDate(highScore.timestamp ?? 0)}

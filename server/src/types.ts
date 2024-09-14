@@ -5,7 +5,9 @@ import type app from './index';
 export interface Env {
   ALLOWED_HOST: string;
   DB: KVNamespace;
-  ENV: 'dev' | 'prod' | 'stage';
+  LOCAL_DB: KVNamespace;
+  TEST_DB: KVNamespace;
+  ENV: 'dev' | 'prod' | 'stage' | 'test';
   GITHUB_REF_NAME: string;
   GITHUB_SHA: string;
 }

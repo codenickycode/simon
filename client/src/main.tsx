@@ -22,3 +22,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 console.log(`branch: ${import.meta.env.GIT_BRANCH}`);
 console.log(`commit: ${import.meta.env.GIT_SHA}`);
+console.log(`e2e: ${import.meta.env.E2E || 'false'}`);

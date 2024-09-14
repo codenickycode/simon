@@ -17,7 +17,7 @@ const mockEnv = {
     put: vi.fn().mockResolvedValue(DEFAULT_ENTRY),
   },
   ALLOWED_HOST: '*',
-  ENV: 'dev',
+  ENV: 'test',
 };
 
 describe('GET', () => {
