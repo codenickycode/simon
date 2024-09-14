@@ -106,7 +106,7 @@ jobs:
         run: pnpm install
 
       - name: 🌐 Install browsers
-        run: pnpm playwright install --with-deps
+        run: pnpm playwright install chromium
 
       - name: 🎭 Run e2e tests
         run: pnpm run e2e
