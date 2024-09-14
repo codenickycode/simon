@@ -9,6 +9,7 @@ export const testRoute = new Hono<{ Bindings: Env }>()
       throw new HTTPException(404, { message: 'Not Found' });
     }
     await resetDb(c);
+    return new Response('ok', { status: 200 });
   })
   .notFound(() => {
     throw new HTTPException(404, { message: 'Not Found' });
