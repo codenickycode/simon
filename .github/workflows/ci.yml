@@ -86,7 +86,7 @@ jobs:
 
   e2e:
     name: 🎭 E2E
-    runs-on: unbuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
