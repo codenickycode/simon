@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: 🎭 Playwright
 on:
   push:
     branches: [main]
@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: npm install -g pnpm && pnpm install
       - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
+        run: pnpm playwright install --with-deps
       - name: Run Playwright tests
         run: pnpm run e2e
       - uses: actions/upload-artifact@v4
