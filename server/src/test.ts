@@ -17,6 +17,6 @@ export const testRoute = new Hono<{ Bindings: Env }>()
     throw new HTTPException(404, { message: 'Not Found' });
   });
 
-const resetDb = async (testDb: KVNamespace) => {
+const resetDb = async (testDb: Env['TEST_DB']) => {
   await testDb.delete('highScore');
 };
