@@ -2,7 +2,6 @@
   "name": "@simon/server",
   "type": "module",
   "version": "0.0.0",
-  "private": true,
   "scripts": {
     "deploy:stage": "pnpm wrangler deploy --minify src/index.ts --env stage --var GITHUB_REF_NAME:$GITHUB_REF_NAME --var GITHUB_SHA:$GITHUB_SHA",
     "deploy:prod": "pnpm wrangler deploy --minify src/index.ts --env prod --var GITHUB_REF_NAME:$GITHUB_REF_NAME --var GITHUB_SHA:$GITHUB_SHA",

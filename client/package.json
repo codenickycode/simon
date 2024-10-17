@@ -1,6 +1,5 @@
 {
   "name": "@simon/client",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -25,7 +24,6 @@
     "tone": "^15.0.4"
   },
   "devDependencies": {
-    "@simon/server": "workspace:*",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@types/react": "^18.3.3",
