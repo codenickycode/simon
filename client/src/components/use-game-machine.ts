@@ -5,7 +5,7 @@ import { gameLogic, NEW_GAME_STATE } from './use-game-machine.logic';
 import { useOnEntry } from './use-game-machine.use-on-entry';
 import { melodyPlayer } from '../services/melody-player';
 import type { PadId } from '../types';
-import type { HighScoreEntry } from '../../../server/src/types';
+import type { HighScoreEntry } from 'types.shared';
 
 export type GameMachine = ReturnType<typeof useGameMachine>;
 
