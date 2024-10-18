@@ -43,7 +43,11 @@ declare module "high-score" {
             $get: {
                 input: {};
                 output: {
-                    highScore: any;
+                    highScore: {
+                        name: string;
+                        score: number;
+                        timestamp: number;
+                    };
                 };
                 outputFormat: "json";
                 status: 200;
@@ -80,7 +84,11 @@ declare module "index" {
             $get: {
                 input: {};
                 output: {
-                    highScore: any;
+                    highScore: {
+                        name: string;
+                        score: number;
+                        timestamp: number;
+                    };
                 };
                 outputFormat: "json";
                 status: 200;

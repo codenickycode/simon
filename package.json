@@ -1,7 +1,6 @@
 {
   "name": "simon",
   "type": "module",
-  "private": true,
   "version": "0.0.0",
   "description": "Simon: The classic memory game",
   "main": "index.js",
@@ -12,6 +11,7 @@
     "build": "pnpm -r build",
     "ci": "pnpm lint && pnpm typecheck && pnpm test",
     "clean": "rm -rf node_modules && pnpm -r exec rm -rf node_modules && pnpm i",
+    "dev": "pnpm -r dev",
     "e2e": "pnpm exec playwright test",
     "e2e:ui": "pnpm exec playwright test --ui",
     "format": "pnpm exec prettier --write **/*.{js,ts,tsx,json,css,md}",
@@ -21,22 +21,33 @@
     "test:watch": "pnpm -r test:watch",
     "typecheck": "pnpm -r typecheck"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "simon",
+    "memory game",
+    "state machine",
+    "fsm",
+    "react",
+    "game design"
+  ],
+  "author": "@codenickycode",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codenickycode/simon.git"
+  },
   "dependencies": {
     "hono": "^4.5.8"
   },
   "devDependencies": {
     "@playwright/test": "^1.47.0",
     "@types/eslint": "^9.6.0",
-    "@types/node": "^20.14.12",
+    "@types/node": "^22.7.6",
     "@typescript-eslint/eslint-plugin": "^7.14.1",
     "@typescript-eslint/parser": "^7.14.1",
     "eslint": "^8.57.0",
     "prettier": "^3.3.3",
     "typescript": "^5.5.3",
-    "wrangler": "^3.73.0"
+    "wrangler": "^3.80.5"
   },
   "engines": {
     "node": ">=22.9.0",
