@@ -64,9 +64,6 @@ importers:
         specifier: ^15.0.4
         version: 15.0.4
     devDependencies:
-      '@simon/server':
-        specifier: workspace:*
-        version: link:../server
       '@testing-library/jest-dom':
         specifier: ^6.4.6
         version: 6.4.8

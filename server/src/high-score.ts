@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import { zValidator } from '@hono/zod-validator';
 import type { Context, Env } from './types';
-import type { HighScoreEntry } from './types';
+import type { HighScoreEntry } from './types.shared';
 import { z } from 'zod';
 import { getDb } from './utils';
 

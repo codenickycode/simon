@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "tsc -b && vite build",
+    "build": "pnpm run build:server-types && tsc -b && vite build",
+    "build:server-types": "tsc -p ../server/tsconfig.shared.json --declaration --emitDeclarationOnly --outFile ./src/server-types.d.ts",
     "build:test": "tsc -b && E2E=true vite build",
     "deploy:stage": "pnpm wrangler pages deploy ./dist --project-name simon --branch \"stage\" --commit-hash \"$GITHUB_SHA\" --commit-message \"stage deployment\"",
     "deploy:prod": "pnpm wrangler pages deploy ./dist --project-name simon",
@@ -25,7 +26,6 @@
     "tone": "^15.0.4"
   },
   "devDependencies": {
-    "@simon/server": "workspace:*",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@types/react": "^18.3.3",
