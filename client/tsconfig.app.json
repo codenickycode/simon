@@ -12,5 +12,5 @@
     "jsx": "react-jsx",
     "types": ["vitest/globals"]
   },
-  "include": ["src", "../server/src/types.ts"]
+  "include": ["src"]
 }
